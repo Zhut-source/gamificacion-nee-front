@@ -1,0 +1,376 @@
+.profile-container{
+    width: 100%;
+    padding: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--profile-bg-color);
+    color:var(--profile-text-color);
+    gap: 16px;
+
+    @media (max-width: 800px) {
+      padding: 1.5rem;
+    }
+
+    .input-df{
+      all: unset;
+      padding: 12px 16px;
+      background-color: transparent;
+      border: 2px solid var(--input-border-color);
+      border-radius: 10px;
+      outline: none;
+      transition: all 0.2s ease;
+      &::placeholder{
+        color: var(--input-placeholder-color);
+      }
+
+      &:focus {
+        border-color: var(--input-border-color-focus);
+      }
+    }
+}
+
+.card{
+    width: 100%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background-color: var(--card-profile-bg-color);
+    border: 2px solid var(--card-profile-border-color);
+    border-radius: 16px;
+    overflow:hidden;
+}
+
+.input-area.grid-profile {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem 1rem;
+    align-items: center;
+
+    .disabled-input {
+        all: unset;
+        padding: 12px 16px;
+        background-color: transparent;
+        border-radius: 10px;
+        color: #7A7A7A;
+        border: 2px solid #7A7A7A;
+        cursor: not-allowed;
+        grid-column: span 2; 
+      }
+
+    .edit-btn {
+       all: unset;
+        padding: 0.5rem;  
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        width: 30px;
+        height: 30px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 10px;
+        background: var(--button-bg-color-save-changes);
+        color: var(--button-text-color-save-changes);
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+          &:hover{
+            background: var(--button-bg-color-save-changes-hover);
+            color: var(--button-text-color-save-changes-hover);
+        }
+    }
+
+    .action-container{
+
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-content: center;
+      grid-column: span 3; 
+
+      .save-changes-btn{
+        padding: 0.5rem;  
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        min-height: 50px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 10px;
+        background: var(--button-bg-color-save-changes);
+        color: var(--button-text-color-save-changes);
+        cursor: pointer;
+        transition: background 0.2s ease;
+        &:hover{
+            background: var(--button-bg-color-save-changes-hover);
+            color: var(--button-text-color-save-changes-hover);
+        }
+      }
+    }
+    
+
+    @media (max-width: 700px) {
+        .input-area.grid-profile {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 1.2rem;
+
+          label {
+            margin-bottom: -0.8rem; 
+          }
+
+          input.disabled-input {
+            grid-column: auto; 
+          }
+          
+          .edit-btn {
+            align-self: flex-end;
+            margin-top: -3.3rem; 
+            margin-right: 0.5rem;
+            height: 38px;
+          }
+        }
+        
+        .action-container {
+          .save-changes-btn {
+            width: 100%;
+            text-align: center;
+          }
+        }
+      }
+  }
+
+.input-area.grid-join {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.75rem 1.25rem;
+  align-items: center;
+
+  .status-value {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &.class-none {
+      color: #7A7A7A;
+      font-style: italic;
+    }
+
+    &.class-joined {
+
+      .status-tag {
+        background-color: transparent;
+        color: var(--status-text-color);
+        padding: 0.25rem 0.6rem;
+        border-radius: 10px;
+        text-transform: uppercase;
+        border: 2px solid var(--status-border-color);
+      }
+    }
+  }
+
+  .join-btn {
+        padding: 0.5rem;  
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        min-height: 50px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 10px;
+        background: var(--button-bg-color-login);
+        color: var(--button-text-color-login);
+        cursor: pointer;
+        transition: background 0.2s ease;
+        &:hover{
+            background: var(--button-bg-color-login-hover);
+            color: var(--button-text-color-login-hover);
+        }
+  }
+
+  // ==========================================================================
+  // RESPONSIVE DESIGN (Corregido a 720px para evitar el desborde del texto)
+  // ==========================================================================
+  @media (max-width: 720px) {
+    // CORRECCIÓN: Quitamos el selector repetido. Al estar dentro de Nesting,
+    // estas propiedades se aplican directamente a .input-area.grid-join
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.2rem;
+
+    label, .status-label {
+      margin-bottom: -0.6rem; // Atrae la etiqueta hacia su respectivo control abajo
+      white-space: normal;    // Permite que el texto se acomode en múltiples líneas si falta espacio
+    }
+
+    .status-value {
+      grid-column: auto;      // Desactiva el comportamiento de celdas del Grid
+      flex-direction: column; // En móviles pequeños, pone el tag arriba y el nombre de la clase abajo
+      align-items: flex-start;
+      gap: 6px;
+      background-color: var(--status-container-bg-color);
+      padding: 0.75rem;
+      border-radius: 8px;
+      width: 100%;
+    }
+
+    .join-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+.input-area.grid6 {
+    display: grid;
+    grid-template-columns: auto 1fr; 
+    gap: 1.5rem 1rem;
+    align-items: center;
+
+    label {
+      white-space: nowrap;
+    }
+
+
+    @media (max-width: 700px) {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+
+      label {
+        margin-bottom: -0.5rem; 
+      }
+    }
+}
+
+.input-area.grid-accessibility {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem 2rem;
+  align-items: center;
+  max-width: 650px;
+  margin: 0;
+  padding: 1rem;
+
+  label {
+    white-space: nowrap;
+  }
+
+  .control-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  // ==========================================
+  // ESTILOS DE LOS CONTROLES INTERNOS
+  // ==========================================
+
+  // Desplegables (Selects)
+  .select-control {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.6rem 1rem;
+    border: 2px solid var(--select-border-color);
+    border-radius: 10px;
+    background-color: transparent;
+    color: var(--select-text-color);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    option{
+      background-color: var(--select-list-bg-color);
+
+    }
+
+    &:focus {
+      border-color: var(--input-border-color-focus);
+    }
+  }
+
+  .switch-control {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+
+    input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--slider-bg-color);
+      transition: .3s;
+      border-radius: 34px;
+
+      &:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 4px;
+        bottom: 4px;
+        background-color: var(--slider-circle-bg-color);
+        transition: .3s;
+        border-radius: 50%;
+      }
+    }
+
+    input:checked + .slider {
+      background-color: var(--slider-bg-color-checked);
+      &:before {
+        background-color: var(--slider-circle-color-checked);
+      }
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+  }
+
+  .checkbox-control {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    input {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      color:black;
+      accent-color: var(--check-bg-color);
+    }
+  }
+
+  // ==========================================
+  // RESPONSIVE DESIGN (Media Query)
+  // ==========================================
+  @media (max-width: 700px) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.2rem;
+
+    label {
+      margin-bottom: -0.7rem; // Atrae visualmente la etiqueta hacia su respectivo control
+      white-space: normal;    // Permite que el texto quepa en pantallas muy chicas
+    }
+
+    .select-control {
+      max-width: 100%; // Hace que los dropdowns ocupen todo el ancho en móviles
+    }
+  }
+}

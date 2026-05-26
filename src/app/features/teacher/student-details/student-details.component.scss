@@ -1,0 +1,297 @@
+// ==========================================================================
+// CONFIGURACIÓN Y CONTENEDOR PRINCIPAL VISTA
+// ==========================================================================
+.student-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 3.5rem;
+  max-width: 100%;
+  background-color: var(--container-dashboard-bg-color);
+  color: var(--container-dashboard-text-color);
+}
+
+// Estructura semántica base para Cards del Dashboard
+.card {
+  background-color: var(--card-bg-color, #FFFFFF);
+  border: 2px solid var(--card-border-color, #FFFFFF);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+// Utilidad de texto resaltado gamificado
+.text-accent {
+  color: var(--accent, #0eb9de);
+}
+
+// ==========================================================================
+// 1. CARD PRINCIPAL DE ENCABEZADO
+// ==========================================================================
+.header-section {
+  width: 100%;
+
+  .header-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .main-title {
+    margin: 0;
+    color: var(--text-titulo-landing, #2B2B2A);
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+
+    .dynamic-student-name {
+      display: inline-block;
+      font-weight: 800;
+      color: var(--text-primary, #2B2B2A);
+    }
+  }
+}
+
+// ==========================================================================
+// 2. SECCIÓN DE MÉTRICAS DEL ESTUDIANTE (MÉTRICAS TRIPLE FLEX)
+// ==========================================================================
+.metrics-section {
+  width: 100%;
+
+  .metrics-flex-layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .mini-metric-card {
+    flex: 1;
+    min-width: 0; // Protege contra anchos destructivos de palabra (OpenDyslexic)
+    background-color: var(--carousel-bg-card-color, #F9F6F0);
+    border: 2px solid var(--carousel-border-card-color, #2B2B2A);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+
+    .metric-label {
+      font-weight: 600;
+      color: var(--label-text-color, #2B2B2A);
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      overflow-wrap: anywhere;
+    }
+
+    .metric-value {
+      font-weight: 800;
+      font-size: 2rem; // Mantiene consistencia de escala sin definir pixel estricto
+      margin: 0;
+      overflow-wrap: anywhere;
+      line-height: 1.2;
+    }
+
+    .metric-subtext {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #7A7A7A;
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .datetime-value {
+      font-size: 1.75rem;
+    }
+  }
+}
+
+// ==========================================================================
+// 3. TABLA DE NIVELES RESPONSIVA
+// ==========================================================================
+.levels-section {
+  width: 100%;
+
+  .table-container-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .table-section-title {
+    margin: 0;
+    color: var(--text-titulo-landing, #2B2B2A);
+  }
+
+  // Contenedor elástico de la tabla (Soporta Reflow WCAG 2.2)
+  .table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    background-color: transparent;
+
+    // Indicador visible de foco por teclado para usuarios de tecnologías asistivas
+    &:focus-visible {
+      outline: 3px solid var(--accent, #0eb9de);
+      outline-offset: 2px;
+    }
+  }
+
+  .levels-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    min-width: 800px; // Evita el colapso de celdas de texto inclusivo
+
+    th, td {
+      padding: 1.25rem 1.5rem;
+      vertical-align: middle;
+      border-bottom: 1px solid #E2E8F0;
+      overflow-wrap: anywhere; // Impide desbordes laterales
+    }
+
+    thead {
+      background-color: #F8FAFC;
+
+      th {
+        font-weight: 700;
+        color: var(--text-primary, #2B2B2A);
+        white-space: nowrap;
+      }
+    }
+
+    tbody {
+      tr {
+        transition: background-color 0.15s ease;
+
+        &:hover {
+          background-color: rgba(#0eb9de, 0.03);
+        }
+
+        // Fila destacada de atención pedagógica
+        &.row-attention {
+          background-color: rgba(#E11D48, 0.02);
+
+          &:hover {
+            background-color: rgba(#E11D48, 0.05);
+          }
+        }
+      }
+
+      .level-name {
+        color: var(--text-primary, #2B2B2A);
+        display: block;
+      }
+
+      // Sistema de Badges/Insignias Adaptables
+      .difficulty-badge, .status-badge {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      // Modificadores de Dificultad
+      .difficulty-easy { background-color: #DCFCE7; color: #15803D; }
+      .difficulty-medium { background-color: #FEF9C3; color: #A16207; }
+      .difficulty-hard { background-color: #FEE2E2; color: #B91C1C; }
+
+      // Modificadores de Estado Gamificado
+      .status-completed {
+        background-color: var(--button-bg-color-comenzar, #2B2B2A);
+        color: var(--button-text-color-comenzar, #F9F6F0);
+      }
+      .status-pending {
+        background-color: rgba(#0eb9de, 0.15);
+        color: #0369A1;
+        border: 1px solid var(--accent, #0eb9de);
+      }
+      .status-alert {
+        background-color: #E11D48;
+        color: #FFFFFF;
+      }
+
+      .attempts-count, .time-value {
+        color: var(--container-dashboard-text-color);
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// ==========================================================================
+// ADAPTACIONES COMPLEMENTARIAS AL MODO ALTO CONTRASTE GLOBALES
+// ==========================================================================
+body.high-contrast {
+  .card {
+    background-color: #000000 !important;
+    border: 2px solid #FFFFFF !important;
+  }
+
+  .mini-metric-card {
+    background-color: #000000 !important;
+    border: 2px solid #FFFFFF !important;
+    
+    .metric-subtext {
+      color: #FFFFFF !important;
+    }
+  }
+
+  .table-responsive-wrapper {
+    border-color: #FFFFFF !important;
+  }
+
+  .levels-table {
+    thead {
+      background-color: #121212 !important;
+      th { border-bottom: 2px solid #FFFFFF !important; }
+    }
+    td { border-bottom: 1px solid #FFFFFF !important; }
+
+    tbody {
+      tr:hover { background-color: #121212 !important; }
+      
+      .difficulty-badge, .status-badge {
+        background-color: #000000 !important;
+        color: #FFFFFF !important;
+        border: 2px solid #FFFFFF !important;
+      }
+    }
+  }
+}
+
+// ==========================================================================
+// MEDIA QUERIES (DISPOSITIVOS MÓVILES Y RESPONSIVE)
+// ==========================================================================
+@media (max-width: 840px) {
+  .student-details-container {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  // Transformación horizontal a vertical de las tres mini cards métricas
+  .metrics-section {
+    .metrics-flex-layout {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .mini-metric-card {
+      width: 100%;
+    }
+  }
+}

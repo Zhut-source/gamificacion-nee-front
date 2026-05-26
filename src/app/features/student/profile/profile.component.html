@@ -1,0 +1,119 @@
+<main class="profile-container">
+
+    <section class="area-info">
+        <div class="card info">
+            <h1 class="title info">Información personal</h1>
+            <div class="input-area grid-profile">
+                
+                <label for="profile-name">Nombre</label>
+                <input class="input-df" type="text" id="profile-name" value="José Daniel" placeholder="Tu nombre">
+                <button type="button" class="edit-btn" title="Modificar nombre">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                </button>
+
+                <label for="profile-email">Correo</label>
+                <input type="email" id="profile-email" value="jose.daniel@example.com" disabled class="disabled-input">
+
+                <div class="action-container">
+                    <button class="save-changes-btn">
+                        Guardar cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="area-join-class">
+        <div class="card join-class">
+            <h1 class="title join-class">
+                Unirse a una clase
+            </h1>
+            <div class="input-area grid-join">
+    
+                <label class="status-label">Estado:</label>
+                
+                <div class="status-value class-joined">
+                <span class="status-tag">Unido</span> 
+                <strong class="class-info">Aula 402 - Lógica Computacional (Prof. Ramírez)</strong>
+                </div>
+
+                <label for="class-code">Código de clase:</label>
+                <input class="input-df" type="text" id="class-code" placeholder="Ej: XF93-LK2" autocomplete="off">
+                <button type="button" class="join-btn">
+                Entrar al aula
+                </button>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="area-change-pass"> 
+        <div class="card change-pass">
+            <h1 class=" title change-pass">
+                Cambiar contrasenia
+            </h1>
+            <div class="input-area grid6">
+                <label for="current-pass">Contraseña actual</label>
+                <input class="input-df" type="password" id="current-pass" placeholder="Ingresa tu contraseña actual">
+
+                <label for="new-pass">Nueva contraseña</label>
+                <input class="input-df" type="password" id="new-pass" placeholder="Mínimo 6 caracteres">
+
+                <label for="confirm-pass">Confirmar contraseña</label>
+                <input class="input-df" type="password" id="confirm-pass" placeholder="Repite tu nueva contraseña">
+                </div>
+            </div>
+    </section>
+
+    <section class="area-settings-acces">
+        <div class="card settings-acces">
+            <h1 class="title settings-acces">
+                Ajustes de accesibilidad
+            </h1>
+            <div class="input-area grid-accessibility">
+                <label for="toggle-dyslexia">Activar fuente OpenDyslexic</label>
+                <div class="control-container">
+                    <label class="switch-control">
+                    <input  type="checkbox" id="toggle-dyslexia">
+                    <span class="slider"></span>
+                    </label>
+                </div>
+
+                <label for="select-contrast">Modo de Contraste</label>
+                <div class="control-container">
+                    <select id="select-contrast" class="select-control">
+                    <option value="claro" selected>Claro</option>
+                    <option value="oscuro">Oscuro</option>
+                    </select>
+                </div>
+
+                <label for="select-speed">Velocidad del Lector de Voz</label>
+                <div class="control-container">
+                    <select id="select-speed" class="select-control">
+                    <option value="rapido">Rápido</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="lento">Lento</option>
+                    </select>
+                </div>
+
+                <label for="check-animations">Desactivar Animaciones</label>
+                <div class="control-container">
+                    <label class="checkbox-control">
+                    <input type="checkbox" id="check-animations" checked>
+                    <span class="custom-checkbox"></span>
+                    </label>
+                </div>
+
+                <label for="select-font-size">Tamaño de Fuente</label>
+                <div class="control-container">
+                    <select id="select-font-size" class="select-control">
+                    <option value="normal" selected>Normal</option>
+                    <option value="grande">Grande</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>

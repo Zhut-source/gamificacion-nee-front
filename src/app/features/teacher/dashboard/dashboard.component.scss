@@ -1,0 +1,365 @@
+// ==========================================================================
+// CONFIGURACIÓN DE CONTENEDOR PRINCIPAL
+// ==========================================================================
+.teacher-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 3.5rem;
+  max-width: 100%;
+  background-color: var(--container-dashboard-bg-color);
+  color: var(--container-dashboard-text-color);
+}
+
+// Clases de utilidad para accesibilidad WCAG lectores de pantalla
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Estructura Base de Tarjetas Reutilizables
+.card {
+  background-color: var(--card-bg-color, #FFFFFF);
+  border: 2px solid var(--card-border-color, #FFFFFF);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+// ==========================================================================
+// 1. SECCIÓN SELECCIÓN DE AULA
+// ==========================================================================
+.classroom-selector-section {
+  width: 100%;
+
+  .selector-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .selector-content {
+    width: 100%;
+    
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 400px; // El contenedor crece de forma controlada horizontalmente
+
+      .selector-label {
+        font-weight: 700;
+        color: var(--label-text-color, #2B2B2A);
+      }
+    }
+
+    .no-classrooms-notice {
+      margin: 0;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      background-color: rgba(#FFD700, 0.15);
+      border: 1px solid var(--accent, #0eb9de);
+      color: var(--container-dashboard-text-color);
+      overflow-wrap: anywhere;
+    }
+  }
+}
+
+// ==========================================================================
+// 2. SECCIÓN DE MÉTRICAS RÁPIDAS
+// ==========================================================================
+.metrics-grid {
+  display: grid;
+  // Layout elástico que calcula columnas de mínimo 280px automáticas sin romper el ancho
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+
+  .metric-card {
+    background-color: var(--card-bg-color, #FFFFFF);
+    border: 2px solid var(--card-border-color, #FFFFFF);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 140px;
+    height: auto; // Flexible para fuentes anchas como OpenDyslexic
+
+    .metric-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .metric-title {
+      font-weight: 600;
+      color: var(--text-primary, #2B2B2A);
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .metric-value {
+      font-weight: 800;
+      font-size: 2.25rem; // Mantiene escala proporcional sin romper tamaño explícito
+      color: var(--accent, #0eb9de);
+      margin: 0;
+    }
+
+    // Variación para resaltar alertas visualmente de manera inclusiva
+    &.metric-alert {
+      border-color: #E11D48;
+      
+      .metric-value {
+        color: #E11D48;
+      }
+    }
+  }
+}
+
+// ==========================================================================
+// 3. PANEL ADMINISTRATIVO Y HERRAMIENTAS
+// ==========================================================================
+.management-section {
+  width: 100%;
+
+  .management-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; // Evita el quiebre de componentes hacia los lados
+    gap: 1.5rem;
+
+    .management-card-title {
+      margin: 0;
+      color: var(--text-primary, #2B2B2A);
+    }
+  }
+
+  .toolbar-panel {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap; // Permite adaptación elástica en tablets
+    
+    .search-box, .filter-box {
+      min-width: 200px;
+      flex: 1;
+    }
+
+    input[type="search"] {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border: 2px solid var(--input-border-color, #2B2B2A);
+      border-radius: 10px;
+      background-color: transparent;
+      color: var(--input-text-color, #2B2B2A);
+      outline: none;
+      transition: border-color 0.2s;
+
+      &:focus {
+        border-color: var(--accent, #0eb9de);
+      }
+    }
+  }
+}
+
+// ==========================================================================
+// 4. TABLA DE ESTUDIANTES (CUMPLE WCAG CONTENEDORES SCROLLABLE)
+// ==========================================================================
+.table-container {
+  width: 100%;
+  overflow-x: auto; // Permite scroll horizontal controlado sólo en pantallas muy chicas
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: transparent;
+  
+  // Garantiza foco de accesibilidad por teclado al scrollear
+  &:focus-visible {
+    outline: 3px solid var(--accent, #0eb9de);
+    outline-offset: 2px;
+  }
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 700px; // Evita el colapso destructivo de columnas de texto
+
+  th, td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #e2e8f0;
+    overflow-wrap: anywhere; // Protege desbordamiento de correos o nombres largos
+  }
+
+  thead {
+    background-color: #f8fafc;
+    
+    th {
+      font-weight: 700;
+      color: var(--text-primary, #2B2B2A);
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: rgba(#0eb9de, 0.04);
+      }
+
+      &.row-alert {
+        background-color: rgba(#E11D48, 0.02);
+        
+        &:hover {
+          background-color: rgba(#E11D48, 0.05);
+        }
+      }
+    }
+
+    .student-name {
+      color: var(--text-primary, #2B2B2A);
+      display: block;
+    }
+
+    .student-email {
+      color: #7a7a7a;
+    }
+
+    .table-progress-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      .progress-percentage {
+        font-weight: 700;
+      }
+    }
+
+    .activity-date {
+      color: var(--container-dashboard-text-color);
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: 2px solid var(--button-bg, #2B2B2A);
+      color: var(--button-bg, #2B2B2A);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+
+      &:hover, &:focus {
+        background-color: var(--button-bg, #2B2B2A);
+        color: var(--button-text, #F9F6F0);
+        outline: none;
+      }
+      
+      &:focus-visible {
+        box-shadow: 0 0 0 3px var(--accent, #0eb9de);
+      }
+    }
+  }
+}
+
+// ==========================================================================
+// AJUSTES DE ALTO CONTRASTE (HERENCIA GLOBAL DE TU PROYECTO)
+// ==========================================================================
+body.high-contrast {
+  .card, .metric-card {
+    background-color: #000000 !important;
+    border: 2px solid #FFFFFF !important;
+  }
+
+  .table-container {
+    border-color: #FFFFFF;
+  }
+
+  .students-table {
+    thead {
+      background-color: #121212;
+      th { border-bottom: 2px solid #FFFFFF; }
+    }
+    td { border-bottom: 1px solid #FFFFFF; }
+    
+    tbody tr:hover {
+      background-color: #121212 !important;
+    }
+    
+    .student-email {
+      color: #FFFFFF !important;
+    }
+
+    .action-btn {
+      border-color: #FFFFFF !important;
+      color: #FFFFFF !important;
+
+      &:hover {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+      }
+    }
+  }
+  
+  .metric-card.metric-alert {
+    border-color: var(--accent, #FFD700) !important;
+    .metric-value { color: var(--accent, #FFD700) !important; }
+  }
+
+  input[type="search"] {
+    border-color: #FFFFFF !important;
+    &:focus { border-color: var(--accent, #FFD700) !important; }
+  }
+}
+
+// ==========================================================================
+// MEDIA QUERIES (DISPOSITIVOS MÓVILES Y RESPONSIVE RÁPIDO)
+// ==========================================================================
+@media (max-width: 768px) {
+  .teacher-dashboard {
+    padding: 1.5rem; // Reducción de espacio perimetral en pantallas compactas
+    gap: 1.5rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .management-header {
+    flex-direction: column;
+    align-items: fill;
+    
+    .toolbar-panel {
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+
+      .search-box, .filter-box {
+        width: 100%;
+      }
+    }
+  }
+}

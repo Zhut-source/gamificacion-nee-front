@@ -1,1 +1,266 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/assets/fonts/OpenDyslexic-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  /// COLORES DEL HEADER
+  --bg-header: #F9F6F0;
+  --color-line-header:#2B2B2A;
+  --button-bg-color-header:#2B2B2A;
+  --button-text-color-header:#F9F6F0;
+  --button-bg-color-header-hover:#0eb9de;
+  --button-text-color-header-hover:#2B2B2A;
+  --button-bg-color-header-active:#0eb9de;
+  --button-text-color-header-active:#2B2B2A;
+  --button-outline-color-header-active:#2B2B2A;
+  --line-divisor-color:#2B2B2A;
+
+  /// BASE COLOR
+  --bg-color-body:#F9F6F0;
+
+  /// COLORES DE LANDING PAGE
+  --bg-color-card-landing:#FFFFFF;
+  --text-titulo-landing:#2B2B2A;
+  --text-p-landing:#2B2B2A;
+  --button-bg-color-comenzar:#2B2B2A;
+  --button-text-color-comenzar:#F9F6F0;
+  --button-bg-color-comenzar-hover:#0eb9de;
+
+  //LOGINS/REGISTERS COLORS
+  --bg-color-card-login:#FFFFFF;
+
+  --label-text-color:#2B2B2A;
+
+  --input-text-color:#2B2B2A;
+  --input-border-color:#2B2B2A;
+  --input-placeholder-color:#7A7A7A;
+  --input-border-color-focus:#4f46e5;
+
+  --checkbox-border-color:#2B2B2A;
+  --checkbox-bg-color-active:#0eb9de;
+  --checkbox-border-color-active:#0eb9de;
+
+  --button-bg-color-login:#2B2B2A;
+  --button-text-color-login:#F9F6F0;
+  --button-bg-color-login-hover:#0eb9de;
+  --button-text-color-login-hover:#2B2B2A;
+
+  --button-bg-color-register:#F9F6F0;
+  --button-text-color-register:#2B2B2A;
+  --button-border-color-register:#2B2B2A;
+
+  --button-text-color-register-hover:#FFFFFF;
+  --button-bg-color-register-hover:#0eb9de;
+  --button-border-color-register-hover:#0eb9de;
+
+  //DASHBOARD ESTUDIANTE
+  --container-dashboard-bg-color:#F9F6F0;
+  --container-dashboard-text-color:#2B2B2A;
+
+  --progress-bg-color:#2B2B2A;
+  --progress-fill-bg-color:#0eb9de;
+  --card-bg-color:#FFFFFF;
+  --card-border-color:#FFFFFF;
+
+  --button-speaker-bg-color:#2B2B2A;
+  --button-speaker-text-color:#F9F6F0;
+  --button-speaker-bg-color-hover:#F9F6F0;
+  --button-speaker-text-color-hover:#2B2B2A;
+
+  --carousel-bg-card-color:#F9F6F0;
+  --carousel-border-card-color:#2B2B2A;
+
+
+  //PROFILE ESTUDIANTE/PROFESOR
+  --profile-bg-color:#F9F6F0;
+  --profile-text-color:#2B2B2A;
+
+  --card-profile-bg-color:#FFFFFF;
+  --card-profile-border-color:#2B2B2A;
+
+  --button-bg-color-save-changes:#2B2B2A;
+  --button-text-color-save-changes:#F9F6F0;
+  --button-bg-color-save-changes-hover:#F9F6F0;
+  --button-text-color-save-changes-hover:#2B2B2A;
+
+  --select-border-color:#2B2B2A;
+  --select-text-color:#2B2B2A;
+  --select-list-bg-color:#FFFFFF;
+  --select-list-bg-color-hover:#0eb9de;
+  
+
+  --status-container-bg-color:#F9F6F0;
+  --status-text-color:#0eb9de;
+  --status-border-color:#0eb9de;
+
+  --check-bg-color:#0eb9de;
+
+  --slider-circle-bg-color:#FFFFFF;
+  --slider-bg-color-checked:#0eb9de;
+  --slider-circle-color-checked:#000000;
+  --slider-bg-color:#2B2B2A;
+
+  --bg-primary: #F9F6F0;
+  --bg-card: #FFFFFF;
+  --text-primary: #2B2B2A;
+  --button-bg: #2B2B2A;
+  --button-text: #F9F6F0;
+  --accent: #0eb9de;
+}
+
+
+*, *::before, *::after {
+  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color-body);
+}
+
+body {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+
+  &, *, header, h1, h2, h3, h4, h5, h6, span, a, p, input, select {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+  }
+
+  h1{
+    font-size: 48px;
+  }
+
+}
+
+body.accessible-font {
+  
+  font-family: "OpenDyslexic" !important;
+  font-size: 16px;
+  line-height: 1.6;
+
+  &, *, header, h1, h2, h3, h4, h5, h6, span, a, p, input, select {
+    font-family: "OpenDyslexic", sans-serif !important;
+  }
+
+  h1{
+    font-size: 34px;
+  }
+  h2{
+    font-size: 26px;
+  }
+  h3{
+    font-size: 22px;
+  }
+
+}
+
+body.high-contrast {
+   /// COLORES DEL HEADER
+  --bg-header: #000000;
+  --color-line-header:#FFFFFF;
+  --button-bg-color-header:#FFFFFF;
+  --button-text-color-header:#000000;
+  --button-bg-color-header-hover:#FFD700;
+  --button-text-color-header-hover:#000000;
+  --button-bg-color-header-active:#FFD700;
+  --button-text-color-header-active:#000000;
+  --button-outline-color-header-active:#000000;
+  --line-divisor-color:#FFFFFF;
+
+  /// BASE COLOR
+  --bg-color-body:#000000;
+
+  /// COLORES DE LANDING PAGE
+  --bg-color-card-landing:#121212;
+  --text-titulo-landing:#FFFFFF;
+  --text-p-landing:#FFFFFF;
+  --button-bg-color-comenzar:#FFFFFF;
+  --button-text-color-comenzar:#000000;
+  --button-bg-color-comenzar-hover:#FFD700;
+
+  //LOGINS COLORS
+  --bg-color-card-login:#121212;
+
+  --label-text-color:#FFFFFF;
+  --input-text-color:#FFFFFF;
+  --input-border-color:#FFFFFF;
+  --input-placeholder-color:#7A7A7A;
+  --input-border-color-focus:#4f46e5;
+
+  --checkbox-border-color:#FFFFFF;
+  --checkbox-bg-color-active:#FFD700;
+  --checkbox-border-color-active:#FFD700;
+
+  --button-bg-color-login:#FFFFFF;
+  --button-text-color-login:#000000;
+  --button-bg-color-login-hover:#FFD700;
+  --button-text-color-login-hover:#000000;
+
+  --button-bg-color-register:#000000;
+  --button-text-color-register:#FFFFFF;
+  --button-border-color-register:#FFFFFF;
+
+  --button-text-color-register-hover:#000000;
+  --button-bg-color-register-hover:#FFD700;
+  --button-border-color-register-hover:#FFD700;
+
+  //DASHBOARD ESTUDIANTE
+  --container-dashboard-bg-color:#000000;
+  --container-dashboard-text-color:#FFFFFF;
+
+  --progress-bg-color:#FFFFFF;
+  --progress-fill-bg-color:#FFD700;
+  --card-bg-color:#121212;
+  --card-border-color:#FFFFFF;
+
+  --button-speaker-bg-color:#FFFFFF;
+  --button-speaker-text-color:#000000;
+  --button-speaker-bg-color-hover:#000000;
+  --button-speaker-text-color-hover:#FFFFFF;
+
+  --carousel-bg-card-color:#121212;
+  --carousel-border-card-color:#FFFFFF;
+
+  //PROFILE ESTUDIANTE/MAESTRO
+  --profile-bg-color:#000000;
+  --profile-text-color:#FFFFFF;
+
+  --card-profile-bg-color:#121212;
+  --card-profile-border-color:#FFFFFF;
+
+  --button-bg-color-save-changes:#FFFFFF;
+  --button-text-color-save-changes:#000000;
+  --button-bg-color-save-changes-hover:#FFD700;
+  --button-text-color-save-changes-hover:#000000;
+
+  --select-border-color:#FFFFFF;
+  --select-text-color:#FFFFFF;
+  --select-list-bg-color:#000000;
+
+  --status-container-bg-color:#000000;
+  --status-text-color:#FFD700;
+  --status-border-color:#FFD700;
+
+  --check-bg-color:#FFD700;
+
+  --slider-circle-bg-color:#000000;
+  --slider-bg-color-checked:#FFD700;
+  --slider-circle-color-checked:#000000;
+  --slider-bg-color:#FFFFFF;
+
+  --bg-primary: #000000;
+  --bg-card: #121212;
+  --text-primary: #FFFFFF;
+  --button-bg: #FFFFFF;
+  --button-text: #000000;
+  --accent: #FFD700;
+}
+

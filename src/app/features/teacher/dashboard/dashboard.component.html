@@ -1,0 +1,122 @@
+<main class="teacher-dashboard">
+
+  <section class="classroom-selector-section" aria-labelledby="classroom-selector-title">
+    <div class="card selector-card">
+      <div class="selector-content">
+        <div class="field-group">
+          <label for="dashboard-classroom-select" id="classroom-selector-title" class="selector-label">
+            Aula activa
+          </label>
+          <select id="dashboard-classroom-select" class="select-control">
+            <option value="aula-102">Aula 102 - Matemáticas</option>
+            <option value="aula-402">Aula 402 - Lógica Computacional</option>
+          </select>
+        </div>
+        
+        </div>
+    </div>
+  </section>
+
+  <section class="metrics-grid" aria-label="Métricas de rendimiento del aula">
+    
+    <article class="metric-card">
+      <div class="metric-info">
+        <h2 class="metric-title">Total de estudiantes</h2>
+        <p class="metric-value">32</p>
+      </div>
+    </article>
+
+    <article class="metric-card">
+      <div class="metric-info">
+        <h2 class="metric-title">Progreso promedio</h2>
+        <p class="metric-value">74%</p>
+      </div>
+    </article>
+
+    <article class="metric-card metric-alert">
+      <div class="metric-info">
+        <h2 class="metric-title">Estudiantes con dificultades</h2>
+        <p class="metric-value">5</p>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="management-section" aria-labelledby="management-title">
+    <div class="card management-card">
+      
+      <header class="management-header">
+        <h2 id="management-title" class="management-card-title">Listado de Estudiantes</h2>
+        
+        <div class="toolbar-panel">
+          <div class="search-box">
+            <label for="student-search" class="sr-only">Buscar estudiante por nombre</label>
+            <input 
+              type="search" 
+              id="student-search" 
+              placeholder="Buscar estudiante..." 
+              autocomplete="off"
+            >
+          </div>
+          
+          <div class="filter-box">
+            <label for="student-filter" class="sr-only">Filtrar lista de estudiantes</label>
+            <select id="student-filter" class="select-control">
+              <option value="all">Todos los estudiantes</option>
+              <option value="alert">Con dificultades</option>
+              <option value="completed">Completados</option>
+            </select>
+          </div>
+        </div>
+      </header>
+
+      <div class="table-container" tabindex="0" aria-label="Tabla de progreso de estudiantes, usa las flechas para desplazarte horizontalmente si es necesario">
+        <table class="students-table">
+          <thead>
+            <tr>
+              <th scope="col">Nombre del estudiante</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Progreso</th>
+              <th scope="col">Última actividad</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong class="student-name">José Daniel Ramirez</strong></td>
+              <td><span class="student-email">j.ramirezmail.com</span></td>
+              <td>
+                <div class="table-progress-wrapper">
+                  <span class="progress-percentage">85%</span>
+                </div>
+              </td>
+              <td><span class="activity-date">Hace 10 min</span></td>
+              <td>
+                <button type="button" class="action-btn" aria-label="Ver perfil y detalles de José Daniel Ramirez">
+                  Ver detalles
+                </button>
+              </td>
+            </tr>
+            <tr class="row-alert">
+              <td><strong class="student-name">María Carmen Luz</strong></td>
+              <td><span class="student-email">m.luzmail.com</span></td>
+              <td>
+                <div class="table-progress-wrapper">
+                  <span class="progress-percentage">42%</span>
+                </div>
+              </td>
+              <td><span class="activity-date">Ayer</span></td>
+              <td>
+                <button type="button" class="action-btn" aria-label="Ver perfil y detalles de María Carmen Luz">
+                  Ver detalles
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+</main>

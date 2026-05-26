@@ -1,0 +1,153 @@
+<main class="profile-container">
+
+    <section class="area-info">
+        <div class="card info">
+            <h1 class="title info">Información personal</h1>
+            <div class="input-area grid-profile">
+                
+                <label for="profile-name">Nombre</label>
+                <input class="input-df" type="text" id="profile-name" value="José Daniel" placeholder="Tu nombre">
+                <button type="button" class="edit-btn" title="Modificar nombre">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                </button>
+
+                <label for="profile-email">Correo</label>
+                <input type="email" id="profile-email" value="jose.daniel@example.com" disabled class="disabled-input">
+
+                <div class="action-container">
+                    <button class="save-changes-btn">
+                        Guardar cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="area-create-class">
+        <div class="card create-class">
+            <h1 class="title create-class-title">
+                Crear clase
+            </h1>
+            <form class="input-area grid-create">
+                <div class="field-group">
+                    <label for="classroom-name" class="control-label">Nombre del aula:</label>
+                    <input 
+                    type="text" 
+                    id="classroom-name" 
+                    placeholder="Ej: Aula 102 - Matemáticas" 
+                    autocomplete="off"
+                    required
+                    >
+                </div>
+                
+                <button type="submit" class="generate-btn">
+                    Generar código
+                </button>
+            </form>
+            <div class="created-classrooms-section">
+                <div class="classrooms-list">
+                    <article class="classroom-item">
+                    <div class="classroom-info">
+                        <strong class="classroom-name">Aula 102 - Matemáticas</strong>
+                        <div class="code-badge-container">
+                        <span class="code-label">Código:</span>
+                        <code class="class-code-text">MT84-X2A</code>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="copy-btn" title="Copiar código al portapapeles" aria-label="Copiar código de Aula 102">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy icon-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                        <span>Copiar código</span>
+                    </button>
+                    </article>
+
+                    <article class="classroom-item">
+                    <div class="classroom-info">
+                        <strong class="classroom-name">Aula 402 - Lógica Computacional</strong>
+                        <div class="code-badge-container">
+                        <span class="code-label">Código:</span>
+                        <code class="class-code-text">XF93-LK2</code>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="copy-btn" title="Copiar código al portapapeles" aria-label="Copiar código de Aula 402">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy icon-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                        <span>Copiar código</span>
+                    </button>
+                    </article>
+
+                </div>
+                </div>
+        </div>
+    </section>
+
+    <section class="area-change-pass"> 
+        <div class="card change-pass">
+            <h1 class=" title change-pass">
+                Cambiar contrasenia
+            </h1>
+            <div class="input-area grid6">
+                <label for="current-pass">Contraseña actual</label>
+                <input class="input-df" type="password" id="current-pass" placeholder="Ingresa tu contraseña actual">
+
+                <label for="new-pass">Nueva contraseña</label>
+                <input class="input-df" type="password" id="new-pass" placeholder="Mínimo 6 caracteres">
+
+                <label for="confirm-pass">Confirmar contraseña</label>
+                <input class="input-df" type="password" id="confirm-pass" placeholder="Repite tu nueva contraseña">
+                </div>
+            </div>
+    </section>
+
+    <section class="area-settings-acces">
+        <div class="card settings-acces">
+            <h1 class="title settings-acces">
+                Ajustes de accesibilidad
+            </h1>
+            <div class="input-area grid-accessibility">
+                <label for="toggle-dyslexia">Activar fuente OpenDyslexic</label>
+                <div class="control-container">
+                    <label class="switch-control">
+                    <input  type="checkbox" id="toggle-dyslexia">
+                    <span class="slider"></span>
+                    </label>
+                </div>
+
+                <label for="select-contrast">Modo de Contraste</label>
+                <div class="control-container">
+                    <select id="select-contrast" class="select-control">
+                    <option value="claro" selected>Claro</option>
+                    <option value="oscuro">Oscuro</option>
+                    </select>
+                </div>
+
+                <label for="select-speed">Velocidad del Lector de Voz</label>
+                <div class="control-container">
+                    <select id="select-speed" class="select-control">
+                    <option value="rapido">Rápido</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="lento">Lento</option>
+                    </select>
+                </div>
+
+                <label for="check-animations">Desactivar Animaciones</label>
+                <div class="control-container">
+                    <label class="checkbox-control">
+                    <input type="checkbox" id="check-animations" checked>
+                    <span class="custom-checkbox"></span>
+                    </label>
+                </div>
+
+                <label for="select-font-size">Tamaño de Fuente</label>
+                <div class="control-container">
+                    <select id="select-font-size" class="select-control">
+                    <option value="normal" selected>Normal</option>
+                    <option value="grande">Grande</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>

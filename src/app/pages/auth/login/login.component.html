@@ -1,0 +1,62 @@
+<main class="login-container">
+  <section class="login-card">
+    <h1 class="login-title">TEXT</h1>
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+
+      <div class="input-group">
+        <label for="usuario">Usuario</label>
+        <input 
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Ingrese su email"
+          formControlName="email"
+          [class.error]="emailInvalid"
+          [class.success]="emailValid"
+        >
+        <small class="error-text" *ngIf="emailInvalid">
+          ⚠ Email inválido
+        </small>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Contraseña</label>
+        <input 
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Ingrese su contraseña"
+          formControlName="password"
+          [class.error]="passwordInvalid"
+          [class.success]="passwordValid"
+         
+        >
+        <small class="error-text" *ngIf="passwordInvalid">
+          ⚠ Mínimo 6 caracteres
+        </small>
+      </div>
+
+      <div class="remember-container">
+        <input 
+          type="checkbox"
+          id="rememberPassword"
+          name="rememberPassword"
+        >
+        <label for="rememberPassword">
+          Guardar contraseña
+        </label>
+      </div>
+
+      <div class="action-area">
+            <button type="submit" class="login-button" (click)="onLogin()">
+                Iniciar Sesión
+            </button>
+
+            <button type="button" class="register-button" (click)="goToRegister()">
+                Registrarse
+            </button>
+      </div>
+      
+    </form>
+  </section>
+</main>

@@ -1,0 +1,79 @@
+<main class="student-details-container">
+
+  <header class="header-section" aria-labelledby="main-header-title">
+    <div class="card header-card">
+      <h1 id="main-header-title" class="main-title">
+        Progreso de <span class="dynamic-student-name">José Daniel Ramirez</span>
+      </h1>
+    </div>
+  </header>
+
+  <section class="metrics-section" aria-label="Métricas de rendimiento del estudiante">
+    <div class="card metrics-container-card">
+      <div class="metrics-flex-layout">
+        
+        <article class="mini-metric-card" aria-labelledby="metric-progreso-title">
+          <h2 id="metric-progreso-title" class="metric-label">Progreso total</h2>
+          <p class="metric-value text-accent">85%</p>
+        </article>
+
+        <article class="mini-metric-card" aria-labelledby="metric-desafios-title">
+          <h2 id="metric-desafios-title" class="metric-label">Desafíos completados</h2>
+          <p class="metric-value">12 <span class="metric-subtext">ejercicios resueltos de 15</span></p>
+        </article>
+
+        <article class="mini-metric-card" aria-labelledby="metric-actividad-title">
+          <h2 id="metric-actividad-title" class="metric-label">Última actividad</h2>
+          <p class="metric-value datetime-value">Hace 10 min</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="levels-section" aria-labelledby="levels-section-title">
+    <div class="card table-container-card">
+      
+      <h2 id="levels-section-title" class="table-section-title">Historial de progreso por niveles</h2>
+      
+      <div class="table-responsive-wrapper" tabindex="0" aria-label="Tabla de progreso por niveles. Use las flechas de dirección para desplazarse horizontalmente si es necesario.">
+        <table class="levels-table">
+          <thead>
+            <tr>
+              <th scope="col">Nombre del nivel</th>
+              <th scope="col">Dificultad</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Intentos realizados</th>
+              <th scope="col">Tiempo promedio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong class="level-name">Nivel 1: Conceptos Básicos</strong></td>
+              <td><span class="difficulty-badge difficulty-easy">Fácil</span></td>
+              <td><span class="status-badge status-completed">Completado</span></td>
+              <td><span class="attempts-count">1 intento</span></td>
+              <td><span class="time-value">04:15 min</span></td>
+            </tr>
+            <tr>
+              <td><strong class="level-name">Nivel 2: Bucles y Bucles Anidados</strong></td>
+              <td><span class="difficulty-badge difficulty-medium">Intermedio</span></td>
+              <td><span class="status-badge status-pending">En progreso</span></td>
+              <td><span class="attempts-count">3 intentos</span></td>
+              <td><span class="time-value">12:40 min</span></td>
+            </tr>
+            <tr class="row-attention">
+              <td><strong class="level-name">Nivel 3: Estructuras Complejas</strong></td>
+              <td><span class="difficulty-badge difficulty-hard">Difícil</span></td>
+              <td><span class="status-badge status-alert">Requiere apoyo</span></td>
+              <td><span class="attempts-count">5 intentos</span></td>
+              <td><span class="time-value">22:10 min</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+</main>
