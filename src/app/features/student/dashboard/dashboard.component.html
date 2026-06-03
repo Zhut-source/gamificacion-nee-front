@@ -1,5 +1,35 @@
 <main class="dashboard-container">
-  
+
+  @if (isLoading) {
+    <div class="loading-overlay" [class.fade-out]="isFadingOut" role="status" aria-live="polite">
+      <div class="spinner-container">
+        <div class="fulfilling-square-spinner">
+          <div class="spinner-inner"></div>
+        </div>
+        <p class="help-text">Cargando tus desafíos de aprendizaje...</p>
+      </div>
+    </div>
+  } @else {
+  @if (!currentClass) {
+      <section class="no-class-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; text-align: center; padding: 2rem;" aria-labelledby="no-class-title">
+        
+        <div class="card info" style="max-width: 500px; width: 100%; padding: 2.5rem; border-radius: 16px; box-shadow: var(--shadow-df, 0 4px 6px rgba(0,0,0,0.05));">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gamepad-2" style="color: #6366f1; margin-bottom: 1.5rem;"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="3"/></svg>
+          
+          <h1 id="no-class-title" class="main-title" style="margin-bottom: 1rem; font-size: 1.8rem;">¡Únete a tu clase!</h1>
+          
+          <p class="challenge-description" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
+            Para comenzar a resolver desafíos de programación, fortalecer tu pensamiento lógico y ganar increíbles insignias, necesitas estar vinculado a un aula activa.
+          </p>
+          
+          <button type="button" class="join-btn" style="width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: bold; cursor: pointer;" (click)="goToJoinClass()">
+            Ingresar código de clase
+          </button>
+        </div>
+
+      </section>
+    } @else {
   <section class="progress-section">
     <h1 class="main-title">Listo para el siguiente desafío</h1>
     
@@ -192,5 +222,6 @@
       </div>
     </div>
   </section>
-
+    }
+}
 </main>

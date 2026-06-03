@@ -13,6 +13,7 @@ import { AuthService } from '@core/services/auth.service';
 })
 export class HeaderComponent {
 
+
   isLoggedIn$;
   isDyslexiaFont = false;
   isHighContrast = false;

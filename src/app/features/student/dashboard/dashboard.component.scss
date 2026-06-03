@@ -1,52 +1,133 @@
 .dashboard-container {
-    margin: 0;
-    padding: 3.5rem;
-    background-color: var(--container-dashboard-bg-color);
-    color: var(--container-dashboard-text-color);
-    max-width: 100%;
-    margin: 0;
+  padding: 3.5rem;
+  background-color: var(--container-dashboard-bg-color);
+  color: var(--container-dashboard-text-color);
+  max-width: 100%;
+  margin: 0; // Limpiado el duplicado
 
-    @media (max-width: 700px) {
-      padding: 1.5rem;
-    }
+  @media (max-width: 700px) {
+    padding: 1.5rem;
+  }
 }
 
-.progress-section{
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+
+  &.fade-out {
+    opacity: 0;
+    pointer-events: none; 
+  }
+
+  .spinner-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-content: center;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+
+.main-content-wrapper {
+  &.fade-in {
+    animation: fadeInAnimation 0.4s ease-out forwards;
+  }
+}
+
+@keyframes fadeInAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fulfilling-square-spinner, .fulfilling-square-spinner * {
+  box-sizing: border-box;
+}
+
+.fulfilling-square-spinner {
+  height: 50px;
+  width: 50px;
+  position: relative;
+  border: 4px solid #ff1d5e;
+  animation: fulfilling-square-spinner-animation 2.5s infinite ease;
+}
+
+.fulfilling-square-spinner .spinner-inner {
+  vertical-align: top;
+  display: inline-block;
+  background-color: #ff1d5e;
+  width: 100%;
+  opacity: 1;
+  animation: fulfilling-square-spinner-inner-animation 2.5s infinite ease-in;
+}
+
+.help-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+@keyframes fulfilling-square-spinner-animation {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(180deg); }
+  50% { transform: rotate(180deg); }
+  75% { transform: rotate(360deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fulfilling-square-spinner-inner-animation {
+  0% { height: 0%; }
+  25% { height: 0%; }
+  50% { height: 100%; }
+  75% { height: 100%; }
+  100% { height: 0%; }
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
 }
 
 .section-title {
   color: var(--text-main);
 }
 
-  .main-title {
-    text-align: center;
-  }
+.main-title {
+  text-align: center;
+}
 
 .progress-container {
-    margin-bottom: 3rem;
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 
-    .progress-bar-wrapper {
-      flex: 1;
-      height: 16px;
-      background-color: var(--progress-bg-color);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
+  .progress-bar-wrapper {
+    flex: 1;
+    height: 16px;
+    background-color: var(--progress-bg-color);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
 
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--progress-fill-bg-color));
-      border-radius: 20px;
-      transition: width 0.4s ease-in-out;
-    }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--progress-fill-bg-color); // Corregido: removido el linear-gradient inválido
+    border-radius: 20px;
+    transition: width 0.4s ease-in-out;
+  }
 }
 
 .challenges-section {
@@ -108,7 +189,7 @@
       padding: 0.2rem;
 
       &:hover {
-        background:var(--button-speaker-bg-color-hover);
+        background: var(--button-speaker-bg-color-hover);
         color: var(--button-speaker-text-color-hover);
       }
     }
@@ -157,7 +238,6 @@
     .speaker-button { display: none; } 
   }
 }
-
 
 .badges-section {
   margin-bottom: 3.5rem;
