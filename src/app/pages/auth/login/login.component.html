@@ -1,10 +1,11 @@
 <main class="login-container">
   <section class="login-card">
     <h1 class="login-title">TEXT</h1>
+
     <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
 
       <div class="input-group">
-        <label for="usuario">Usuario</label>
+        <label for="email">Usuario</label>
         <input 
           type="email"
           id="email"
@@ -13,10 +14,14 @@
           formControlName="email"
           [class.error]="emailInvalid"
           [class.success]="emailValid"
+          [attr.aria-invalid]="emailInvalid ? 'true' : 'false'"
+          aria-describedby="email-error"
         >
-        <small class="error-text" *ngIf="emailInvalid">
-          ⚠ Email inválido
-        </small>
+        <div id="email-error" aria-live="polite" class="error-container">
+          <small class="error-text" *ngIf="emailInvalid">
+            ⚠ Email inválido
+          </small>
+        </div>
       </div>
 
       <div class="input-group">
@@ -29,18 +34,22 @@
           formControlName="password"
           [class.error]="passwordInvalid"
           [class.success]="passwordValid"
+          [attr.aria-invalid]="passwordInvalid ? 'true' : 'false'"
+          aria-describedby="password-error"
          
         >
-        <small class="error-text" *ngIf="passwordInvalid">
-          ⚠ Mínimo 6 caracteres
-        </small>
+        <div id="password-error" aria-live="polite" class="error-container">
+          <small class="error-text" *ngIf="passwordInvalid">
+            ⚠ Mínimo 6 caracteres
+          </small>
+        </div>
       </div>
 
       <div class="remember-container">
         <input 
           type="checkbox"
           id="rememberPassword"
-          name="rememberPassword"
+          formControlName="remember"
         >
         <label for="rememberPassword">
           Guardar contraseña
@@ -48,11 +57,18 @@
       </div>
 
       <div class="action-area">
-            <button type="submit" class="login-button" (click)="onLogin()">
-                Iniciar Sesión
+            <button type="submit" class="login-button" [disabled]="loginForm.invalid || isLoading">
+              <ng-container *ngIf="!isLoading">Iniciar Sesión</ng-container>
+              <ng-container *ngIf="isLoading">
+                <div class="looping-rhombuses-spinner">
+                  <div class="rhombus"></div>
+                  <div class="rhombus"></div>
+                  <div class="rhombus"></div>
+                </div>
+              </ng-container>
             </button>
 
-            <button type="button" class="register-button" (click)="goToRegister()">
+            <button type="button" class="register-button" (click)="goToRegister()" [disabled]="isLoading">
                 Registrarse
             </button>
       </div>

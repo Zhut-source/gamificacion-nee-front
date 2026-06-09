@@ -18,11 +18,15 @@
             placeholder="Ingrese su nombre"
             [class.error]="nameInvalid"
             [class.success]="nameValid"
+            [attr.aria-invalid]="nameInvalid ? 'true' : 'false'"
+            aria-describedby="name-error"
             >
 
-            <small class="error-text" *ngIf="nameInvalid">
-            ⚠ Nombre requerido
-            </small>
+            <div id="name-error" aria-live="polite" class="error-container">
+              <small class="error-text" *ngIf="nameInvalid">
+                ⚠ Nombre requerido (solo letras y espacios)
+              </small>
+            </div>
         </div>
 
         <div class="input-group">
@@ -35,11 +39,15 @@
             placeholder="Ingrese su correo electrónico"
             [class.error]="emailInvalid"
             [class.success]="emailValid"
+            [attr.aria-invalid]="emailInvalid ? 'true' : 'false'"
+            aria-describedby="register-email-error"
             >
 
-            <small class="error-text" *ngIf="emailInvalid">
-            ⚠ Email inválido
-            </small>
+            <div id="register-email-error" aria-live="polite" class="error-container">
+              <small class="error-text" *ngIf="emailInvalid">
+                ⚠ Email inválido
+              </small>
+            </div>
         </div>
 
         <div class="input-group">
@@ -52,11 +60,15 @@
             placeholder="Ingrese su contraseña"
             [class.error]="passwordInvalid"
             [class.success]="passwordValid"
+            [attr.aria-invalid]="passwordInvalid ? 'true' : 'false'"
+            aria-describedby="register-password-error"
             >
 
-            <small class="error-text" *ngIf="passwordInvalid">
-            ⚠ Mínimo 6 caracteres
-            </small>
+            <div id="register-password-error" aria-live="polite" class="error-container">
+              <small class="error-text" *ngIf="passwordInvalid">
+                ⚠ Mínimo 6 caracteres
+              </small>
+            </div>
         </div>
 
         <div class="input-group">
@@ -68,35 +80,54 @@
             placeholder="Repita su contraseña"
             [class.error]="passwordMismatch"
             [class.success]="confirmPasswordValid"
+            [attr.aria-invalid]="passwordMismatch ? 'true' : 'false'"
+            aria-describedby="confirm-error"
             >
 
-            <small class="error-text" *ngIf="passwordMismatch">
-            ⚠ Las contraseñas no coinciden
-            </small>
-        </div>
-
-        <label>¿Cuál es tu rol?</label>
-
-        <div class="role-options"> 
-            <div class="role-item"> 
-                <input type="checkbox" id="maestro" name="maestro" [checked]="registerForm.get('role')?.value === 'maestro'"
-  (change)="selectRole('maestro')"> 
-                <label for="maestro"> Soy maestro </label> 
-            </div> 
-            <div class="role-item"> 
-                <input type="checkbox" id="estudainte" name="estudiante" [checked]="registerForm.get('role')?.value === 'estudiante'"
-      (change)="selectRole('estudiante')"> 
-                <label for="estudiante"> Soy estudiante </label> 
+            <div id="confirm-error" aria-live="polite" class="error-container">
+              <small class="error-text" *ngIf="passwordMismatch">
+                ⚠ Las contraseñas no coinciden
+              </small>
             </div>
         </div>
-        <small class="error-text" *ngIf="roleInvalid">
-            ⚠ Seleccione un rol
-        </small> 
-        
+
+        <fieldset class="role-fieldset">
+          <legend class="role-legend">¿Cuál es tu rol?</legend>
+            <div class="role-options"> 
+                <div class="role-item"> 
+                    <input 
+                        type="checkbox" 
+                        id="maestro" 
+                        name="maestro" 
+                        [checked]="registerForm.get('role')?.value === 'maestro'"
+                        (change)="selectRole('maestro')"
+                    > 
+                    <label for="maestro"> Soy maestro </label> 
+                </div> 
+                <div class="role-item"> 
+                    <input 
+                        type="checkbox" 
+                        id="estudainte" 
+                        name="estudiante" 
+                        [checked]="registerForm.get('role')?.value === 'estudiante'"
+                        (change)="selectRole('estudiante')"
+                    > 
+                    <label for="estudiante"> Soy estudiante </label> 
+                </div>
+            </div>
+            <div id="role-error" aria-live="polite" class="error-container">
+                <small class="error-text" *ngIf="roleInvalid">
+                    ⚠ Seleccione un rol
+                </small> 
+            </div>
+        </fieldset>
 
         <div class="action-area">
-            <button type="submit" class="crear-button">
-            Crear cuenta
+            <button type="submit" class="crear-button" [disabled]="registerForm.invalid || passwordMismatch || isLoading">
+              <ng-container *ngIf="!isLoading">Crear cuenta</ng-container>
+              <ng-container *ngIf="isLoading">
+                <div class="btn-spinner" role="status" aria-label="Registrando cuenta"></div>
+              </ng-container>
             </button>
         </div>
 

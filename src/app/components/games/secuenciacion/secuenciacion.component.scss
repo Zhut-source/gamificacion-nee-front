@@ -1,0 +1,214 @@
+.game-environment {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 600px; // Evita que se haga gigante en pantallas grandes
+  margin: 0 auto;
+}
+
+// 1. EL TABLERO (MATRIZ)
+.board-container {
+  background-color: #e0e0e0;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+
+  .game-grid {
+    display: grid;
+    gap: 4px; // Espacio entre las baldosas
+    // El grid-template-columns lo inyectamos dinámicamente desde el HTML
+  }
+
+  .grid-cell {
+    aspect-ratio: 1 / 1; // Obliga a que sean cuadrados perfectos
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem; // Tamaño del emoji del robot/bandera[cite: 18]
+    position: relative;
+    transition: background-color 0.3s, border 0.3s; // Añadido border a la transición[cite: 18]
+
+    // Tipos de celda[cite: 18]
+    &.cell-empty, &.cell-start {
+      background-color: #ffffff; // Baldosa de piso[cite: 18]
+      border-bottom: 4px solid #cccccc; // Efecto 3D[cite: 18]
+    }
+
+    &.cell-goal {
+      background-color: #d1fae5; // Baldosa de meta (verde claro)[cite: 18]
+      border-bottom: 4px solid #10b981;
+    }
+
+    &.cell-wall {
+      background-color: #4b5563; // Baldosa de muro (gris oscuro)[cite: 18]
+      border-bottom: 4px solid #1f2937;
+      border-radius: 4px;
+      transform: translateY(-4px);
+    }
+
+    // ¡ESTO ESTABA FUERA DE LUGAR! Ahora se encuentra correctamente anidado aquí
+    &.cell-hint {
+      background-color: #fef08a !important; // Amarillo suave[cite: 18]
+      border: 2px dashed #eab308 !important; // Borde punteado[cite: 18]
+      border-bottom: 2px dashed #eab308 !important; // Sobrescribe el efecto 3D para la pista
+      
+      // Animación de pulso continuo
+      animation: pulseHint 1s infinite alternate ease-in-out;
+    }
+
+    // El robot debe verse por encima del piso[cite: 18]
+    .player-character {
+      position: absolute;
+      z-index: 10;
+      animation: bounce 0.5s ease; // Animar cuando cae en una casilla[cite: 18]
+    }
+  }
+}
+
+@keyframes bounce {
+  0% { transform: translateY(-10px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
+
+// 2. LA SECUENCIA
+.sequence-timeline {
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 12px;
+  border: 2px solid #cbd5e1;
+
+  .timeline-title {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .sequence-track {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: 50px;
+    align-items: center;
+
+    .empty-text {
+      color: #94a3b8;
+      font-style: italic;
+    }
+
+    .command-block {
+      background-color: #f1f5f9;
+      border: 2px solid #94a3b8;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover, &:focus {
+        background-color: #fca5a5; // Rojo suave al pasar el mouse para borrar
+        border-color: #ef4444;
+        outline: none;
+      }
+    }
+  }
+}
+
+// 3. PANEL DE CONTROLES
+.control-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  .direction-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+
+    .horizontal-btns {
+      display: flex;
+      gap: 5px;
+    }
+
+    .dir-btn {
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+      background-color: #3b82f6; // Azul
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      border-bottom: 4px solid #2563eb;
+      
+      &:active {
+        transform: translateY(4px); // Efecto de pulsar el botón
+        border-bottom: 0;
+      }
+      &:disabled {
+        background-color: #93c5fd;
+        border-bottom-color: #60a5fa;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+
+    button {
+      padding: 15px 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+
+      &.run-btn {
+        background-color: #10b981; // Verde
+        font-size: 1.1rem;
+        border-bottom: 4px solid #059669;
+      }
+      &.reset-btn {
+        background-color: #f59e0b; // Naranja
+        border-bottom: 4px solid #d97706;
+      }
+
+      &:active {
+        transform: translateY(4px);
+        border-bottom: 0;
+      }
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  @keyframes pulseHint {
+  from {
+    background-color: #fef08a;
+    box-shadow: 0 0 4px #eab308;
+  }
+  to {
+    background-color: #fef9c3; // Un amarillo aún más claro y brillante
+    box-shadow: 0 0 12px #eab308;
+  }
+}
+
+  // Adaptación de pista para el modo Alto Contraste global
+  body.high-contrast {
+    .grid-cell.cell-hint {
+      background-color: #000000 !important;
+      border: 3px dashed #FFD700 !important; // Punteado amarillo
+    }
+  }
+
+}

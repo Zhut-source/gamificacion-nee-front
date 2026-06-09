@@ -29,6 +29,19 @@
         flex-direction: row;
         gap: 16px;
     }
+
+    @media (max-width: 800px) {
+
+        padding: 0 0.5rem;
+
+        .user-nav{
+            gap:8px;
+        }
+        
+        span{
+            display: none;
+        }
+    }
 }
 
 .header-content.private-view {

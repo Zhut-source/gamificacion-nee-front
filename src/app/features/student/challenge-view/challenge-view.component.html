@@ -1,13 +1,6 @@
 <div class="challenge-workspace-wrapper">
   
   <main class="challenge-main-container">
-    
-    <header class="challenge-header" aria-labelledby="challenge-title">
-      <div class="header-titles">
-        <span class="topic-indicator">Tema: Secuenciación</span>
-        <h1 id="challenge-title" class="challenge-dynamic-title">El Laberinto de Algoritmos</h1>
-      </div>
-    </header>
 
     <div class="challenge-body-layout">
       
@@ -15,43 +8,58 @@
         <div class="panel-card-content">
           
           <header class="level-header">
-            <h2 id="level-title" class="level-current-title">Nivel 3: Bucles Simples</h2>
+            <h2 id="level-title" class="level-current-title">Nivel {{ challengeId }}: {{ challengeData?.nombre || 'Cargando Nivel...' }}</h2>
             <p class="level-description">
-              Ayuda al personaje a llegar a la meta utilizando el menor número de bloques posibles.
+              {{ challengeData?.descripcion_juego || 'Cargando descripción...' }}
             </p>
           </header>
 
           <div class="level-objectives" aria-label="Objetivos del nivel">
             <span class="objectives-label">Objetivo:</span>
-            <ul class="objectives-list">
-              <li>Repetir la acción de avanzar 3 veces.</li>
-              <li>Evitar los obstáculos del camino.</li>
+             <ul class="objectives-list">
+              @for (obj of challengeData?.objetivos; track $index) {
+                <li>{{ obj }}</li>
+              }
             </ul>
           </div>
 
           <div class="difficulty-selection-box">
-            <label for="workspace-difficulty-select" class="control-label-sm">Dificultad:</label>
-            <select id="workspace-difficulty-select" class="select-control">
-              <option value="normal">Normal</option>
-              <option value="medio">Medio</option>
-              <option value="dificil">Difícil</option>
-            </select>
+            <label class="control-label-sm">Dificultad actual:</label>
+            
+            <div class="diff-buttons-group">
+              <button class="diff-btn" 
+                      [disabled]="!canPlayDifficulty('easy')" 
+                      [class.active]="currentDifficulty === 'easy'"
+                      (click)="setDifficulty('easy')">Fácil</button>
+
+              <button class="diff-btn" 
+                      [disabled]="!canPlayDifficulty('medium')" 
+                      [class.active]="currentDifficulty === 'medium'"
+                      (click)="setDifficulty('medium')">Medio</button>
+
+              <button class="diff-btn" 
+                      [disabled]="!canPlayDifficulty('hard')" 
+                      [class.active]="currentDifficulty === 'hard'"
+                      (click)="setDifficulty('hard')">Difícil</button>
+            </div>
+            
+            @if (!isLevelFullyCompleted) {
+              <small style="color:#7A7A7A; margin-top: 8px; display:block;">
+                Supera la dificultad actual para desbloquear la siguiente.
+              </small>
+            }
           </div>
+
 
           <footer class="controls-utility-footer">
             <div class="accessibility-action-group">
-              <button type="button" class="utility-btn btn-tts" title="Escuchar descripción en voz alta" aria-label="Leer texto en voz alta">
+              <button type="button" class="utility-btn btn-tts" title="Escuchar en voz alta">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
               </button>
               
-              <button type="button" class="utility-btn btn-help" title="Ver pista o ayuda del nivel" aria-label="Mostrar pista del desafío">
+              <button type="button" class="utility-btn btn-help" title="Ver pista o ayuda" (click)="usarPista()">
                 <span>Pista</span>
               </button>
-            </div>
-
-            <div class="discreet-timer-box" aria-label="Tiempo transcurrido">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock icon-timer"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-              <span class="timer-digits">01:45</span>
             </div>
           </footer>
 
@@ -61,25 +69,33 @@
       <section class="panel-right-game" aria-label="Contenedor de actividades">
         <div class="game-runtime-container">
 
-            <div class="intro-start-screen">
-            <button type="button" class="start-challenge-btn">
-                <span>Iniciar Introducción</span>
-            </button>
-            </div>
+          @if (currentView === 'intro') {
+              <div class="intro-start-screen">
+                <button type="button" class="start-challenge-btn" (click)="startVideo()">
+                    <span>Iniciar Introducción</span>
+                </button>
+              </div>
+            }
 
-            <div class="video-player-screen">
-            <video controls class="challenge-intro-video">
-                <source src="assets/videos/secuenciacion-intro.mp4" type="video/mp4">
-                Tu navegador no soporta la reproducción de videos.
-            </video>
-            </div>
+            @if (currentView === 'video') {
+              <div class="video-player-screen">
+                <video controls autoplay class="challenge-intro-video" (ended)="startGame()">
+                    <source src="assets/videos/videoplaybackweb.mp4" type="video/mp4">
+                    Tu navegador no soporta la reproducción de videos.
+                </video>
+                <button class="skip-btn" style=" top: 10px; right: 10px; background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;" (click)="startGame()">Saltar Video</button>
+              </div>
+            }
 
-            <div class="game-placeholder-canvas">
-            <div class="placeholder-graphic">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gamepad-2"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x2="2" y2="6" rx="3"/></svg>
-                <span class="canvas-text">Área del juego</span>
-            </div>
-            </div>
+            @if (currentView === 'game') {
+              <div class="game-placeholder-canvas" style="padding: 1rem;">
+                 <!-- INYECCIÓN DEL HIJO CON BINDINGS -->
+                 <app-secuenciacion 
+                    [difficultyLevel]="currentDifficulty"
+                    (gameResult)="onGameResult($event)">
+                 </app-secuenciacion>
+              </div>
+            }
 
         </div>
         </section>
@@ -87,18 +103,24 @@
     </div>
   </main>
 
-  <footer class="system-feedback-banner" role="status" aria-live="polite">
-    <div class="feedback-banner-content">
-      
-      <div class="feedback-message-state status-success-layout">
-        <span class="feedback-icon">🎉</span>
-        <div class="feedback-text-group">
-          <strong class="feedback-headline">¡Excelente trabajo!</strong>
-          <span class="feedback-subline">Has completado el bucle perfectamente. +50 puntos de experiencia.</span>
-        </div>
-      </div>
+  @if (feedback.show) {
+    <footer class="system-feedback-banner" role="status" aria-live="polite">
+      <div class="feedback-banner-content">
+        
+        <div class="feedback-message-state" 
+             [ngClass]="feedback.status === 'success' ? 'status-success-layout' : 'status-error-layout'">
+          
+          <span class="feedback-icon">{{ feedback.status === 'success' ? '🎉' : '💡' }}</span>
+          
+          <div class="feedback-text-group">
+            <strong class="feedback-headline">{{ feedback.title }}</strong>
+            <span class="feedback-subline">{{ feedback.message }}</span>
+          </div>
 
+        </div>
+  
       </div>
-  </footer>
+    </footer>
+  }
 
 </div>

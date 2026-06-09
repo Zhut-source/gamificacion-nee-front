@@ -1,5 +1,33 @@
 <main class="teacher-dashboard">
-
+@if (isLoading) {
+    <div class="loading-overlay" [class.fade-out]="isFadingOut" role="status" aria-live="polite">
+      <div class="spinner-container">
+        <div class="fulfilling-square-spinner">
+          <div class="spinner-inner"></div>
+        </div>
+        <p class="help-text">Cargando tus desafíos de aprendizaje...</p>
+      </div>
+    </div>
+  } @else {
+  @if (classrooms.length === 0) {
+    <section class="no-class-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center; padding: 2rem;" aria-labelledby="no-class-title">
+        
+        <div class="card info" style="max-width: 500px; width: 100%; padding: 2.5rem; border-radius: 16px; box-shadow: var(--shadow-df, 0 4px 6px rgba(0,0,0,0.05)); background-color: var(--card-bg-color); border: 2px solid var(--card-border-color);">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation" style="color: #6366f1; margin-bottom: 1.5rem;"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>
+          
+          <h1 id="no-class-title" class="main-title" style="margin-bottom: 1rem; font-size: 1.8rem; color: var(--text-main);">¡Crea tu primera clase!</h1>
+          
+          <p class="challenge-description" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem; color: var(--container-dashboard-text-color); text-align: justify;">
+            Para comenzar a gestionar tus alumnos, revisar métricas de rendimiento en tiempo real, ver progresos cognitivos y asignar desafíos de programación, primero debes dar de alta un aula virtual.
+          </p>
+          
+          <button type="button" class="join-btn" style="width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: bold; cursor: pointer; background-color: var(--button-bg-color-save-changes); color: var(--button-text-color-save-changes); border: none; border-radius: 8px;" (click)="goToCreateClass()">
+            Configurar un aula nueva
+          </button>
+        </div>
+      </section>
+    } @else {
   <section class="classroom-selector-section" aria-labelledby="classroom-selector-title">
     <div class="card selector-card">
       <div class="selector-content">
@@ -7,9 +35,10 @@
           <label for="dashboard-classroom-select" id="classroom-selector-title" class="selector-label">
             Aula activa
           </label>
-          <select id="dashboard-classroom-select" class="select-control">
-            <option value="aula-102">Aula 102 - Matemáticas</option>
-            <option value="aula-402">Aula 402 - Lógica Computacional</option>
+          <select id="dashboard-classroom-select" class="select-control" (change)="onAulaChange($event)">
+            @for (classroom of classrooms; track classroom.id) {
+                  <option [value]="classroom.id">{{ classroom.name }} — Código: {{ classroom.code }}</option>
+                }
           </select>
         </div>
         
@@ -17,26 +46,26 @@
     </div>
   </section>
 
-  <section class="metrics-grid" aria-label="Métricas de rendimiento del aula">
+  <section class="metrics-grid" aria-label="Métricas de rendimiento del aula" *ngIf="metrics">
     
     <article class="metric-card">
       <div class="metric-info">
         <h2 class="metric-title">Total de estudiantes</h2>
-        <p class="metric-value">32</p>
+        <p class="metric-value">{{ metrics.kpis.totalEstudiantes }}</p>
       </div>
     </article>
 
     <article class="metric-card">
       <div class="metric-info">
         <h2 class="metric-title">Progreso promedio</h2>
-        <p class="metric-value">74%</p>
+        <p class="metric-value">{{ metrics.kpis.progresoPromedio }}%</p>
       </div>
     </article>
 
     <article class="metric-card metric-alert">
       <div class="metric-info">
         <h2 class="metric-title">Estudiantes con dificultades</h2>
-        <p class="metric-value">5</p>
+        <p class="metric-value">{{ metrics.kpis.estudiantesConDificultad }}</p>
       </div>
     </article>
 
@@ -82,41 +111,41 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td><strong class="student-name">José Daniel Ramirez</strong></td>
-              <td><span class="student-email">j.ramirezmail.com</span></td>
-              <td>
-                <div class="table-progress-wrapper">
-                  <span class="progress-percentage">85%</span>
-                </div>
-              </td>
-              <td><span class="activity-date">Hace 10 min</span></td>
-              <td>
-                <button type="button" class="action-btn" aria-label="Ver perfil y detalles de José Daniel Ramirez">
-                  Ver detalles
-                </button>
-              </td>
-            </tr>
-            <tr class="row-alert">
-              <td><strong class="student-name">María Carmen Luz</strong></td>
-              <td><span class="student-email">m.luzmail.com</span></td>
-              <td>
-                <div class="table-progress-wrapper">
-                  <span class="progress-percentage">42%</span>
-                </div>
-              </td>
-              <td><span class="activity-date">Ayer</span></td>
-              <td>
-                <button type="button" class="action-btn" aria-label="Ver perfil y detalles de María Carmen Luz">
-                  Ver detalles
-                </button>
-              </td>
-            </tr>
+            @for (student of metrics?.estudiantes; track student.id) {
+              <tr [class.row-alert]="student.alerta">
+                <td><strong class="student-name">{{ student.name }}</strong></td>
+                <td><span class="student-email">{{ student.email }}</span></td>
+                <td>
+                  <div class="table-progress-wrapper">
+                    <span class="progress-percentage">{{ student.progreso }}%</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="activity-date">
+                    <!-- Podrías usar el pipe de Angular date: 'short' aquí -->
+                    {{ student.ultima_actividad ? (student.ultima_actividad | date:'short') : 'Sin actividad' }}
+                  </span>
+                </td>
+                <td>
+                  <button type="button" class="action-btn" (click)="viewStudentDetails(student.id)">
+                    Ver detalles
+                  </button>
+                </td>
+              </tr>
+            }
+
+            <!-- Mensaje por si el aula no tiene estudiantes -->
+            @if (metrics?.estudiantes?.length === 0) {
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">Aún no hay estudiantes unidos a esta aula.</td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
 
     </div>
   </section>
-
+  }
+}
 </main>

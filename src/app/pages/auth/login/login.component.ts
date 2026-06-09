@@ -1,9 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 
+interface LoginPayload {
+  email: string | null;
+  password: string | null;
+}
 
 @Component({
   selector: 'app-login',
@@ -12,20 +16,35 @@ import { AuthService } from '@core/services/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-     constructor(private router: Router, private authService: AuthService) {}
+    isLoading = false;
 
     loginForm = new FormGroup({
       email: new FormControl('', [
         Validators.required,
-        Validators.email
+        Validators.email,
+        Validators.pattern(/^[^'"]*$/)
       ]),
       password: new FormControl('', [
         Validators.required,
         Validators.minLength(6)
-      ])
+      ]),
+      remember: new FormControl(false)
     });
+
+    constructor(private router: Router, private authService: AuthService) {}
+
+    ngOnInit(): void {
+      // Al cargar, verificamos si existe un correo guardado previamente
+      const savedEmail = localStorage.getItem('remembered_email');
+      if (savedEmail) {
+        this.loginForm.patchValue({
+          email: savedEmail,
+          remember: true
+        });
+      }
+    }
 
     get emailInvalid() {
       const c = this.loginForm.get('email');
@@ -47,32 +66,42 @@ export class LoginComponent {
       return c?.touched && c.valid;
     }
 
-    onLogin() {
+    onLogin(): void {
       if (this.loginForm.invalid) {
         this.loginForm.markAllAsTouched();
         return;
       }
 
+      this.isLoading = true;
+      const emailValue = this.loginForm.value.email ?? '';
+
+      // Guardar o destruir el correo según la elección del checkbox
+      if (this.loginForm.value.remember) {
+        localStorage.setItem('remembered_email', emailValue);
+      } else {
+        localStorage.removeItem('remembered_email');
+      }
+
       const loginData = {
-        email: this.loginForm.value.email,
-        password: this.loginForm.value.password
+        email: emailValue,
+        password: this.loginForm.value.password ?? ''
       };
 
       this.authService.login(loginData).subscribe({
         next: (response: any) => {
-          console.log('1. Respuesta del backend:', response);
-          console.log('2. El rol del usuario es:', response.user.role); 
-          if (response.user.role === 'maestro') {
-            console.log('3. Navegando a maestro...');
+          if (response?.user?.role === 'maestro') {
              this.router.navigate(['/teacher/dashboard']); 
           } else {
-            console.log('3. Navegando a estudiante...');
              this.router.navigate(['/student/dashboard']); 
           }
         },
         error: (err) => {
           console.error(err);
-          alert('Credenciales incorrectas');
+          alert(err.error?.message || 'Credenciales incorrectas');
+          this.isLoading = false;
+        },
+        complete: () => {
+          this.isLoading = false;
         }
       });
     }

@@ -12,12 +12,13 @@ import { ProfileComponent as TeacherProfileComponent } from '@features/teacher/p
 
 import { roleGuard } from '@core/guards/role.guard';
 import { StudentDetailsComponent } from '@features/teacher/student-details/student-details.component';
+import { publicGuard } from '@core/guards/public.guard';
 
 
 
 export const routes: Routes = [
 
-    { path: '', component: PublicLayoutComponent, children: 
+    { path: '', component: PublicLayoutComponent, canActivate:[publicGuard], children: 
         [
             { path: '', component: LandingComponent },
             { path: 'login', component: LoginComponent },
@@ -28,14 +29,14 @@ export const routes: Routes = [
         [
             { path: 'dashboard', component: StudentDashboardComponent },
             { path: 'profile', component: StudentProfileComponent},
-            { path: 'challenge-view', component: ChallengeViewComponent}
+            { path: 'challenge-view/:id', component: ChallengeViewComponent }
         ]
     },
     { path: 'teacher', component: PrivateLayoutComponent, canActivate: [roleGuard], data: { roles: ['maestro'] }, children: 
         [
             { path: 'dashboard', component: TeacherDashboardComponent },
             { path: 'profile', component: TeacherProfileComponent},
-            { path: 'student-details', component: StudentDetailsComponent}
+            { path: 'student-details/:id', component: StudentDetailsComponent}
         ]
     },
     { path: '**', redirectTo: '', pathMatch: 'full' }

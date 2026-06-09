@@ -1,0 +1,83 @@
+<div class="game-environment">
+  
+  <!-- 1. EL TABLERO (MATRIZ) -->
+  <div class="board-container">
+    <!-- Usamos CSS Grid dinámico basado en gridSize -->
+    <div class="game-grid" [style.grid-template-columns]="'repeat(' + gridSize + ', 1fr)'">
+      
+      <!-- Iterar Filas -->
+      @for (row of grid; track $index) {
+        <!-- Iterar Columnas (Celdas) -->
+        @for (cell of row; track $index) {
+          
+          <div class="grid-cell" [class]="'cell-' + cell.type" [class.cell-hint]="cell.isHint">
+            
+            <!-- Renderizar al personaje si su posición coincide con esta celda -->
+            @if (playerPosition.x === cell.x && playerPosition.y === cell.y) {
+              <div class="player-character">🤖</div>
+            }
+            
+            <!-- Renderizar Meta -->
+            @if (cell.type === 'goal') {
+              <div class="goal-indicator">🚩</div>
+            }
+            
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- 2. LA SECUENCIA (Línea de comandos) -->
+  <div class="sequence-timeline" aria-label="Tu secuencia de instrucciones">
+    <p class="timeline-title">Tu Secuencia (Doble clic para borrar):</p>
+    
+    <div class="sequence-track">
+      @if (playerSequence.length === 0) {
+        <span class="empty-text">Añade comandos para comenzar...</span>
+      }
+
+      @for (cmd of playerSequence; track $index) {
+        <!-- Accesibilidad: tabindex para que sea focuseable con teclado -->
+        <button 
+            class="command-block" 
+            tabindex="0"
+            (dblclick)="removeCommand($index)"
+            (keydown.enter)="removeCommand($index)"
+            title="Doble clic o doble Enter para eliminar"
+            [attr.aria-label]="'Comando ' + cmd + ' en posición ' + ($index + 1)">
+          
+          @if (cmd === 'UP') { ⬆️ }
+          @if (cmd === 'DOWN') { ⬇️ }
+          @if (cmd === 'LEFT') { ⬅️ }
+          @if (cmd === 'RIGHT') { ➡️ }
+
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- 3. PANEL DE CONTROLES (Botones de acción) -->
+  <div class="control-panel">
+    
+    <div class="direction-buttons">
+      <button class="dir-btn" (click)="addCommand('UP')" [disabled]="isPlaying" aria-label="Mover arriba">⬆️</button>
+      <div class="horizontal-btns">
+        <button class="dir-btn" (click)="addCommand('LEFT')" [disabled]="isPlaying" aria-label="Mover izquierda">⬅️</button>
+        <button class="dir-btn" (click)="addCommand('DOWN')" [disabled]="isPlaying" aria-label="Mover abajo">⬇️</button>
+        <button class="dir-btn" (click)="addCommand('RIGHT')" [disabled]="isPlaying" aria-label="Mover derecha">➡️</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="run-btn" (click)="runSequence()" [disabled]="isPlaying || playerSequence.length === 0">
+        {{ isPlaying ? 'Ejecutando...' : '▶ PROBAR CÓDIGO' }}
+      </button>
+      <button class="reset-btn" (click)="initGame(difficulty)" [disabled]="isPlaying">
+        🔄 Reiniciar Nivel
+      </button>
+    </div>
+
+  </div>
+
+</div>

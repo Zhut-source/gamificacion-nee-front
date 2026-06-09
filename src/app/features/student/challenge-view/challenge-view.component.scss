@@ -205,7 +205,19 @@
 // 2.2 PANEL DERECHO: LIENZO DE JUEGO (ÁREA EXPANSIVA)
 // --------------------------------------------------------------------------
 .panel-right-game {
-  // ... tu configuración actual se mantiene ...
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+
+  .game-runtime-container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
 
   // Pantalla de Inicio (Estado 1)
   .intro-start-screen {
@@ -233,6 +245,8 @@
         outline: none;
       }
     }
+
+
   }
 
   // Pantalla del Video (Estado 2)
@@ -352,6 +366,7 @@ body.high-contrast {
   }
 
   .panel-right-game .game-runtime-container {
+
     background-color: #000000 !important;
     border: 2px solid #FFFFFF !important;
     
@@ -421,5 +436,60 @@ body.high-contrast {
   
   .challenge-header .challenge-dynamic-title {
     font-size: 1.5rem; // Escala visual armónica compacta
+  }
+}
+
+// Animación de destello para el contenedor de dificultad
+.highlight-anim {
+  animation: flashHighlight 1.5s ease-in-out;
+}
+
+@keyframes flashHighlight {
+  0% { background-color: transparent; }
+  20% { background-color: rgba(14, 185, 222, 0.3); border-radius: 8px; padding: 5px; } // Usa tu color --accent
+  100% { background-color: transparent; padding: 0;}
+}
+
+// Estilos dinámicos extra para el footer de error
+.status-error-layout {
+  background-color: #FEF2F2 !important;
+  border: 1px solid #DC2626 !important;
+  color: #991B1B !important;
+}
+
+// Estilos para los nuevos botones de dificultad
+.diff-buttons-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+
+  .diff-btn {
+    flex: 1;
+    padding: 10px 5px;
+    border-radius: 8px;
+    border: 2px solid var(--input-border-color);
+    background-color: transparent;
+    color: var(--label-text-color);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background-color: #f1f5f9;
+    }
+
+    &:not(:disabled):hover {
+      border-color: var(--accent);
+    }
+
+    &.active {
+      background-color: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      transform: scale(1.05);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
   }
 }

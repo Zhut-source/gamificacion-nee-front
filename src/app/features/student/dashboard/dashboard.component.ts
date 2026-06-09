@@ -3,7 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 import { ClassroomService, StudentClassStatus } from '@core/services/classroom.service';
+import { ProgressService } from '@core/services/progress.service';
 import { forkJoin, timer } from 'rxjs';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -20,9 +22,12 @@ export class DashboardComponent implements OnInit {
   isFadingOut: boolean = false;
   progressValue: number = 60;
 
+  challenges: any[] = [];
+
   constructor(
     private authService: AuthService,
     private classroomService: ClassroomService,
+    private progressService: ProgressService,
     private router: Router
   ) {}
 
@@ -45,7 +50,9 @@ export class DashboardComponent implements OnInit {
       next: ({ aula }) => {
         this.currentClass = aula;
         
-        // 1. Activamos la animación de salida en el CSS
+        if (aula) {
+          this.loadChallenges();
+        }
         this.isFadingOut = true; 
         
         // 2. Esperamos a que termine el fade-out (300ms) antes de destruir el nodo del DOM
@@ -60,6 +67,26 @@ export class DashboardComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  loadChallenges() {
+    this.progressService.getStudentChallenges(this.user.id).subscribe({
+      next: (data) => {
+        this.challenges = data;
+        // Opcional: Calcular el porcentaje de la barra (ej. completados / 5 * 100)
+        const completados = this.challenges.filter(c => c.status === 'completed').length;
+        this.progressValue = (completados / this.challenges.length) * 100;
+      }
+    });
+  }
+
+  goToChallenge(challenge: any) {
+    if (challenge.status === 'locked') {
+      alert('Debes completar los niveles anteriores primero.');
+      return;
+    }
+    // Si está disponible o completado, lo dejamos entrar
+    this.router.navigate(['/student/challenge-view', challenge.id]);
   }
 
   /**

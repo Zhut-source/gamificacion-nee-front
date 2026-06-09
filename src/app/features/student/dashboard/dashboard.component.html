@@ -36,9 +36,9 @@
     <div class="progress-container">
       <div class="progress-bar-wrapper" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
 
-        <div class="progress-bar-fill" style="width: 60%;"></div>
+        <div class="progress-bar-fill" [style.width.%]="progressValue"></div>
       </div>
-      <span class="progress-percentage">60% Completado</span>
+      <span class="progress-percentage">{{ progressValue | number:'1.0-0' }}% Completado</span>
     </div>
   </section>
     
@@ -47,12 +47,17 @@
     <h2 id="challenges-title" class="section-title">Tus Desafíos</h2>
     
     <div class="challenges-grid">
-      <!-- Card de Desafío (Se repite x5 usando *ngFor en Angular) -->
-      <article class="challenge-card status-completed">
+     @for (challenge of challenges; track challenge.id) {
+      <article 
+        class="challenge-card"
+        [ngClass]="'status-' + challenge.status" 
+        [class.cursor-pointer]="challenge.status !== 'locked'"
+        (click)="goToChallenge(challenge)"
+      >
         <header class="card-header">
           <div class="level-info">
-            <span class="level-number">Nivel 1</span>
-            <h3 class="level-title">Introducción a la Lógica</h3>
+            <span class="level-number">Nivel {{ challenge.nivel }}</span>
+            <h3 class="level-title">{{ challenge.nombre }}</h3>
           </div>
           <button class="speaker-button" title="Escuchar nivel" aria-label="Escuchar nivel">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
@@ -60,120 +65,25 @@
         </header>
 
         <div class="card-body">
-          <p class="challenge-description">Aprende los conceptos básicos del pensamiento computacional mediante bloques interactivos.</p>
+          <p class="challenge-description">{{ challenge.descripcion_nivel}}</p>
         </div>
 
         <footer class="card-footer">
           <!-- Icono de estado dinámico (Completado, Bloqueado, Pendiente) -->
           <div class="status-indicator">
             <!-- Ejemplo Estado: Completado -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big status-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-            <span class="status-text">Completado</span>
+            @if (challenge.status === 'completed') {
+              <span> Completado</span>
+            } @else if (challenge.status === 'available') {
+              <span> Disponible</span>
+            } @else {
+              <span> Bloqueado</span>
+            }
           </div>
         </footer>
       </article>
 
-      <article class="challenge-card status-completed">
-        <header class="card-header">
-          <div class="level-info">
-            <span class="level-number">Nivel 2</span>
-            <h3 class="level-title">Introducción a la Lógica</h3>
-          </div>
-          <button class="speaker-button" title="Escuchar nivel" aria-label="Escuchar nivel">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
-          </button>
-        </header>
-
-        <div class="card-body">
-          <p class="challenge-description">Aprende los conceptos básicos del pensamiento computacional mediante bloques interactivos.</p>
-        </div>
-
-        <footer class="card-footer">
-          <!-- Icono de estado dinámico (Completado, Bloqueado, Pendiente) -->
-          <div class="status-indicator">
-            <!-- Ejemplo Estado: Completado -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big status-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-            <span class="status-text">Completado</span>
-          </div>
-        </footer>
-      </article>
-
-      <article class="challenge-card status-completed">
-        <header class="card-header">
-          <div class="level-info">
-            <span class="level-number">Nivel 3</span>
-            <h3 class="level-title">Introducción a la Lógica</h3>
-          </div>
-          <button class="speaker-button" title="Escuchar nivel" aria-label="Escuchar nivel">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
-          </button>
-        </header>
-
-        <div class="card-body">
-          <p class="challenge-description">Aprende los conceptos básicos del pensamiento computacional mediante bloques interactivos.</p>
-        </div>
-
-        <footer class="card-footer">
-          <!-- Icono de estado dinámico (Completado, Bloqueado, Pendiente) -->
-          <div class="status-indicator">
-            <!-- Ejemplo Estado: Completado -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big status-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-            <span class="status-text">Completado</span>
-          </div>
-        </footer>
-      </article>
-
-      <article class="challenge-card status-completed">
-        <header class="card-header">
-          <div class="level-info">
-            <span class="level-number">Nivel 4</span>
-            <h3 class="level-title">Introducción a la Lógica</h3>
-          </div>
-          <button class="speaker-button" title="Escuchar nivel" aria-label="Escuchar nivel">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
-          </button>
-        </header>
-
-        <div class="card-body">
-          <p class="challenge-description">Aprende los conceptos básicos del pensamiento computacional mediante bloques interactivos.</p>
-        </div>
-
-        <footer class="card-footer">
-          <!-- Icono de estado dinámico (Completado, Bloqueado, Pendiente) -->
-          <div class="status-indicator">
-            <!-- Ejemplo Estado: Completado -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big status-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-            <span class="status-text">Completado</span>
-          </div>
-        </footer>
-      </article>
-
-      <article class="challenge-card status-completed">
-        <header class="card-header">
-          <div class="level-info">
-            <span class="level-number">Nivel 5</span>
-            <h3 class="level-title">Introducción a la Lógica</h3>
-          </div>
-          <button class="speaker-button" title="Escuchar nivel" aria-label="Escuchar nivel">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
-          </button>
-        </header>
-
-        <div class="card-body">
-          <p class="challenge-description">Aprende los conceptos básicos del pensamiento computacional mediante bloques interactivos.</p>
-        </div>
-
-        <footer class="card-footer">
-          <!-- Icono de estado dinámico (Completado, Bloqueado, Pendiente) -->
-          <div class="status-indicator">
-            <!-- Ejemplo Estado: Completado -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big status-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-            <span class="status-text">Completado</span>
-          </div>
-        </footer>
-      </article>
-
-      
+    }
     </div>
   </section>
 
