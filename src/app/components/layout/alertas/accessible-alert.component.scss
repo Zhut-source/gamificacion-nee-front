@@ -1,0 +1,124 @@
+.custom-alert {
+  position: fixed;
+  top: 24px;         
+  left: 50%;         
+  transform: translateX(-50%);
+  z-index: 9999;
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  
+  width: calc(100% - 48px);
+  max-width: 450px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  
+  // Animación de entrada suave
+  animation: slideDownAlert 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+
+  &.error {
+    background-color: #fef2f2;
+    border-left: 5px solid #ef4444;
+    .alert-icon { color: #ef4444; }
+    .alert-message { color: #991b1b; }
+  }
+
+  &.success {
+    background-color: #f0fdf4;
+    border-left: 5px solid #22c55e;
+    .alert-icon { color: #22c55e; }
+    .alert-message { color: #166534; }
+  }
+
+  .alert-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+
+    .alert-icon {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .alert-message {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+  }
+
+  .alert-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .alert-btn {
+    background: transparent;
+    border: none;
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555555;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.06);
+      color: #000000;
+    }
+
+    &.read-btn.speaking {
+      color: #0eb9de;
+      animation: pulseAudio 1.5s infinite;
+    }
+  }
+}
+
+// SOPORTE PARA ALTO CONTRASTE SEMÁNTICO
+body.high-contrast {
+  .custom-alert {
+    background: #000000 !important;
+    border: 3px solid #ffffff !important;
+    
+    .alert-message, .alert-icon, .alert-btn {
+      color: #ffffff !important;
+    }
+
+    .alert-btn {
+      &:hover {
+        background: #ffd700 !important;
+        color: #000000 !important;
+      }
+      &.read-btn.speaking {
+        color: #ffd700 !important;
+        outline: 2px dashed #ffd700;
+      }
+    }
+  }
+}
+
+// ANIMACIONES
+@keyframes slideDownAlert {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px); // Viene un poco más arriba manteniendo el centrado
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);     // Se asienta en su posición central
+  }
+}
+
+@keyframes pulseAudio {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}

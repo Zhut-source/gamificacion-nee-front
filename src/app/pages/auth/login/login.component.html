@@ -1,10 +1,10 @@
 <main class="login-container">
   <section class="login-card">
-    <h1 class="login-title">TEXT</h1>
+    <h1 class="login-title fade-item" >TEXT</h1>
 
     <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
 
-      <div class="input-group">
+      <div class="input-group fade-item">
         <label for="email">Usuario</label>
         <input 
           type="email"
@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <div class="input-group">
+      <div class="input-group fade-item">
         <label for="password">Contraseña</label>
         <input 
           type="password"
@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <div class="remember-container">
+      <div class="remember-container fade-item">
         <input 
           type="checkbox"
           id="rememberPassword"
@@ -56,7 +56,7 @@
         </label>
       </div>
 
-      <div class="action-area">
+      <div class="action-area fade-item">
             <button type="submit" class="login-button" [disabled]="loginForm.invalid || isLoading">
               <ng-container *ngIf="!isLoading">Iniciar Sesión</ng-container>
               <ng-container *ngIf="isLoading">

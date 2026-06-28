@@ -13,8 +13,8 @@
 
 // Estructura semántica base para Cards del Dashboard
 .card {
-  background-color: var(--card-bg-color, #FFFFFF);
-  border: 2px solid var(--card-border-color, #FFFFFF);
+  background-color: var(--card-bg-color, #ffffff);
+  border: 2px solid var(--card-border-color, #ffffff);
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -42,14 +42,14 @@
 
   .main-title {
     margin: 0;
-    color: var(--text-titulo-landing, #2B2B2A);
+    color: var(--text-titulo-landing, #2b2b2a);
     word-wrap: break-word;
     overflow-wrap: anywhere;
 
     .dynamic-student-name {
       display: inline-block;
       font-weight: 800;
-      color: var(--text-primary, #2B2B2A);
+      color: var(--text-primary, #2b2b2a);
     }
   }
 }
@@ -72,8 +72,8 @@
   .mini-metric-card {
     flex: 1;
     min-width: 0; // Protege contra anchos destructivos de palabra (OpenDyslexic)
-    background-color: var(--carousel-bg-card-color, #F9F6F0);
-    border: 2px solid var(--carousel-border-card-color, #2B2B2A);
+    background-color: var(--carousel-bg-card-color, #f9f6f0);
+    border: 2px solid var(--carousel-border-card-color, #2b2b2a);
     border-radius: 12px;
     padding: 1.5rem;
     display: flex;
@@ -83,7 +83,7 @@
 
     .metric-label {
       font-weight: 600;
-      color: var(--label-text-color, #2B2B2A);
+      color: var(--label-text-color, #2b2b2a);
       margin: 0;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -101,7 +101,7 @@
     .metric-subtext {
       font-size: 1rem;
       font-weight: 400;
-      color: #7A7A7A;
+      color: #7a7a7a;
       display: block;
       margin-top: 0.25rem;
     }
@@ -126,7 +126,7 @@
 
   .table-section-title {
     margin: 0;
-    color: var(--text-titulo-landing, #2B2B2A);
+    color: var(--text-titulo-landing, #2b2b2a);
   }
 
   // Contenedor elástico de la tabla (Soporta Reflow WCAG 2.2)
@@ -134,7 +134,7 @@
     width: 100%;
     overflow-x: auto;
     border-radius: 8px;
-    border: 1px solid #E2E8F0;
+    border: 1px solid #e2e8f0;
     background-color: transparent;
 
     // Indicador visible de foco por teclado para usuarios de tecnologías asistivas
@@ -150,19 +150,20 @@
     text-align: left;
     min-width: 800px; // Evita el colapso de celdas de texto inclusivo
 
-    th, td {
+    th,
+    td {
       padding: 1.25rem 1.5rem;
       vertical-align: middle;
-      border-bottom: 1px solid #E2E8F0;
+      border-bottom: 1px solid #e2e8f0;
       overflow-wrap: anywhere; // Impide desbordes laterales
     }
 
     thead {
-      background-color: #F8FAFC;
+      background-color: #f8fafc;
 
       th {
         font-weight: 700;
-        color: var(--text-primary, #2B2B2A);
+        color: var(--text-primary, #2b2b2a);
         white-space: nowrap;
       }
     }
@@ -177,21 +178,22 @@
 
         // Fila destacada de atención pedagógica
         &.row-attention {
-          background-color: rgba(#E11D48, 0.02);
+          background-color: rgba(#e11d48, 0.02);
 
           &:hover {
-            background-color: rgba(#E11D48, 0.05);
+            background-color: rgba(#e11d48, 0.05);
           }
         }
       }
 
       .level-name {
-        color: var(--text-primary, #2B2B2A);
+        color: var(--text-primary, #2b2b2a);
         display: block;
       }
 
       // Sistema de Badges/Insignias Adaptables
-      .difficulty-badge, .status-badge {
+      .difficulty-badge,
+      .status-badge {
         display: inline-block;
         padding: 0.35rem 0.75rem;
         border-radius: 20px;
@@ -202,26 +204,36 @@
       }
 
       // Modificadores de Dificultad
-      .difficulty-easy { background-color: #DCFCE7; color: #15803D; }
-      .difficulty-medium { background-color: #FEF9C3; color: #A16207; }
-      .difficulty-hard { background-color: #FEE2E2; color: #B91C1C; }
+      .difficulty-easy {
+        background-color: #dcfce7;
+        color: #15803d;
+      }
+      .difficulty-medium {
+        background-color: #fef9c3;
+        color: #a16207;
+      }
+      .difficulty-hard {
+        background-color: #fee2e2;
+        color: #b91c1c;
+      }
 
       // Modificadores de Estado Gamificado
       .status-completed {
-        background-color: var(--button-bg-color-comenzar, #2B2B2A);
-        color: var(--button-text-color-comenzar, #F9F6F0);
+        background-color: var(--button-bg-color-comenzar, #2b2b2a);
+        color: var(--button-text-color-comenzar, #f9f6f0);
       }
       .status-pending {
         background-color: rgba(#0eb9de, 0.15);
-        color: #0369A1;
+        color: #0369a1;
         border: 1px solid var(--accent, #0eb9de);
       }
       .status-alert {
-        background-color: #E11D48;
-        color: #FFFFFF;
+        background-color: #e11d48;
+        color: #ffffff;
       }
 
-      .attempts-count, .time-value {
+      .attempts-count,
+      .time-value {
         color: var(--container-dashboard-text-color);
         font-weight: 500;
       }
@@ -235,36 +247,43 @@
 body.high-contrast {
   .card {
     background-color: #000000 !important;
-    border: 2px solid #FFFFFF !important;
+    border: 2px solid #ffffff !important;
   }
 
   .mini-metric-card {
     background-color: #000000 !important;
-    border: 2px solid #FFFFFF !important;
-    
+    border: 2px solid #ffffff !important;
+
     .metric-subtext {
-      color: #FFFFFF !important;
+      color: #ffffff !important;
     }
   }
 
   .table-responsive-wrapper {
-    border-color: #FFFFFF !important;
+    border-color: #ffffff !important;
   }
 
   .levels-table {
     thead {
       background-color: #121212 !important;
-      th { border-bottom: 2px solid #FFFFFF !important; }
+      th {
+        border-bottom: 2px solid #ffffff !important;
+      }
     }
-    td { border-bottom: 1px solid #FFFFFF !important; }
+    td {
+      border-bottom: 1px solid #ffffff !important;
+    }
 
     tbody {
-      tr:hover { background-color: #121212 !important; }
-      
-      .difficulty-badge, .status-badge {
+      tr:hover {
+        background-color: #121212 !important;
+      }
+
+      .difficulty-badge,
+      .status-badge {
         background-color: #000000 !important;
-        color: #FFFFFF !important;
-        border: 2px solid #FFFFFF !important;
+        color: #ffffff !important;
+        border: 2px solid #ffffff !important;
       }
     }
   }
@@ -281,7 +300,7 @@ body.high-contrast {
 
   &.fade-out {
     opacity: 0;
-    pointer-events: none; 
+    pointer-events: none;
   }
 
   .spinner-container {
@@ -291,7 +310,6 @@ body.high-contrast {
     gap: 1.5rem;
   }
 }
-
 
 .main-content-wrapper {
   &.fade-in {
@@ -310,7 +328,8 @@ body.high-contrast {
   }
 }
 
-.fulfilling-square-spinner, .fulfilling-square-spinner * {
+.fulfilling-square-spinner,
+.fulfilling-square-spinner * {
   box-sizing: border-box;
 }
 
@@ -337,19 +356,39 @@ body.high-contrast {
 }
 
 @keyframes fulfilling-square-spinner-animation {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(180deg); }
-  50% { transform: rotate(180deg); }
-  75% { transform: rotate(360deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(180deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fulfilling-square-spinner-inner-animation {
-  0% { height: 0%; }
-  25% { height: 0%; }
-  50% { height: 100%; }
-  75% { height: 100%; }
-  100% { height: 0%; }
+  0% {
+    height: 0%;
+  }
+  25% {
+    height: 0%;
+  }
+  50% {
+    height: 100%;
+  }
+  75% {
+    height: 100%;
+  }
+  100% {
+    height: 0%;
+  }
 }
 
 // ==========================================================================

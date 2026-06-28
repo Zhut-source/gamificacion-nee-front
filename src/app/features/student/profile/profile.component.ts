@@ -2,9 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { AccessibilityService } from '@core/services/accessibility.service';
 import { AuthService } from '@core/services/auth.service';
 import { ClassroomService, StudentClassStatus } from '@core/services/classroom.service';
+import { TtsService } from '@core/services/tts.service';
 import { UserService } from '@core/services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -16,29 +19,32 @@ import { UserService } from '@core/services/user.service';
 export class ProfileComponent implements OnInit{
 
   user: any;
-
   isEditingName: boolean = false;
-  
-  // Formularios
   infoForm!: FormGroup;
   passwordForm!: FormGroup;
   classForm!: FormGroup;
-
   currentClass: StudentClassStatus | null = null;
   isLoadingClass: boolean = true;
-
   isJoining: boolean = false;
+  currentSpeed: string = 'normal';
+  isDyslexiaActive = false;
+  currentTheme = 'claro';
+  private accessibilitySub = new Subscription();
 
   constructor(
     private authService: AuthService, 
     private classroomService: ClassroomService,
     private userService: UserService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private accessibilityService: AccessibilityService,
+    public tts: TtsService
   ) {}
 
   ngOnInit() {
     //this.loadMyClass();
     this.user = this.authService.getCurrentUser();
+
+    this.currentSpeed = localStorage.getItem('ttsSpeed') || 'normal';
 
     // 2. Inicializar formulario de información
     this.infoForm = new FormGroup({
@@ -88,6 +94,18 @@ export class ProfileComponent implements OnInit{
     this.classForm = new FormGroup({
       code: new FormControl('', Validators.required)
     });
+
+    this.accessibilitySub.add(
+      this.accessibilityService.dyslexiaFont$.subscribe(enabled => {
+        this.isDyslexiaActive = enabled;
+      })
+    );
+
+    this.accessibilitySub.add(
+      this.accessibilityService.highContrast$.subscribe(enabled => {
+        this.currentTheme = enabled ? 'oscuro' : 'claro';
+      })
+    );
 
     this.loadMyClass();
 
@@ -193,22 +211,29 @@ export class ProfileComponent implements OnInit{
 
   onToggleDyslexia(event: any) {
     const isEnabled = event.target.checked;
-    if (isEnabled) {
-      document.body.classList.toggle('accessible-font');
-    } else {
-      document.body.classList.remove('accessible-font');
-    }
-    localStorage.setItem('dyslexiaFont', isEnabled);
+    this.accessibilityService.setDyslexiaFont(isEnabled);
   }
 
   onContrastChange(event: any) {
-    const theme = event.target.value;
-    if (theme === 'oscuro') {
-      document.body.classList.add('high-contrast');
-    } else {
-      document.body.classList.remove('high-contrast');
-    }
-    localStorage.setItem('theme', theme);
+    const theme = event.target.value; 
+    this.accessibilityService.setHighContrast(theme === 'oscuro');
   }
+
+  onChangeTtsSpeed(event: any) {
+    const selectedSpeed = event.target.value; // 'lento', 'normal' o 'rapido'
+    
+    localStorage.setItem('ttsSpeed', selectedSpeed);
+    this.currentSpeed = selectedSpeed; 
+    
+    let fraseConfirmacion = 'Activaste el modo normal';
+    if (selectedSpeed === 'lento') {
+      fraseConfirmacion = 'Activaste el modo lento';
+    } else if (selectedSpeed === 'rapido') {
+      fraseConfirmacion = 'Activaste el modo rápido';
+    }
+
+    this.tts.speak(fraseConfirmacion); 
+  }
+
 
 }

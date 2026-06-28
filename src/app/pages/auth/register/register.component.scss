@@ -1,100 +1,162 @@
-.register-container{
-    display: flex;
-    justify-content: center;
-    min-height: calc(100vh - 100px);
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideDownError {
+  from {
+    opacity: 0;
+    transform: translateY(10px); // Viene sutilmente desde el borde del input
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); // Se asienta en su lugar
+  }
+}
+@keyframes looping-rhombuses-spinner-animation {
+  0% {
+    transform: translateX(0) rotate(45deg) scale(0);
+  }
+  50% {
+    transform: translateX(-233%) rotate(45deg) scale(1);
+  }
+  100% {
+    transform: translateX(-466%) rotate(45deg) scale(0);
+  }
+}
+
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 100px);
+  background-color: transparent;
+}
+
+.register-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  background: var(--bg-surface);
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  width: 100%;
+  max-width: 500px;
+  min-width: 350px;
+
+  height: auto;
+  min-height: 600px;
+
+  .register-title {
+    font-size: 40px;
+    color: var(--text-main);
+    text-align: center;
+  }
+
+  .fade-item {
+    opacity: 0;
+    animation: fadeInUp 0.2s ease-out forwards;
+  }
+  & > .fade-item:nth-child(1) {
+    animation-delay: 0.05s;
+  } // Título
+  & > .register-form .fade-item:nth-child(1) {
+    animation-delay: 0.15s;
+  } // Email
+  & > .register-form .fade-item:nth-child(2) {
+    animation-delay: 0.25s;
+  } // Password
+  & > .register-form .fade-item:nth-child(3) {
+    animation-delay: 0.35s;
+  } // Checkbox
+  & > .register-form .fade-item:nth-child(4) {
+    animation-delay: 0.45s;
+  }
+  & > .register-form .fade-item:nth-child(5) {
+    animation-delay: 0.55s;
+  }
+  & > .register-form .fade-item:nth-child(6) {
+    animation-delay: 0.65s;
+  }
+  & > .register-form .fade-item:nth-child(7) {
+    animation-delay: 0.75s;
+  }
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  label {
+    color: var(--text-main);
+  }
+}
+
+.register-form {
+  width: 100%;
+  height: 100%;
+  align-content: space-between;
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
+  label {
+    color: var(--input-1-text);
+  }
+  .error-text {
+    font-size: 16px;
+    color: var(--input-1-error);
+    margin-top: 4px;
+    animation: slideDownError 0.3s ease-out forwards;
+  }
+}
+
+.input-group {
+  margin: 6px;
+  input {
+    all: unset;
     background-color: transparent;
-    padding-top: 20px;
+    color: var(--input-1-text);
+    border: 2px solid var(--input-1-border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    outline: none;
+    &::placeholder {
+      color: var(--input-1-placeholder);
+    }
+    &:focus {
+      border-color: var(--input-1-focus);
+    }
+  }
+  input.error {
+    border-color: var(--input-1-error);
+    background-color: transparent;
+  }
+
+  input.success {
+    border-color: var(--input-1-success);
+    background-color: transparent;
+  }
 }
 
-.register-card{
-    justify-content: center;
-    background: var(--bg-color-card-login);
-    padding: 40px;
-    border-radius: 18px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    width: 500px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    height: 100%;
-    .register-title{
-        font-size: 40px;
-        color: var(--label-text-color);
-    }
+.role-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.input-group{
-    display: flex;
-    flex-direction: column;
-    label{
-        color: var(--label-text-color);
-    }
-}
-
-.register-form{
-    width: 100%;
-    height: 100%;
-    align-content:space-between;
-    display: flex;
-    flex-direction: column;
-    font-size: 20px;
-    label{
-        color: var(--label-text-color);
-    }
-}
-
-.input-group{
-    margin: 6px;
-    input{
-        all: unset;
-        background-color: transparent;
-        color: var(--input-text-color);
-        border: 2px solid var(--input-border-color);
-        border-radius: 10px;
-        padding: 12px 16px;
-        outline: none;
-        &::placeholder {
-            color: var(--input-placeholder-color);
-        }
-        &:focus {
-            border-color: var(--input-border-color-focus);
-        }
-    }
-    input.error {
-        border-color: #ff4d4d;
-        background-color: transparent;
-    }
-
-    input.success {
-        border-color: #0eb9de;
-        background-color: transparent;
-    }
-    .error-text {
-        font-size: 16px;
-        color: #ff4d4d;
-        margin-top: 4px;
-    }
-}
-
-.error-text {
-        font-size: 16px;
-        color: #ff4d4d;
-        margin-top: 4px;
-    }
-
-.role-options{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    
-}
-
-.role-item{
-    margin-top: 10px;
-    label{
-        color: var(--label-text-color);
-    }
+.role-item {
+  margin-top: 10px;
+  label {
+    color: var(--text-main);
+  }
 }
 
 input[type="checkbox"] {
@@ -104,7 +166,7 @@ input[type="checkbox"] {
   width: 22px;
   height: 22px;
 
-  border: 3px solid var(--checkbox-border-color); 
+  border: 3px solid var(--input-1-border);
   border-radius: 6px;
 
   background-color: transparent;
@@ -120,128 +182,120 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"]:checked {
-  background-color: var(--checkbox-bg-color-active); 
-  border-color: var(--checkbox-border-color-active);
+  background-color: var(--input-1-box-active-bg);
+  border-color: var(--input-1-box-active-bg);
 }
 
 input[type="checkbox"]:checked::after {
   content: "✓";
 
-  color: #F9F6F0;
+  color: var(--input-1-box-active-text);
   font-size: 14px;
   font-weight: bold;
 
   position: absolute;
 }
 
-.action-area{
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.action-area {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.crear-button{
-    all: unset;
-    padding: 0.5rem;  
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    min-height: 50px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 10px;
-    background: var(--button-bg-color-login);
-    color: var(--button-text-color-login);
-    cursor: pointer;
-    transition: background 0.2s ease;
-    &:hover{
-        background: var(--button-bg-color-login-hover);
+.crear-button {
+  all: unset;
+  padding: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  background: var(--btn-2-action-bg);
+  color: var(--btn-2-action-text);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  &:hover:not(:disabled){
+        background: var(--btn-2-action-hover-bg);
+        color: var(--btn-2-action-hover-text);
     }
-    &:disabled {
-        background: #ccc;
-        cursor: not-allowed;
-        box-shadow: none;
-    }
-}
-
-.login-link{
-    padding: 1rem;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    a{
-        all: unset;
-        cursor: pointer;
-        color: var(--label-text-color);
-        text-decoration: underline;
+    &:focus:not(:disabled){
+      outline: 2px solid var(--btn-2-action-active-outline);
+      outline-offset: 3px !important;
     }
 }
 
-.login-button:disabled {
-  background: #ccc;
+.crear-button:disabled {
+  opacity: 50%;
   cursor: not-allowed;
   box-shadow: none;
 }
 
+.login-link {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  a {
+    cursor: pointer;
+    color: var(--btn-link-2-action-text);
+    text-decoration: underline;
+    &:focus {
+      border-radius: 10px;
+      outline: 2px solid rgb(255, 0, 255);
+    }
+  }
+}
+
+
+
 ///
-/// SPINNER LOGIN 
-/// 
+/// SPINNER LOGIN
+///
 
-.looping-rhombuses-spinner, .looping-rhombuses-spinner * {
-      box-sizing: border-box;
-    }
+.looping-rhombuses-spinner,
+.looping-rhombuses-spinner * {
+  box-sizing: border-box;
+}
 
-    .looping-rhombuses-spinner {
-      width: calc(15px * 4);
-      height: 15px;
-      position: relative;
-    }
+.looping-rhombuses-spinner {
+  width: calc(15px * 4);
+  height: 15px;
+  position: relative;
+}
 
-    .looping-rhombuses-spinner .rhombus {
-      height: 15px;
-      width: 15px;
-      background-color: #ff1d5e;
-      left: calc(15px * 4);
-      position: absolute;
-      margin: 0 auto;
-      border-radius: 2px;
-      transform: translateY(0) rotate(45deg) scale(0);
-      animation: looping-rhombuses-spinner-animation 2500ms linear infinite;
-    }
+.looping-rhombuses-spinner .rhombus {
+  height: 15px;
+  width: 15px;
+  background-color: var(--spinner-color);
+  left: calc(15px * 4);
+  position: absolute;
+  margin: 0 auto;
+  border-radius: 2px;
+  transform: translateY(0) rotate(45deg) scale(0);
+  animation: looping-rhombuses-spinner-animation 2500ms linear infinite;
+}
 
-    .looping-rhombuses-spinner .rhombus:nth-child(1) {
-      animation-delay: calc(2500ms * 1 / -1.5);
-    }
+.looping-rhombuses-spinner .rhombus:nth-child(1) {
+  animation-delay: calc(2500ms * 1 / -1.5);
+}
 
-    .looping-rhombuses-spinner .rhombus:nth-child(2) {
-      animation-delay: calc(2500ms * 2 / -1.5);
-    }
+.looping-rhombuses-spinner .rhombus:nth-child(2) {
+  animation-delay: calc(2500ms * 2 / -1.5);
+}
 
-    .looping-rhombuses-spinner .rhombus:nth-child(3) {
-      animation-delay: calc(2500ms * 3 / -1.5);
-    }
-
-    @keyframes looping-rhombuses-spinner-animation {
-      0% {
-        transform: translateX(0) rotate(45deg) scale(0);
-      }
-      50% {
-        transform: translateX(-233%) rotate(45deg) scale(1);
-      }
-      100% {
-        transform: translateX(-466%) rotate(45deg) scale(0);
-      }
-    }
-    ///////
-    /// 
-    input[type="checkbox"]:focus-visible, 
-.login-button:focus-visible, 
+.looping-rhombuses-spinner .rhombus:nth-child(3) {
+  animation-delay: calc(2500ms * 3 / -1.5);
+}
+///////
+///
+input[type="checkbox"]:focus-visible,
+.login-button:focus-visible,
 .register-button:focus-visible,
 .crear-button:focus-visible {
-  outline: 3px solid var(--input-border-color-focus, #6366f1);
-  outline-offset: 2px;
+  outline: 2px solid var(--input-1-focus);
 }
 
 // Estilos semánticos del Fieldset del Rol
@@ -249,10 +303,27 @@ input[type="checkbox"]:checked::after {
   border: none;
   padding: 0;
   margin: 15px 0;
-  
+
   .role-legend {
-    color: var(--label-text-color);
+    color: var(--text-main);
     font-weight: bold;
     margin-bottom: 10px;
+  }
+}
+
+//Responsividad
+@media (max-width: 480px) {
+  .register-container {
+    padding: 20px;
+    min-height: unset;
+    gap: 20px;
+  }
+  .register-card {
+    padding: 20px;
+    min-height: unset;
+    gap: 20px;
+  }
+  .register-title {
+    font-size: 2rem;
   }
 }

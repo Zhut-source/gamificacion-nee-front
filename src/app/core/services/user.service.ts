@@ -3,24 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-
   private apiUrl = 'http://localhost:3000';
-
-  constructor(private http: HttpClient) { }
-
-  /**
-   * Actualiza los datos informativos del perfil del usuario
-   */
+  constructor(private http: HttpClient) {}
   updateProfile(id: number, name: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/update-profile`, { id, name });
   }
-
-  /**
-   * Modifica las credenciales de acceso de seguridad del usuario
-   */
   changePassword(data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/change-password`, data);
   }

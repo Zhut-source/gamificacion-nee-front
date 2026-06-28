@@ -3,7 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 import { Classroom, ClassroomService } from '@core/services/classroom.service';
-import { ProgressService, ClassroomMetricsResponse } from '@core/services/progress.service';
+import {
+  ProgressService,
+  ClassroomMetricsResponse,
+} from '@core/services/progress.service';
 import { forkJoin, timer } from 'rxjs';
 
 @Component({
@@ -11,25 +14,22 @@ import { forkJoin, timer } from 'rxjs';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
   user: any;
   classrooms: Classroom[] = [];
-
   selectedAulaId: number | null = null;
   metrics: ClassroomMetricsResponse | null = null;
   isLoadingMetrics: boolean = false;
-  
-  // Variables idénticas al estudiante para controlar el estado y el desvanecimiento
   isLoading: boolean = true;
   isFadingOut: boolean = false;
 
   constructor(
     private authService: AuthService,
     private classroomService: ClassroomService,
-    private progressService: ProgressService, 
-    private router: Router
+    private progressService: ProgressService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -45,31 +45,29 @@ export class DashboardComponent implements OnInit {
 
     forkJoin({
       aulas: this.classroomService.getTeacherClasses(this.user.id),
-      delayMinimo: timer(800) 
+      delayMinimo: timer(800),
     }).subscribe({
       next: ({ aulas }) => {
         this.classrooms = aulas;
-        
-        // Si tiene aulas, seleccionamos la primera y cargamos sus datos
+
         if (this.classrooms.length > 0) {
           this.selectedAulaId = this.classrooms[0].id!;
           this.loadMetrics(this.selectedAulaId);
         }
 
-        this.isFadingOut = true; 
+        this.isFadingOut = true;
         setTimeout(() => {
           this.isLoading = false;
           this.isFadingOut = false;
-        }, 300); 
+        }, 300);
       },
       error: (err) => {
         console.error('Error al cargar aulas:', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 
-  // EVENTO: Cuando el maestro cambia el Dropdown de aulas en el HTML
   onAulaChange(event: any) {
     const aulaId = event.target.value;
     if (aulaId) {
@@ -78,7 +76,6 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // Consulta el backend para traer la tabla y los KPIs
   loadMetrics(aulaId: number) {
     this.isLoadingMetrics = true;
     this.progressService.getClassroomMetrics(aulaId).subscribe({
@@ -89,7 +86,7 @@ export class DashboardComponent implements OnInit {
       error: (err) => {
         console.error('Error cargando métricas:', err);
         this.isLoadingMetrics = false;
-      }
+      },
     });
   }
 
@@ -98,8 +95,6 @@ export class DashboardComponent implements OnInit {
   }
 
   viewStudentDetails(studentId: number) {
-    // Redirige pasando el ID del estudiante por URL
     this.router.navigate(['/teacher/student-details', studentId]);
   }
-
 }

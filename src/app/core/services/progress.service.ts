@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-
 export interface ClassroomMetricsResponse {
   kpis: {
     totalEstudiantes: number;
@@ -24,34 +23,49 @@ export interface StudentDetailsResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProgressService {
-
   private apiUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getClassroomMetrics(aulaId: number): Observable<ClassroomMetricsResponse> {
-    return this.http.get<ClassroomMetricsResponse>(`${this.apiUrl}/teacher/classroom-metrics/${aulaId}`);
+    return this.http.get<ClassroomMetricsResponse>(
+      `${this.apiUrl}/teacher/classroom-metrics/${aulaId}`,
+    );
   }
 
-  // Dashboard Estudiante
   getStudentChallenges(studentId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/student/challenges/${studentId}`);
+    return this.http.get<any[]>(
+      `${this.apiUrl}/student/challenges/${studentId}`,
+    );
   }
 
-  // NUEVO: Detalles del Estudiante (Para el Maestro)
   getStudentDetails(studentId: number): Observable<StudentDetailsResponse> {
-    return this.http.get<StudentDetailsResponse>(`${this.apiUrl}/teacher/student-details/${studentId}`);
+    return this.http.get<StudentDetailsResponse>(
+      `${this.apiUrl}/teacher/student-details/${studentId}`,
+    );
   }
 
   getChallengeDetail(studentId: number, nivel: number): Observable<any> {
-      return this.http.get<any>(`${this.apiUrl}/student/challenge-detail/${studentId}/${nivel}`);
-    }
+    return this.http.get<any>(
+      `${this.apiUrl}/student/challenge-detail/${studentId}/${nivel}`,
+    );
+  }
 
-    // Guardar el resultado de la partida
-    saveAttempt(data: any): Observable<any> {
-      return this.http.post<any>(`${this.apiUrl}/student/save-attempt`, data);
-    }
+  saveAttempt(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/student/save-attempt`, data);
+  }
+
+  getStudentBadges(studentId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/student/badges/${studentId}`);
+  }
+
+  awardBadge(studentId: number, badgeCode: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/student/award-badge`, {
+      studentId,
+      badgeCode,
+    });
+  }
 }

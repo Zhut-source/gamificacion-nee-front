@@ -1,126 +1,282 @@
 <div class="challenge-workspace-wrapper">
-  
   <main class="challenge-main-container">
-
     <div class="challenge-body-layout">
-      
       <section class="panel-left-controls" aria-labelledby="level-title">
         <div class="panel-card-content">
-          
-          <header class="level-header">
-            <h2 id="level-title" class="level-current-title">Nivel {{ challengeId }}: {{ challengeData?.nombre || 'Cargando Nivel...' }}</h2>
-            <p class="level-description">
-              {{ challengeData?.descripcion_juego || 'Cargando descripción...' }}
-            </p>
-          </header>
+          @if (isDataLoading) {
+            <div class="skeleton-panel-wrapper" aria-hidden="true">
+              <div class="skeleton-line title-sk"></div>
+              <div class="skeleton-line text-sk"></div>
+              <div class="skeleton-line text-sk sub-sk"></div>
+              <div class="skeleton-box objectives-sk"></div>
+              <div class="skeleton-box difficulty-sk"></div>
+              <div class="skeleton-footer-sk">
+                <div class="circle-sk"></div>
+                <div class="circle-sk"></div>
+              </div>
+            </div>
+          } @else {
+            <header class="level-header">
+              <h2 id="level-title" class="level-current-title">
+                Nivel {{ challengeId }}:
+                {{ challengeData?.nombre || "Cargando Nivel..." }}
+              </h2>
+              <p class="level-description">
+                {{
+                  challengeData?.descripcion_juego || "Cargando descripción..."
+                }}
+              </p>
+            </header>
 
-          <div class="level-objectives" aria-label="Objetivos del nivel">
-            <span class="objectives-label">Objetivo:</span>
-             <ul class="objectives-list">
-              @for (obj of challengeData?.objetivos; track $index) {
-                <li>{{ obj }}</li>
+            <div class="level-objectives" aria-label="Objetivos del nivel">
+              <span class="objectives-label">Objetivo:</span>
+              <ul class="objectives-list">
+                @for (obj of challengeData?.objetivos; track $index) {
+                  <li>{{ obj }}</li>
+                }
+              </ul>
+            </div>
+
+            <div class="difficulty-selection-box">
+              <label class="control-label-sm">Dificultad actual:</label>
+
+              <div class="diff-buttons-group">
+                <button
+                  class="diff-btn"
+                  [disabled]="!canPlayDifficulty('easy')"
+                  [class.active]="currentDifficulty === 'easy'"
+                  (click)="setDifficulty('easy')"
+                >
+                  Fácil
+                </button>
+
+                <button
+                  class="diff-btn"
+                  [disabled]="!canPlayDifficulty('medium')"
+                  [class.active]="currentDifficulty === 'medium'"
+                  (click)="setDifficulty('medium')"
+                >
+                  Medio
+                </button>
+
+                <button
+                  class="diff-btn"
+                  [disabled]="!canPlayDifficulty('hard')"
+                  [class.active]="currentDifficulty === 'hard'"
+                  (click)="setDifficulty('hard')"
+                >
+                  Difícil
+                </button>
+              </div>
+
+              @if (!isLevelFullyCompleted) {
+                <small style="color: #7a7a7a; margin-top: 8px; display: block">
+                  Supera la dificultad actual para desbloquear la siguiente.
+                </small>
               }
-            </ul>
-          </div>
-
-          <div class="difficulty-selection-box">
-            <label class="control-label-sm">Dificultad actual:</label>
-            
-            <div class="diff-buttons-group">
-              <button class="diff-btn" 
-                      [disabled]="!canPlayDifficulty('easy')" 
-                      [class.active]="currentDifficulty === 'easy'"
-                      (click)="setDifficulty('easy')">Fácil</button>
-
-              <button class="diff-btn" 
-                      [disabled]="!canPlayDifficulty('medium')" 
-                      [class.active]="currentDifficulty === 'medium'"
-                      (click)="setDifficulty('medium')">Medio</button>
-
-              <button class="diff-btn" 
-                      [disabled]="!canPlayDifficulty('hard')" 
-                      [class.active]="currentDifficulty === 'hard'"
-                      (click)="setDifficulty('hard')">Difícil</button>
             </div>
-            
-            @if (!isLevelFullyCompleted) {
-              <small style="color:#7A7A7A; margin-top: 8px; display:block;">
-                Supera la dificultad actual para desbloquear la siguiente.
-              </small>
-            }
-          </div>
 
+            <footer class="controls-utility-footer">
+              <div class="accessibility-action-group">
+                <button
+                  class="speaker-button"
+                  title="Escuchar descripción del juego"
+                  aria-label="Escuchar descripción del juego"
+                  [class.active]="tts.isPlaying"
+                  (click)="leerInstrucciones()"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="30"
+                    height="30"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-volume2-icon lucide-volume-2"
+                  >
+                    <path
+                      d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"
+                    />
+                    <path d="M16 9a5 5 0 0 1 0 6" />
+                    <path d="M19.364 18.364a9 9 0 0 0 0-12.728" />
+                  </svg>
+                  <span>Escuchar</span>
+                </button>
 
-          <footer class="controls-utility-footer">
-            <div class="accessibility-action-group">
-              <button type="button" class="utility-btn btn-tts" title="Escuchar en voz alta">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                <button
+                  type="button"
+                  class="utility-btn btn-help"
+                  title="Ver pista o ayuda"
+                  (click)="usarPista()"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="30"
+                    height="30"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-lightbulb-icon lucide-lightbulb"
+                  >
+                    <path
+                      d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"
+                    />
+                    <path d="M9 18h6" />
+                    <path d="M10 22h4" />
+                  </svg>
+                  <span>Pista</span>
+                </button>
+              </div>
+              <button
+                class="career-speedrun-btn"
+                [class.active-career]="isSpeedrunMode"
+                (click)="toggleSpeedrunMode()"
+                [attr.aria-label]="
+                  isSpeedrunMode
+                    ? 'Modo carrera activo. Cancelar modo carrera.'
+                    : 'Iniciar Modo Carrera para ganar insignias de velocidad e intentos'
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 22h14" />
+                  <path d="M5 2h14" />
+                  <path d="M12 22V2" />
+                  <path d="m17 12-5-5-5 5" />
+                </svg>
+                <span>{{
+                  isSpeedrunMode ? "Carrera Activa ⏱️" : "Modo Carrera"
+                }}</span>
               </button>
-              
-              <button type="button" class="utility-btn btn-help" title="Ver pista o ayuda" (click)="usarPista()">
-                <span>Pista</span>
-              </button>
-            </div>
-          </footer>
-
+            </footer>
+          }
         </div>
       </section>
 
       <section class="panel-right-game" aria-label="Contenedor de actividades">
         <div class="game-runtime-container">
+          @if (currentView === "intro") {
+            <div class="intro-start-screen">
+              <button
+                type="button"
+                class="start-challenge-btn"
+                (click)="startVideo()"
+              >
+                <span>Iniciar Introducción</span>
+              </button>
+            </div>
+          }
 
-          @if (currentView === 'intro') {
-              <div class="intro-start-screen">
-                <button type="button" class="start-challenge-btn" (click)="startVideo()">
-                    <span>Iniciar Introducción</span>
-                </button>
+          @if (currentView === "video") {
+            <div class="video-player-screen">
+              <video
+                controls
+                autoplay
+                class="challenge-intro-video"
+                (ended)="startGame()"
+              >
+                <source
+                  src="assets/videos/videoplaybackweb.mp4"
+                  type="video/mp4"
+                />
+                Tu navegador no soporta la reproducción de videos.
+              </video>
+              <button
+                class="skip-btn"
+                style="
+                  top: 10px;
+                  right: 10px;
+                  background: rgba(0, 0, 0, 0.5);
+                  color: white;
+                  border: none;
+                  padding: 10px;
+                  border-radius: 8px;
+                  cursor: pointer;
+                "
+                (click)="startGame()"
+              >
+                Saltar Video
+              </button>
+            </div>
+          }
+
+          @if (currentView === "game") {
+            @if (isGameLoading) {
+              <div
+                class="loading-overlay"
+                [class.fade-out]="isFadingOut"
+                role="status"
+                aria-live="polite"
+              >
+                <div class="spinner-container">
+                  <div class="fulfilling-square-spinner">
+                    <div class="spinner-inner"></div>
+                  </div>
+                  <p class="help-text">
+                    Cargando tus desafíos de aprendizaje...
+                  </p>
+                </div>
               </div>
-            }
-
-            @if (currentView === 'video') {
-              <div class="video-player-screen">
-                <video controls autoplay class="challenge-intro-video" (ended)="startGame()">
-                    <source src="assets/videos/videoplaybackweb.mp4" type="video/mp4">
-                    Tu navegador no soporta la reproducción de videos.
-                </video>
-                <button class="skip-btn" style=" top: 10px; right: 10px; background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;" (click)="startGame()">Saltar Video</button>
-              </div>
-            }
-
-            @if (currentView === 'game') {
-              <div class="game-placeholder-canvas" style="padding: 1rem;">
-                 <!-- INYECCIÓN DEL HIJO CON BINDINGS -->
-                 <app-secuenciacion 
+            } @else {
+              <div class="game-placeholder-canvas">
+                @if (challengeId === 1) {
+                  <app-secuenciacion
                     [difficultyLevel]="currentDifficulty"
-                    (gameResult)="onGameResult($event)">
-                 </app-secuenciacion>
+                    (gameResult)="onGameResult($event)"
+                  ></app-secuenciacion>
+                }
+
+                <!-- NIVEL 2: PATRONES -->
+                @if (challengeId === 2) {
+                  <app-juego-patrones
+                    [difficultyLevel]="currentDifficulty"
+                    (gameResult)="onGameResult($event)"
+                  ></app-juego-patrones>
+                }
               </div>
             }
-
+          }
         </div>
-        </section>
-
+      </section>
     </div>
   </main>
 
   @if (feedback.show) {
     <footer class="system-feedback-banner" role="status" aria-live="polite">
       <div class="feedback-banner-content">
-        
-        <div class="feedback-message-state" 
-             [ngClass]="feedback.status === 'success' ? 'status-success-layout' : 'status-error-layout'">
-          
-          <span class="feedback-icon">{{ feedback.status === 'success' ? '🎉' : '💡' }}</span>
-          
+        <div
+          class="feedback-message-state"
+          [ngClass]="
+            feedback.status === 'success'
+              ? 'status-success-layout'
+              : 'status-error-layout'
+          "
+        >
+          <span class="feedback-icon">{{
+            feedback.status === "success" ? "🎉" : "💡"
+          }}</span>
+
           <div class="feedback-text-group">
             <strong class="feedback-headline">{{ feedback.title }}</strong>
             <span class="feedback-subline">{{ feedback.message }}</span>
           </div>
-
         </div>
-  
       </div>
     </footer>
   }
-
 </div>

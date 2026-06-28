@@ -1,7 +1,11 @@
 <main class="student-details-container">
-
   @if (isLoading) {
-    <div class="loading-overlay" [class.fade-out]="isFadingOut" role="status" aria-live="polite">
+    <div
+      class="loading-overlay"
+      [class.fade-out]="isFadingOut"
+      role="status"
+      aria-live="polite"
+    >
       <div class="spinner-container">
         <div class="fulfilling-square-spinner">
           <div class="spinner-inner"></div>
@@ -9,107 +13,162 @@
         <p class="help-text">Cargando tus desafíos de aprendizaje...</p>
       </div>
     </div>
-} @else if (details) {
-
-  <header class="header-section" aria-labelledby="main-header-title">
-    <div class="card header-card">
-      <h1 id="main-header-title" class="main-title">
-        Progreso de <span class="dynamic-student-name">{{ details.perfil.nombre }}</span>
-      </h1>
-      <p style="margin-top: 10px; opacity: 0.7;">{{ details.perfil.email }}</p>
-
-    </div>
-  </header>
-
-  <section class="metrics-section" aria-label="Métricas de rendimiento del estudiante">
-    <div class="card metrics-container-card">
-      <div class="metrics-flex-layout">
-        
-        <article class="mini-metric-card" aria-labelledby="metric-progreso-title">
-          <h2 id="metric-progreso-title" class="metric-label">Progreso total</h2>
-          <p class="metric-value text-accent">{{ details.perfil.progreso_total_porcentaje }}%</p>
-        </article>
-
-        <article class="mini-metric-card" aria-labelledby="metric-desafios-title">
-          <h2 id="metric-desafios-title" class="metric-label">Desafíos completados</h2>
-          <p class="metric-value">{{ details.perfil.desafios_completados_texto.split(' ')[0] }} <span class="metric-subtext"> de 15 ejercicios</span></p>
-        </article>
-
-        <article class="mini-metric-card" aria-labelledby="metric-actividad-title">
-          <h2 id="metric-actividad-title" class="metric-label">Última actividad</h2>
-          <p class="metric-value datetime-value">{{ details.perfil.ultima_actividad ? (details.perfil.ultima_actividad | date:'medium') : 'Sin registro' }}</p>
-        </article>
-
+  } @else if (details) {
+    <header class="header-section" aria-labelledby="main-header-title">
+      <div class="card header-card">
+        <h1 id="main-header-title" class="main-title">
+          Progreso de
+          <span class="dynamic-student-name">{{ details.perfil.nombre }}</span>
+        </h1>
+        <p style="margin-top: 10px; opacity: 0.7">{{ details.perfil.email }}</p>
       </div>
-    </div>
-  </section>
+    </header>
 
-  <section class="levels-section" aria-labelledby="levels-section-title">
-    <div class="card table-container-card">
-      
-      <h2 id="levels-section-title" class="table-section-title">Historial de progreso por niveles</h2>
-      
-      <div class="table-responsive-wrapper" tabindex="0" aria-label="Tabla de progreso por niveles. Use las flechas de dirección para desplazarse horizontalmente si es necesario.">
-        <table class="levels-table">
-          <thead>
-            <tr>
-              <th scope="col">Nombre del nivel</th>
-              <th scope="col">Dificultad</th>
-              <th scope="col">Estado</th>
-              <th scope="col">Intentos</th>
-              <th scope="col">Tiempo Promedio</th>
-              <th scope="col">Pistas Promedio</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (row of details.historial_niveles; track row.nivel + row.dificultad) {
-              <tr [class.row-attention]="row.tiene_alerta">
-                
-                <td><strong class="level-name">{{ row.nombre_nivel }}</strong></td>
-                
-                <td>
-                  <!-- Estilos de Badge según la dificultad que viene del JSON -->
-                  <span class="difficulty-badge" 
-                        [ngClass]="{
-                          'difficulty-easy': row.dificultad === 'easy',
-                          'difficulty-medium': row.dificultad === 'medium',
-                          'difficulty-hard': row.dificultad === 'hard'
-                        }">
-                    {{ row.dificultad === 'easy' ? 'Fácil' : (row.dificultad === 'medium' ? 'Intermedio' : 'Difícil') }}
-                  </span>
-                </td>
-                
-                <td>
-                  <!-- Estilos de Estado -->
-                  <span class="status-badge"
-                        [ngClass]="{
-                          'status-completed': row.estado === 'Completado',
-                          'status-alert': row.estado === 'Requiere apoyo',
-                          'status-pending': row.estado === 'En progreso'
-                        }">
-                    {{ row.estado }}
-                  </span>
-                </td>
-                
-                <td><span class="attempts-count">{{ row.intentos_realizados }} intento(s)</span></td>
-                
-                <!-- Usamos la función del TS para convertir los segundos a MM:SS -->
-                <td><span class="time-value">{{ formatTime(row.tiempo_promedio_segundos) }}</span></td>
+    <section
+      class="metrics-section"
+      aria-label="Métricas de rendimiento del estudiante"
+    >
+      <div class="card metrics-container-card">
+        <div class="metrics-flex-layout">
+          <article
+            class="mini-metric-card"
+            aria-labelledby="metric-progreso-title"
+          >
+            <h2 id="metric-progreso-title" class="metric-label">
+              Progreso total
+            </h2>
+            <p class="metric-value text-accent">
+              {{ details.perfil.progreso_total_porcentaje }}%
+            </p>
+          </article>
 
-                <td><span class="time-value">{{ row.pistas_promedio }} pistas</span></td>
-                
-              </tr>
-            }
-            @if (details.historial_niveles.length === 0) {
+          <article
+            class="mini-metric-card"
+            aria-labelledby="metric-desafios-title"
+          >
+            <h2 id="metric-desafios-title" class="metric-label">
+              Desafíos completados
+            </h2>
+            <p class="metric-value">
+              {{ details.perfil.desafios_completados_texto.split(" ")[0] }}
+              <span class="metric-subtext"> de 15 ejercicios</span>
+            </p>
+          </article>
+
+          <article
+            class="mini-metric-card"
+            aria-labelledby="metric-actividad-title"
+          >
+            <h2 id="metric-actividad-title" class="metric-label">
+              Última actividad
+            </h2>
+            <p class="metric-value datetime-value">
+              {{
+                details.perfil.ultima_actividad
+                  ? (details.perfil.ultima_actividad | date: "medium")
+                  : "Sin registro"
+              }}
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="levels-section" aria-labelledby="levels-section-title">
+      <div class="card table-container-card">
+        <h2 id="levels-section-title" class="table-section-title">
+          Historial de progreso por niveles
+        </h2>
+
+        <div
+          class="table-responsive-wrapper"
+          tabindex="0"
+          aria-label="Tabla de progreso por niveles. Use las flechas de dirección para desplazarse horizontalmente si es necesario."
+        >
+          <table class="levels-table">
+            <thead>
               <tr>
-                <td colspan="6" style="text-align: center; padding: 2rem;">El estudiante aún no ha intentado ningún nivel.</td>
+                <th scope="col">Nombre del nivel</th>
+                <th scope="col">Dificultad</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Intentos</th>
+                <th scope="col">Tiempo Promedio</th>
+                <th scope="col">Pistas Promedio</th>
               </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              @for (
+                row of details.historial_niveles;
+                track row.nivel + row.dificultad
+              ) {
+                <tr [class.row-attention]="row.tiene_alerta">
+                  <td>
+                    <strong class="level-name">{{ row.nombre_nivel }}</strong>
+                  </td>
 
-    </div>
-  </section>
-}
+                  <td>
+                    <span
+                      class="difficulty-badge"
+                      [ngClass]="{
+                        'difficulty-easy': row.dificultad === 'easy',
+                        'difficulty-medium': row.dificultad === 'medium',
+                        'difficulty-hard': row.dificultad === 'hard',
+                      }"
+                    >
+                      {{
+                        row.dificultad === "easy"
+                          ? "Fácil"
+                          : row.dificultad === "medium"
+                            ? "Intermedio"
+                            : "Difícil"
+                      }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span
+                      class="status-badge"
+                      [ngClass]="{
+                        'status-completed': row.estado === 'Completado',
+                        'status-alert': row.estado === 'Requiere apoyo',
+                        'status-pending': row.estado === 'En progreso',
+                      }"
+                    >
+                      {{ row.estado }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span class="attempts-count"
+                      >{{ row.intentos_realizados }} intento(s)</span
+                    >
+                  </td>
+
+                  <td>
+                    <span class="time-value">{{
+                      formatTime(row.tiempo_promedio_segundos)
+                    }}</span>
+                  </td>
+
+                  <td>
+                    <span class="time-value"
+                      >{{ row.pistas_promedio }} pistas</span
+                    >
+                  </td>
+                </tr>
+              }
+
+              @if (details.historial_niveles.length === 0) {
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 2rem">
+                    El estudiante aún no ha intentado ningún nivel.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  }
 </main>

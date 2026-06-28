@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProgressService, StudentDetailsResponse } from '@core/services/progress.service';
+import {
+  ProgressService,
+  StudentDetailsResponse,
+} from '@core/services/progress.service';
 
 @Component({
   selector: 'app-student-details',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './student-details.component.html',
-  styleUrl: './student-details.component.scss'
+  styleUrl: './student-details.component.scss',
 })
 export class StudentDetailsComponent implements OnInit {
   studentId: number = 0;
@@ -19,12 +23,11 @@ export class StudentDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private progressService: ProgressService
+    private progressService: ProgressService,
   ) {}
 
   ngOnInit() {
-    // Capturar el ID de la URL (Ej: /teacher/student-details/5)
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       this.studentId = Number(params.get('id'));
       if (this.studentId) {
         this.loadDetails();
@@ -39,13 +42,18 @@ export class StudentDetailsComponent implements OnInit {
     this.progressService.getStudentDetails(this.studentId).subscribe({
       next: (res) => {
         this.details = res;
-        this.isLoading = false;
+
+        this.isFadingOut = true;
+        setTimeout(() => {
+          this.isLoading = false;
+          this.isFadingOut = false;
+        }, 300);
       },
       error: (err) => {
         console.error('Error cargando detalles:', err);
         this.isLoading = false;
         alert('No se pudieron cargar los detalles del estudiante.');
-      }
+      },
     });
   }
 
@@ -53,8 +61,8 @@ export class StudentDetailsComponent implements OnInit {
     this.router.navigate(['/teacher/dashboard']);
   }
 
-  // Utilidad para formatear los segundos a "MM:SS min"
   formatTime(seconds: number): string {
+    if (!seconds) return '00:00 min';
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')} min`;

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
+import { NotificationService } from '@core/services/notification.service';
 
 interface RegisterPayload {
   name: string | null;
@@ -24,7 +25,11 @@ export class RegisterComponent {
 
   isLoading = false;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router, 
+    private authService: AuthService,
+    private notificationService: NotificationService,
+  ) {}
   
    registerForm = new FormGroup({
     name: new FormControl('', [
@@ -101,12 +106,15 @@ export class RegisterComponent {
 
     this.authService.register(userData).subscribe({
       next: () => {
-        alert('Cuenta creada exitosamente');
+
+        this.notificationService.showAlert('Cuenta creada exitosamente', 'success');
         this.router.navigate(['/login']);
       },
       error: (err) => {
         console.error(err);
-        alert(err.error?.message || 'Error al registrar');
+        const mensajeError =
+          err.error?.message || 'Error al registrar';
+        this.notificationService.showAlert(mensajeError, 'error');
         this.isLoading = false;
       },
       complete: () => {

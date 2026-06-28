@@ -1,146 +1,243 @@
 <main class="profile-container">
+  <section class="area-info" [formGroup]="infoForm">
+    <div class="card info">
+      <h1 class="title info">Información personal</h1>
+      <div class="input-area grid-profile fade-item">
+        <label for="profile-name">Nombre</label>
+        <input
+          class="input-df"
+          type="text"
+          formControlName="name"
+          id="profile-name"
+        />
+        <button
+          type="button"
+          class="edit-btn"
+          title="Modificar nombre"
+          [class.active]="isEditingName"
+          (click)="toggleEditName()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-pencil-icon lucide-pencil"
+          >
+            <path
+              d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"
+            />
+            <path d="m15 5 4 4" />
+          </svg>
+          <span>Editar</span>
+        </button>
 
-    <section class="area-info" [formGroup]="infoForm">
-        <div class="card info">
-            <h1 class="title info">Información personal</h1>
-            <div class="input-area grid-profile">
-                
-                <label for="profile-name">Nombre</label>
-                <input class="input-df" type="text" formControlName="name" id="profile-name">
-                <button type="button" class="edit-btn" title="Modificar nombre" [class.active]="isEditingName" (click)="toggleEditName()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
-                </button>
+        <label for="profile-email">Correo</label>
+        <input
+          type="email"
+          id="profile-email"
+          formControlName="email"
+          class="disabled-input"
+        />
 
-                <label for="profile-email">Correo</label>
-                <input type="email" id="profile-email" formControlName="email" class="disabled-input">
-
-                <div class="action-container" *ngIf="isEditingName">
-                    <button class="save-changes-btn" [disabled]="infoForm.invalid || infoForm.pristine" (click)="onUpdateName()">
-                        Guardar cambios
-                    </button>
-                </div>
-            </div>
+        <div class="action-container" *ngIf="isEditingName">
+          <button
+            class="save-changes-btn"
+            [disabled]="infoForm.invalid || infoForm.pristine"
+            (click)="onUpdateName()"
+          >
+            Guardar cambios
+          </button>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <section class="area-join-class" [formGroup]="classForm" >
-        <div class="card join-class">
-            <h1 class="title join-class">
-                Unirse a una clase
-            </h1>
-            <div class="input-area grid-join">
-                 <div class="status-label" >Estado:</div>
-
-                @if (isLoadingClass) {
-                    <div class="status-value">
-                        <span class="status-tag field-disabled" >Verificando...</span>
-                    </div>
-                } @else {
-                    @if (currentClass) {
-                        <div class="status-value">
-                            <span class="status-tag" >Unido</span>
-                            <p class="help-text" style="display: inline-block; margin-left: 10px; font-weight: bold;">
-                                {{ currentClass.aula_name }} — Prof. {{ currentClass.teacher_name }}
-                          </p>
-                        </div>
-                    } @else {
-                        <div class="status-value">
-                            <span class="status-tag field-disabled">No unido</span>
-                        </div>
-
-                              <label for="class-code">Código de clase:</label>
-                            <input class="input-df" type="text" id="class-code" placeholder="Ej: XF93A2" autocomplete="off" formControlName="code">
-                            
-                            <button type="button" class="join-btn" [disabled]="classForm.invalid" (click)="onJoinClass()">
-                                Entrar al aula
-                            </button>
-                    }
-                }
-            </div>
+  <section class="area-join-class" [formGroup]="classForm">
+    <div class="card join-class">
+      @if (isLoadingClass) {
+        <div class="skeleton-wrapper" aria-hidden="true">
+          <div class="skeleton-block skeleton-title"></div>
+          <div class="skeleton-block" style="width: 80%"></div>
+          <div class="skeleton-block" style="width: 50%"></div>
         </div>
-    </section>
+      }
 
-    <section class="area-change-pass" [formGroup]="passwordForm"> 
-        <div class="card change-pass">
-            <h1 class=" title change-pass">
-                Cambiar contraseña
-            </h1>
-            <div class="input-area grid6">
-                <label for="current-pass">Contraseña actual</label>
-                <input class="input-df" type="password" id="current-pass" placeholder="Ingresa tu contraseña actual" formControlName="currentPassword">
+      <!-- 2. CONTENIDO REAL: Se dibuja y ejecuta el Fade-in cuando la carga finaliza -->
+      @else {
+        <h1 class="title join-class">Unirse a una clase</h1>
+        <div class="input-area grid-join fade-item">
+          <div class="status-label">Estado:</div>
 
-                <label for="new-pass">Nueva contraseña</label>
-                <input class="input-df" type="password" id="new-pass" placeholder="Mínimo 6 caracteres" formControlName="newPassword">
-
-                <label for="confirm-pass">Confirmar contraseña</label>
-                <input class="input-df" type="password" id="confirm-pass" placeholder="Repite tu nueva contraseña" formControlName="confirmPassword">
-
-                
-                <div class="action-container">
-                    @if (passwordForm.valid){
-                        <button class="save-changes-pass-btn" (click)="onChangePassword()">
-                            Guardar cambios
-                        </button>
-                    }@else{
-                        <p class="help-text" style=" color: var(--container-dashboard-text-color); opacity: 0.7; margin: 0;">
-                        * Por favor, completa todos los campos para poder cambiar tu contraseña.
-                    </p>
-                    }    
-                </div>
+          @if (isLoadingClass) {
+            <div class="status-value">
+              <span class="status-tag field-disabled">Verificando...</span>
             </div>
+          } @else {
+            @if (currentClass) {
+              <div class="status-value">
+                <span class="status-tag">Unido</span>
+                <p
+                  class="help-text"
+                  style="
+                    display: inline-block;
+                    margin-left: 10px;
+                    font-weight: bold;
+                  "
+                >
+                  {{ currentClass.aula_name }} — Prof.
+                  {{ currentClass.teacher_name }}
+                </p>
+              </div>
+            } @else {
+              <div class="status-value">
+                <span class="status-tag field-disabled">No unido</span>
+              </div>
+
+              <label for="class-code">Código de clase:</label>
+              <input
+                class="input-df"
+                type="text"
+                id="class-code"
+                placeholder="Ej: XF93A2"
+                autocomplete="off"
+                formControlName="code"
+              />
+
+              <button
+                type="button"
+                class="join-btn"
+                [disabled]="classForm.invalid"
+                (click)="onJoinClass()"
+              >
+                Entrar al aula
+              </button>
+            }
+          }
         </div>
-            
-    </section>
+      }
+    </div>
+  </section>
 
-    <section class="area-settings-acces">
-        <div class="card settings-acces">
-            <h1 class="title settings-acces">
-                Ajustes de accesibilidad
-            </h1>
-            <div class="input-area grid-accessibility">
-                <label for="toggle-dyslexia">Activar fuente OpenDyslexic</label>
-                <div class="control-container">
-                    <label class="switch-control">
-                    <input  type="checkbox" id="toggle-dyslexia" (change)="onToggleDyslexia($event)">
-                    <span class="slider"></span>
-                    </label>
-                </div>
+  <section class="area-change-pass" [formGroup]="passwordForm">
+    <div class="card change-pass">
+      <h1 class="title change-pass">Cambiar contraseña</h1>
+      <div class="input-area grid6 fade-item">
+        <label for="current-pass">Contraseña actual</label>
+        <input
+          class="input-df"
+          type="password"
+          id="current-pass"
+          placeholder="Ingresa tu contraseña actual"
+          formControlName="currentPassword"
+        />
 
-                <label for="select-contrast">Modo de Contraste</label>
-                <div class="control-container">
-                    <select id="select-contrast" class="select-control" (change)="onContrastChange($event)">
-                    <option value="claro" selected>Claro</option>
-                    <option value="oscuro">Oscuro</option>
-                    </select>
-                </div>
+        <label for="new-pass">Nueva contraseña</label>
+        <input
+          class="input-df"
+          type="password"
+          id="new-pass"
+          placeholder="Mínimo 6 caracteres"
+          formControlName="newPassword"
+        />
 
-                <label for="select-speed">Velocidad del Lector de Voz</label>
-                <div class="control-container">
-                    <select id="select-speed" class="select-control">
-                    <option value="rapido">Rápido</option>
-                    <option value="normal" selected>Normal</option>
-                    <option value="lento">Lento</option>
-                    </select>
-                </div>
+        <label for="confirm-pass">Confirmar contraseña</label>
+        <input
+          class="input-df"
+          type="password"
+          id="confirm-pass"
+          placeholder="Repite tu nueva contraseña"
+          formControlName="confirmPassword"
+        />
 
-                <label for="check-animations">Desactivar Animaciones</label>
-                <div class="control-container">
-                    <label class="checkbox-control">
-                    <input type="checkbox" id="check-animations" checked>
-                    <span class="custom-checkbox"></span>
-                    </label>
-                </div>
-
-                <label for="select-font-size">Tamaño de Fuente</label>
-                <div class="control-container">
-                    <select id="select-font-size" class="select-control">
-                    <option value="normal" selected>Normal</option>
-                    <option value="grande">Grande</option>
-                    </select>
-                </div>
-
-            </div>
+        <div class="action-container">
+          @if (passwordForm.valid) {
+            <button class="save-changes-pass-btn" (click)="onChangePassword()">
+              Guardar cambios
+            </button>
+          } @else {
+            <p
+              class="help-text"
+              style="
+                color: var(--container-dashboard-text-color);
+                opacity: 0.7;
+                margin: 0;
+              "
+            >
+              * Por favor, completa todos los campos para poder cambiar tu
+              contraseña.
+            </p>
+          }
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
+  <section class="area-settings-acces">
+    <div class="card settings-acces">
+      <h1 class="title settings-acces">Ajustes de accesibilidad</h1>
+      <div class="input-area grid-accessibility fade-item">
+        <label for="toggle-dyslexia">Activar fuente OpenDyslexic</label>
+        <div class="control-container">
+          <label class="switch-control">
+            <input
+              type="checkbox"
+              id="toggle-dyslexia"
+              [checked]="isDyslexiaActive"
+              (change)="onToggleDyslexia($event)"
+            />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <label for="select-contrast">Modo de Contraste</label>
+        <div class="control-container">
+          <select
+            id="select-contrast"
+            class="select-control"
+            [value]="currentTheme"
+            (change)="onContrastChange($event)"
+          >
+            <option value="claro" selected>Claro</option>
+            <option value="oscuro">Oscuro</option>
+          </select>
+        </div>
+
+        <label for="select-speed">Velocidad del Lector de Voz</label>
+        <div class="control-container">
+          <select
+            id="select-speed"
+            class="select-control"
+            [value]="currentSpeed"
+            (change)="onChangeTtsSpeed($event)"
+          >
+            <option value="rapido">Rápido</option>
+            <option value="normal" selected>Normal</option>
+            <option value="lento">Lento</option>
+          </select>
+        </div>
+
+        <label for="check-animations">Desactivar Animaciones</label>
+        <div class="control-container">
+          <label class="checkbox-control">
+            <input type="checkbox" id="check-animations" checked />
+            <span class="custom-checkbox"></span>
+          </label>
+        </div>
+
+        <label for="select-font-size">Tamaño de Fuente</label>
+        <div class="control-container">
+          <select id="select-font-size" class="select-control">
+            <option value="normal" selected>Normal</option>
+            <option value="grande">Grande</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>

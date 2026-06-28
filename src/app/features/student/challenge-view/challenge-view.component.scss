@@ -1,25 +1,21 @@
-// ==========================================================================
-// CONTENEDOR CONTORNO GENERAL (LAYOUT SEGURO)
-// ==========================================================================
 .challenge-workspace-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  justify-content: center;
   width: 100%;
-  background-color: var(--container-dashboard-bg-color);
+  background-color: transparent;
   color: var(--container-dashboard-text-color);
-  // Asegura espacio inferior holgado para que el footer sticky no tape contenido útil
-  padding-bottom: 6.5rem; 
+  padding: 20px;
 }
 
 // Contenedor tipo Tarjeta Principal que encapsula Header y Cuerpo
 .challenge-main-container {
-  background-color: var(--card-bg-color, #FFFFFF);
-  border: 2px solid var(--card-border-color, #FFFFFF);
+  background-color: var(--card-bg-color, #ffffff);
+  border: 2px solid var(--card-border-color, #ffffff);
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  margin: 2rem;
-  padding: 2rem;
+  margin: 0;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -30,7 +26,7 @@
 // 1. HEADER SUPERIOR (MINIMALISTA)
 // ==========================================================================
 .challenge-header {
-  border-bottom: 1px solid var(--line-divisor-color, #2B2B2A);
+  border-bottom: 1px solid var(--line-divisor-color, #2b2b2a);
   padding-bottom: 1.25rem;
   width: 100%;
 
@@ -51,7 +47,7 @@
 
   .challenge-dynamic-title {
     margin: 0;
-    color: var(--text-titulo-landing, #2B2B2A);
+    color: var(--text-titulo-landing, #2b2b2a);
     overflow-wrap: anywhere;
   }
 }
@@ -62,8 +58,8 @@
 .challenge-body-layout {
   display: grid;
   // Panel izquierdo de control estrecho y Panel derecho elástico grande
-  grid-template-columns: 320px 1fr; 
-  gap: 2rem;
+  grid-template-columns: 400px 1fr;
+  gap: 20px;
   align-items: stretch;
   width: 100%;
   flex-grow: 1;
@@ -76,14 +72,14 @@
   min-width: 0; // Evita el desborde tipográfico lateral en entornos CSS Grid
 
   .panel-card-content {
-    background-color: var(--carousel-bg-card-color, #F9F6F0);
-    border: 2px solid var(--carousel-border-card-color, #2B2B2A);
+    background-color: var(--carousel-bg-card-color, #f9f6f0);
+    border: 2px solid var(--carousel-border-card-color, #2b2b2a);
     border-radius: 12px;
     padding: 1.5rem;
-    height: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   .level-header {
@@ -93,7 +89,7 @@
 
     .level-current-title {
       margin: 0;
-      color: var(--text-titulo-landing, #2B2B2A);
+      color: var(--text-titulo-landing, #2b2b2a);
       font-size: 1.35rem;
     }
 
@@ -111,7 +107,7 @@
 
     .objectives-label {
       font-weight: 700;
-      color: var(--label-text-color, #2B2B2A);
+      color: var(--label-text-color, #2b2b2a);
     }
 
     .objectives-list {
@@ -136,7 +132,7 @@
     .control-label-sm {
       font-weight: 700;
       font-size: 0.9rem;
-      color: var(--label-text-color, #2B2B2A);
+      color: var(--label-text-color, #2b2b2a);
     }
   }
 
@@ -145,7 +141,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid rgba(#2B2B2A, 0.1);
+    border-top: 1px solid rgba(#2b2b2a, 0.1);
     padding-top: 1rem;
     gap: 1rem;
     flex-wrap: wrap;
@@ -157,45 +153,72 @@
     }
 
     // Botones de ayuda discretos y estilizados de baja carga cognitiva
-    .utility-btn {
-      display: inline-flex;
+    .speaker-button {
+      padding: 0.5rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: row;
       align-items: center;
       justify-content: center;
-      background-color: var(--button-bg-color-header, #2B2B2A);
-      color: var(--button-text-color-header, #F9F6F0);
+      gap: 5px;
       border: none;
-      padding: 0.5rem 0.85rem;
-      border-radius: 6px;
+      border-radius: 10px;
+      background: var(--button-speaker-bg-color);
+      color: var(--button-speaker-text-color);
       cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      height: 36px;
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+      flex-shrink: 0;
 
-      &:hover, &:focus {
-        background-color: var(--accent, #0eb9de);
-        color: #2B2B2A;
-        outline: none;
+      &:focus {
+        outline: 2px solid rgb(255, 0, 255);
       }
 
-      &.btn-tts {
-        padding: 0.5rem;
-        width: 36px; // Botón totalmente simétrico e icónico
+      &:hover {
+        background: var(--button-speaker-bg-color-hover);
+        color: var(--button-speaker-text-color-hover);
+      }
+
+      &.active {
+        background-color: var(--button-bg-color-header-active);
+        color: var(--button-text-color-header-active);
+        outline: 2px solid var(--button-outline-color-header-active);
       }
     }
 
-    // Cronómetro secundario y no invasivo
-    .discreet-timer-box {
+    .btn-help {
+      padding: 0.5rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      min-height: 50px;
       display: flex;
+      flex-direction: row;
       align-items: center;
-      gap: 0.4rem;
-      color: #7A7A7A;
-      font-weight: 700;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      background-color: rgba(#2B2B2A, 0.04);
+      justify-content: center;
+      gap: 5px;
+      border: none;
+      border-radius: 10px;
+      background: var(--button-speaker-bg-color);
+      color: var(--button-speaker-text-color);
+      cursor: pointer;
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+      flex-shrink: 0;
 
-      .icon-timer {
-        flex-shrink: 0;
+      &:focus {
+        outline: 2px solid rgb(255, 0, 255);
+      }
+
+      &:hover {
+        background: var(--button-speaker-bg-color-hover);
+        color: var(--button-speaker-text-color-hover);
+      }
+
+      &.active {
+        background-color: var(--button-bg-color-header-active);
+        color: var(--button-text-color-header-active);
+        outline: 2px solid var(--button-outline-color-header-active);
       }
     }
   }
@@ -212,11 +235,19 @@
   margin: 0;
   border: none;
   background-color: transparent;
+  width: 100%;
 
   .game-runtime-container {
     display: flex;
+    width: 100%;
     justify-content: center;
     align-content: center;
+  }
+
+  .game-placeholder-canvas {
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 
   // Pantalla de Inicio (Estado 1)
@@ -228,25 +259,30 @@
     padding: 2rem;
 
     .start-challenge-btn {
-      background-color: var(--button-bg-color-comenzar, #2B2B2A);
-      color: var(--button-text-color-comenzar, #F9F6F0);
+      background-color: var(--button-bg-color-comenzar, #2b2b2a);
+      color: var(--button-text-color-comenzar, #f9f6f0);
       border: none;
       padding: 1rem 2.5rem;
       border-radius: 12px;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-      transition: transform 0.2s, background-color 0.2s;
+      transition:
+        transform 0.2s,
+        background-color 0.2s;
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         background-color: var(--accent, #0eb9de);
-        color: #2B2B2A;
+        color: #2b2b2a;
         transform: scale(1.05); // Efecto sutil interactivo
         outline: none;
       }
     }
 
-
+    .game-placeholder-canvas {
+      width: 100%;
+    }
   }
 
   // Pantalla del Video (Estado 2)
@@ -269,12 +305,12 @@
 // Adaptación automática para Alto Contraste
 body.high-contrast {
   .panel-right-game .intro-start-screen .start-challenge-btn {
-    border: 2px solid #FFFFFF !important;
+    border: 2px solid #ffffff !important;
     background-color: #000000 !important;
-    color: #FFFFFF !important;
-    
+    color: #ffffff !important;
+
     &:hover {
-      background-color: #FFFFFF !important;
+      background-color: #ffffff !important;
       color: #000000 !important;
     }
   }
@@ -290,8 +326,8 @@ body.high-contrast {
   right: 0;
   z-index: 1000;
   padding: 1rem 2rem;
-  background-color: var(--bg-header, #F9F6F0);
-  border-top: 3px solid var(--line-divisor-color, #2B2B2A);
+  background-color: var(--bg-header, #f9f6f0);
+  border-top: 3px solid var(--line-divisor-color, #2b2b2a);
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 
   .feedback-banner-content {
@@ -333,22 +369,28 @@ body.high-contrast {
 
   // Esquemas cromáticos adaptables de retroalimentación
   .status-success-layout {
-    background-color: #DCFCE7;
-    border: 1px solid #15803D;
-    color: #14532D;
+    background-color: #dcfce7;
+    border: 1px solid #15803d;
+    color: #14532d;
   }
 
   .status-error-layout {
-    background-color: #FEE2E2;
-    border: 1px solid #B91C1C;
-    color: #7F1D1D;
+    background-color: #fee2e2;
+    border: 1px solid #b91c1c;
+    color: #7f1d1d;
   }
 }
 
 // Animación de entrada fluida para evitar rupturas de atención visual
 @keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 // ==========================================================================
@@ -357,85 +399,47 @@ body.high-contrast {
 body.high-contrast {
   .challenge-main-container {
     background-color: #000000 !important;
-    border-color: #FFFFFF !important;
+    border-color: #ffffff !important;
   }
 
   .panel-left-controls .panel-card-content {
     background-color: #000000 !important;
-    border-color: #FFFFFF !important;
+    border-color: #ffffff !important;
   }
 
   .panel-right-game .game-runtime-container {
-
     background-color: #000000 !important;
-    border: 2px solid #FFFFFF !important;
-    
+    border: 2px solid #ffffff !important;
+
     .placeholder-graphic {
-      color: #FFFFFF !important;
+      color: #ffffff !important;
     }
   }
 
   .system-feedback-banner {
     background-color: #000000 !important;
-    border-top: 3px solid #FFFFFF !important;
+    border-top: 3px solid #ffffff !important;
 
-    .status-success-layout, .status-error-layout {
+    .status-success-layout,
+    .status-error-layout {
       background-color: #000000 !important;
-      color: #FFFFFF !important;
-      border: 2px solid #FFFFFF !important;
+      color: #ffffff !important;
+      border: 2px solid #ffffff !important;
     }
   }
 
   .panel-left-controls .controls-utility-footer {
-    border-top-color: #FFFFFF;
-    
+    border-top-color: #ffffff;
+
     .utility-btn {
-      background-color: #FFFFFF !important;
+      background-color: #ffffff !important;
       color: #000000 !important;
     }
 
     .discreet-timer-box {
       background-color: #121212 !important;
-      color: #FFFFFF !important;
+      color: #ffffff !important;
     }
-  }
-}
-
-// ==========================================================================
-// MEDIA QUERIES (RESPONSIVIDAD SIN DESTRUCCIÓN EN DISPOSITIVOS MÓVILES)
-// ==========================================================================
-@media (max-width: 960px) {
-  // Conversión automática de rejilla horizontal a flujo vertical elástico
-  .challenge-body-layout {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .challenge-main-container {
-    margin: 1rem;
-    padding: 1.25rem;
-  }
-
-  .panel-left-controls {
-    .panel-card-content {
-      height: auto; // Se adapta dinámicamente al tamaño intrínseco del texto
-    }
-  }
-  
-  .panel-right-game {
-    .game-runtime-container {
-      min-height: 350px; // Reducción de resguardo proporcional en tabletas/móviles
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .system-feedback-banner {
-    padding: 0.75rem 1rem;
-  }
-  
-  .challenge-header .challenge-dynamic-title {
-    font-size: 1.5rem; // Escala visual armónica compacta
   }
 }
 
@@ -445,16 +449,25 @@ body.high-contrast {
 }
 
 @keyframes flashHighlight {
-  0% { background-color: transparent; }
-  20% { background-color: rgba(14, 185, 222, 0.3); border-radius: 8px; padding: 5px; } // Usa tu color --accent
-  100% { background-color: transparent; padding: 0;}
+  0% {
+    background-color: transparent;
+  }
+  20% {
+    background-color: rgba(14, 185, 222, 0.3);
+    border-radius: 8px;
+    padding: 5px;
+  } // Usa tu color --accent
+  100% {
+    background-color: transparent;
+    padding: 0;
+  }
 }
 
 // Estilos dinámicos extra para el footer de error
 .status-error-layout {
-  background-color: #FEF2F2 !important;
-  border: 1px solid #DC2626 !important;
-  color: #991B1B !important;
+  background-color: #fef2f2 !important;
+  border: 1px solid #dc2626 !important;
+  color: #991b1b !important;
 }
 
 // Estilos para los nuevos botones de dificultad
@@ -489,7 +502,290 @@ body.high-contrast {
       color: #000;
       border-color: var(--accent);
       transform: scale(1.05);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+  }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-panel-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+  height: 100%;
+
+  .skeleton-line {
+    background: linear-gradient(
+      90deg,
+      rgba(122, 122, 122, 0.1) 25%,
+      rgba(122, 122, 122, 0.2) 50%,
+      rgba(122, 122, 122, 0.1) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s infinite linear;
+    border-radius: 6px;
+  }
+
+  .title-sk {
+    height: 28px;
+    width: 85%;
+    margin-bottom: 0.5rem;
+  }
+  .text-sk {
+    height: 14px;
+    width: 100%;
+  }
+  .sub-sk {
+    width: 55%;
+    margin-bottom: 1rem;
+  }
+
+  .skeleton-box {
+    background: linear-gradient(
+      90deg,
+      rgba(122, 122, 122, 0.1) 25%,
+      rgba(122, 122, 122, 0.2) 50%,
+      rgba(122, 122, 122, 0.1) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s infinite linear;
+    border-radius: 10px;
+    width: 100%;
+  }
+
+  .objectives-sk {
+    height: 90px;
+  }
+  .difficulty-sk {
+    height: 80px;
+    margin-top: auto;
+  } // Imita el empuje inferior
+
+  .skeleton-footer-sk {
+    display: flex;
+    gap: 12px;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(122, 122, 122, 0.15);
+
+    .circle-sk {
+      width: 45px;
+      height: 45px;
+      border-radius: 10px;
+      background: rgba(122, 122, 122, 0.15);
+    }
+  }
+}
+
+//Spinner
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+
+  &.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+
+.fulfilling-square-spinner,
+.fulfilling-square-spinner * {
+  box-sizing: border-box;
+}
+
+.fulfilling-square-spinner {
+  height: 50px;
+  width: 50px;
+  position: relative;
+  border: 4px solid #ff1d5e;
+  animation: fulfilling-square-spinner-animation 2.5s infinite ease;
+}
+
+.fulfilling-square-spinner .spinner-inner {
+  vertical-align: top;
+  display: inline-block;
+  background-color: #ff1d5e;
+  width: 100%;
+  opacity: 1;
+  animation: fulfilling-square-spinner-inner-animation 2.5s infinite ease-in;
+}
+
+.help-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+@keyframes fulfilling-square-spinner-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(180deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fulfilling-square-spinner-inner-animation {
+  0% {
+    height: 0%;
+  }
+  25% {
+    height: 0%;
+  }
+  50% {
+    height: 100%;
+  }
+  75% {
+    height: 100%;
+  }
+  100% {
+    height: 0%;
+  }
+}
+//
+
+.career-speedrun-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #f3f4f6; // Gris neutral por defecto
+  border: 2px solid #d1d5db;
+  border-radius: 10px;
+  color: #374151;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #e5e7eb;
+    border-color: #9ca3af;
+  }
+
+  // Clase dinámica cuando el modo carrera esté encendido
+  &.active-career {
+    background-color: #ef4444 !important; // Rojo o naranja llamativo de competición
+    border-color: #b91c1c !important;
+    color: #ffffff !important;
+    animation: pulseActiveCareer 2s infinite ease-in-out;
+  }
+}
+
+@keyframes pulseActiveCareer {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+// ==========================================================================
+// MEDIA QUERIES (RESPONSIVIDAD SIN DESTRUCCIÓN EN DISPOSITIVOS MÓVILES)
+// ==========================================================================
+@media (max-width: 1400px) {
+  .challenge-body-layout {
+    grid-template-columns: 350px 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  // 1. Transformar el Layout Horizontal a Vertical[cite: 16]
+  .challenge-body-layout {
+    grid-template-columns: 1fr; // Forzamos 1 sola columna[cite: 16]
+    gap: 1.5rem;
+  }
+
+  .challenge-main-container {
+    margin: 1rem;
+    padding: 1.25rem;
+  }
+
+  .panel-left-controls .panel-card-content {
+    height: auto;
+  }
+
+  .panel-right-game .game-runtime-container {
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .challenge-workspace-wrapper {
+    padding: 10px; //[cite: 16]
+  }
+
+  .challenge-main-container {
+    margin: 0;
+    padding: 10px;
+  }
+
+  .challenge-header .challenge-dynamic-title {
+    font-size: 1.5rem;
+  }
+
+  // 2. Evitar desborde en controles izquierdos[cite: 16]
+  .panel-left-controls {
+    .controls-utility-footer {
+      flex-direction: column; // Distribución vertical de los grupos de botones
+      align-items: stretch;
+      gap: 1rem;
+    }
+
+    .accessibility-action-group {
+      display: flex;
+      justify-content: center; // Centramos los botones en móviles
+      gap: 16px;
+      width: 100%;
+    }
+
+    .speaker-button,
+    .btn-help {
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      justify-content: center;
+
+      span {
+        display: none !important;
+      }
+    }
+  }
+
+  .system-feedback-banner {
+    padding: 0.75rem 1rem;
   }
 }

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AccessibleAlertComponent } from 'src/app/components/layout/alertas/accessible-alert.component';
 import { HeaderComponent } from 'src/app/components/layout/header/header.component';
 
 @Component({
   selector: 'app-public-layout',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent],
+  imports: [RouterOutlet, HeaderComponent, AccessibleAlertComponent],
   templateUrl: './public-layout.component.html',
   styleUrl: './public-layout.component.scss'
 })

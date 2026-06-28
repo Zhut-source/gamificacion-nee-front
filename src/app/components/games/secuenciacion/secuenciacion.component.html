@@ -1,83 +1,280 @@
 <div class="game-environment">
-  
-  <!-- 1. EL TABLERO (MATRIZ) -->
   <div class="board-container">
-    <!-- Usamos CSS Grid dinámico basado en gridSize -->
-    <div class="game-grid" [style.grid-template-columns]="'repeat(' + gridSize + ', 1fr)'">
-      
-      <!-- Iterar Filas -->
+    <div
+      class="game-grid"
+      [style.grid-template-columns]="'repeat(' + gridSize + ', 1fr)'"
+      [style.grid-template-rows]="'repeat(' + gridSize + ', 1fr)'"
+    >
       @for (row of grid; track $index) {
-        <!-- Iterar Columnas (Celdas) -->
         @for (cell of row; track $index) {
-          
-          <div class="grid-cell" [class]="'cell-' + cell.type" [class.cell-hint]="cell.isHint">
-            
-            <!-- Renderizar al personaje si su posición coincide con esta celda -->
+          <div
+            class="grid-cell"
+            [class]="'cell-' + cell.type"
+            [class.cell-hint]="cell.isHint"
+          >
             @if (playerPosition.x === cell.x && playerPosition.y === cell.y) {
-              <div class="player-character">🤖</div>
+              <div class="player-character" [class.robot-exploded]="isDestroying">🤖</div>
             }
-            
-            <!-- Renderizar Meta -->
-            @if (cell.type === 'goal') {
+
+            @if (cell.type === "goal") {
               <div class="goal-indicator">🚩</div>
             }
-            
           </div>
         }
       }
     </div>
   </div>
 
-  <!-- 2. LA SECUENCIA (Línea de comandos) -->
-  <div class="sequence-timeline" aria-label="Tu secuencia de instrucciones">
-    <p class="timeline-title">Tu Secuencia (Doble clic para borrar):</p>
-    
-    <div class="sequence-track">
-      @if (playerSequence.length === 0) {
-        <span class="empty-text">Añade comandos para comenzar...</span>
-      }
+  <div class="side-panels">
+    <div class="sequence-timeline" aria-label="Tu secuencia de instrucciones">
+      <p class="timeline-title">Tu Secuencia:</p>
 
-      @for (cmd of playerSequence; track $index) {
-        <!-- Accesibilidad: tabindex para que sea focuseable con teclado -->
-        <button 
-            class="command-block" 
+      <div class="sequence-track">
+        @if (playerSequence.length === 0) {
+          <span class="empty-text">
+            Añade comandos para comenzar... <br />
+            -1 click en el item para borrar <br />
+            -Puedes usar las flechas de teclado o W A S D respectivamente ESC o
+            DEL para retroceder<br />
+            -SPACE BAR para probar codigo<br />
+          </span>
+        }
+
+        @for (cmd of playerSequence; track $index) {
+          <button
+            class="command-block"
             tabindex="0"
-            (dblclick)="removeCommand($index)"
+            (click)="removeCommand($index)"
             (keydown.enter)="removeCommand($index)"
             title="Doble clic o doble Enter para eliminar"
-            [attr.aria-label]="'Comando ' + cmd + ' en posición ' + ($index + 1)">
-          
-          @if (cmd === 'UP') { ⬆️ }
-          @if (cmd === 'DOWN') { ⬇️ }
-          @if (cmd === 'LEFT') { ⬅️ }
-          @if (cmd === 'RIGHT') { ➡️ }
-
-        </button>
-      }
-    </div>
-  </div>
-
-  <!-- 3. PANEL DE CONTROLES (Botones de acción) -->
-  <div class="control-panel">
-    
-    <div class="direction-buttons">
-      <button class="dir-btn" (click)="addCommand('UP')" [disabled]="isPlaying" aria-label="Mover arriba">⬆️</button>
-      <div class="horizontal-btns">
-        <button class="dir-btn" (click)="addCommand('LEFT')" [disabled]="isPlaying" aria-label="Mover izquierda">⬅️</button>
-        <button class="dir-btn" (click)="addCommand('DOWN')" [disabled]="isPlaying" aria-label="Mover abajo">⬇️</button>
-        <button class="dir-btn" (click)="addCommand('RIGHT')" [disabled]="isPlaying" aria-label="Mover derecha">➡️</button>
+            [attr.aria-label]="
+              'Comando ' + cmd + ' en posición ' + ($index + 1)
+            "
+          >
+            @if (cmd === "UP") {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-arrow-up-icon lucide-arrow-up"
+              >
+                <path d="m5 12 7-7 7 7" />
+                <path d="M12 19V5" />
+              </svg>
+            }
+            @if (cmd === "DOWN") {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-arrow-down-icon lucide-arrow-down"
+              >
+                <path d="M12 5v14" />
+                <path d="m19 12-7 7-7-7" />
+              </svg>
+            }
+            @if (cmd === "LEFT") {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-arrow-left-icon lucide-arrow-left"
+              >
+                <path d="m12 19-7-7 7-7" />
+                <path d="M19 12H5" />
+              </svg>
+            }
+            @if (cmd === "RIGHT") {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-arrow-right-icon lucide-arrow-right"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            }
+          </button>
+        }
       </div>
     </div>
 
-    <div class="action-buttons">
-      <button class="run-btn" (click)="runSequence()" [disabled]="isPlaying || playerSequence.length === 0">
-        {{ isPlaying ? 'Ejecutando...' : '▶ PROBAR CÓDIGO' }}
-      </button>
-      <button class="reset-btn" (click)="initGame(difficulty)" [disabled]="isPlaying">
-        🔄 Reiniciar Nivel
-      </button>
+    <div class="control-panel">
+      <div class="direction-buttons">
+        <button
+          class="dir-btn"
+          (click)="addCommand('UP')"
+          [disabled]="isPlaying"
+          aria-label="Mover arriba"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-arrow-up-icon lucide-arrow-up"
+          >
+            <path d="m5 12 7-7 7 7" />
+            <path d="M12 19V5" />
+          </svg>
+        </button>
+        <div class="horizontal-btns">
+          <button
+            class="dir-btn"
+            (click)="addCommand('LEFT')"
+            [disabled]="isPlaying"
+            aria-label="Mover izquierda"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-arrow-left-icon lucide-arrow-left"
+            >
+              <path d="m12 19-7-7 7-7" />
+              <path d="M19 12H5" />
+            </svg>
+          </button>
+          <button
+            class="dir-btn"
+            (click)="addCommand('DOWN')"
+            [disabled]="isPlaying"
+            aria-label="Mover abajo"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-arrow-down-icon lucide-arrow-down"
+            >
+              <path d="M12 5v14" />
+              <path d="m19 12-7 7-7-7" />
+            </svg>
+          </button>
+          <button
+            class="dir-btn"
+            (click)="addCommand('RIGHT')"
+            [disabled]="isPlaying"
+            aria-label="Mover derecha"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-arrow-right-icon lucide-arrow-right"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button
+          class="run-btn"
+          (click)="runSequence()"
+          [disabled]="isPlaying || playerSequence.length === 0"
+          [attr.aria-label]="
+            isPlaying
+              ? 'Ejecutando secuencia de comandos'
+              : 'Probar código actual'
+          "
+        >
+          @if (!isPlaying) {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-play-icon lucide-play"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"
+              />
+            </svg>
+          }
+          <span>{{ isPlaying ? "Ejecutando..." : "PROBAR CÓDIGO" }}</span>
+        </button>
+        <button
+          class="reset-btn"
+          (click)="initGame(difficulty)"
+          [disabled]="isPlaying"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-repeat-icon lucide-repeat"
+          >
+            <path d="m17 2 4 4-4 4" />
+            <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
+            <path d="m7 22-4-4 4-4" />
+            <path d="M21 13v1a4 4 0 0 1-4 4H3" />
+          </svg>
+          <span>Reiniciar Nivel</span>
+        </button>
+      </div>
     </div>
-
   </div>
-
 </div>

@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { AccessibilityService } from '@core/services/accessibility.service';
 import { AuthService } from '@core/services/auth.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -11,24 +13,49 @@ import { AuthService } from '@core/services/auth.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy{
 
 
   isLoggedIn$;
   isDyslexiaFont = false;
   isHighContrast = false;
   currentUser: any = null;
+  private sub = new Subscription();
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private accessibilityService: AccessibilityService
+  ) {
         this.isLoggedIn$ = this.authService.isLoggedIn$;
+  }
 
-        this.isLoggedIn$.subscribe(loggedIn => {
-          if (loggedIn) {
-            this.currentUser = this.authService.getCurrentUser();
-          } else {
-            this.currentUser = null;
-          }
-        });
+  ngOnInit() {
+    this.sub.add(
+      this.isLoggedIn$.subscribe(loggedIn => {
+        if (loggedIn) {
+          this.currentUser = this.authService.getCurrentUser();
+        } else {
+          this.currentUser = null;
+        }
+      })
+    );
+
+    this.sub.add(
+      this.accessibilityService.dyslexiaFont$.subscribe(enabled => {
+        this.isDyslexiaFont = enabled;
+      })
+    );
+
+    this.sub.add(
+      this.accessibilityService.highContrast$.subscribe(enabled => {
+        this.isHighContrast = enabled;
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   onLogout() {
@@ -37,21 +64,10 @@ export class HeaderComponent {
   }
 
   toggleFont() {
-    this.isDyslexiaFont = !this.isDyslexiaFont;
-
-    document.body.classList.toggle(
-      'accessible-font',
-      this.isDyslexiaFont
-    );
+    this.accessibilityService.setDyslexiaFont(!this.isDyslexiaFont);
   }
   
   toggleHighContrast(): void {
-    this.isHighContrast = !this.isHighContrast;
-
-    if (this.isHighContrast) {
-      document.body.classList.add('high-contrast');
-    } else {
-      document.body.classList.remove('high-contrast');
-    }
+    this.accessibilityService.setHighContrast(!this.isHighContrast);
   }
 }

@@ -3,28 +3,30 @@
   <ng-container *ngIf="isLoggedIn$ | async; else publicHeader">
     
     <div class="header-content private-view">
-      <h1 class="logo-text" >
-        <a routerLink="/student/dashboard">TEXT</a>
-      </h1>
+      
+        <a class="logo-text" routerLink="/student/dashboard">
+            <h1> TEXT</h1>
+        </a>
+      
       <nav class="user-nav">
-        <a [routerLink]="currentUser?.role === 'maestro' ? '/teacher/profile' : '/student/profile'" 
-        class="welcome-link" 
-        title="Ir a mi perfil"> 
+        <a class="profile-link" [routerLink]="currentUser?.role === 'maestro' ? '/teacher/profile' : '/student/profile'" 
+        [attr.aria-label]="'Ir al perfil de ' + (currentUser?.name || 'Usuario')"> 
+        <svg  class="profile-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user profile-icon"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <span class="welcome-text">Hola, {{ currentUser?.name || 'Usuario' }}</span>
         </a>
         <button class="icon-button" title="Activar fuente accesible" [class.active]="isDyslexiaFont" (click)="toggleFont()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-case-sensitive-icon lucide-case-sensitive"><path d="m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16"/><path d="M22 9v7"/><path d="M3.304 13h6.392"/><circle cx="18.5" cy="12.5" r="3.5"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-case-sensitive-icon lucide-case-sensitive"><path d="m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16"/><path d="M22 9v7"/><path d="M3.304 13h6.392"/><circle cx="18.5" cy="12.5" r="3.5"/>
             </svg>
             <span>Fuente Dislexia</span>
         </button>
         <button class="icon-button" title="Activar modo alto-contraste" [class.active]="isHighContrast" (click)="toggleHighContrast()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contrast-icon lucide-contrast"><circle cx="12" cy="12" r="10"/><path d="M12 18a6 6 0 0 0 0-12v12z"/>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contrast-icon lucide-contrast"><circle cx="12" cy="12" r="10"/><path d="M12 18a6 6 0 0 0 0-12v12z"/>
           </svg>
           <span>Alto contraste</span>
         </button>
         <div class="line-divisor"></div>
         <button class="icon-button"  title="Cerrar Sesión" (click)="onLogout()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
           <span>Cerrar Sesión</span>
         </button>
       </nav>
@@ -39,12 +41,12 @@
       <h1 class="logo-text">TEXT</h1>
       <nav class="accessibility-nav">
         <button class="icon-button" title="Activar fuente accesible" [class.active]="isDyslexiaFont" (click)="toggleFont()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-case-sensitive-icon lucide-case-sensitive"><path d="m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16"/><path d="M22 9v7"/><path d="M3.304 13h6.392"/><circle cx="18.5" cy="12.5" r="3.5"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-case-sensitive-icon lucide-case-sensitive"><path d="m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16"/><path d="M22 9v7"/><path d="M3.304 13h6.392"/><circle cx="18.5" cy="12.5" r="3.5"/>
             </svg>
             <span>Fuente Dislexia</span>
         </button>
         <button class="icon-button" title="Activar modo alto-contraste" [class.active]="isHighContrast" (click)="toggleHighContrast()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contrast-icon lucide-contrast"><circle cx="12" cy="12" r="10"/><path d="M12 18a6 6 0 0 0 0-12v12z"/>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contrast-icon lucide-contrast"><circle cx="12" cy="12" r="10"/><path d="M12 18a6 6 0 0 0 0-12v12z"/>
           </svg>
           <span>Alto contraste</span>
         </button>

@@ -1,34 +1,63 @@
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .login-container{
     display: flex;
     justify-content: center;
+    align-items: center;
     min-height: calc(100vh - 100px);
     background-color: transparent;
-    padding-top: 20px;
 }
 
 .login-card{
-    justify-content: center;
-    background: var(--bg-color-card-login);
-    padding: 40px;
-    border-radius: 18px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    width: 500px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     gap: 30px;
-    height: 700px;
+    background: var(--bg-surface);
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+    width: 100%;
+    max-width: 500px;
+    min-width: 350px;
+    
+    height: auto;
+    min-height: 600px;
 
     .login-title{
-        color: var(--label-text-color);
+        color: var(--text-main);
+        text-align: center;
     }
+
+    .fade-item {
+      opacity: 0;
+      animation: fadeInUp 0.2s ease-out forwards;
+    }
+    & > .fade-item:nth-child(1) { animation-delay: 0.05s; } // Título
+  & > .login-form .fade-item:nth-child(1) { animation-delay: 0.15s; } // Email
+  & > .login-form .fade-item:nth-child(2) { animation-delay: 0.25s; } // Password
+  & > .login-form .fade-item:nth-child(3) { animation-delay:0.35s; } // Checkbox
+  & > .login-form .fade-item:nth-child(4) { animation-delay: 0.45s; }
+  
 }
+
 
 .input-group{
     display: flex;
     flex-direction: column;
     label{
-        color: var(--label-text-color);
+        color: var(--input-1-text);
     }
 }
 
@@ -38,38 +67,44 @@
     align-content:space-between;
     display: flex;
     flex-direction: column;
+    .error-container {
+        height: 24px;         // Mantiene el espacio exacto del texto + margen
+        display: block;       // Asegura el comportamiento de bloque para respetar la altura
+        overflow: hidden;     // Evita cualquier rebose visual durante el renderizado inicial
+    }
+    .error-text {
+        font-size: 16px;
+        color: var(--input-1-error);
+        margin-top: 4px;
+        animation: slideDownError 0.3s ease-out forwards;
+    }
 }
 
 .input-group{
     input{
         all: unset;
         background-color: transparent;
-        color: var(--input-text-color);
-        border: 2px solid var(--input-border-color);
+        color: var(--input-1-text);
+        border: 2px solid var(--input-1-border);
         border-radius: 10px;
         padding: 12px 16px;
-        outline: none;
+        box-sizing: border-box;
         &::placeholder {
-            color: var(--input-placeholder-color);
+            color: var(--input-1-placeholder);
         }
         &:focus {
-            border-color: var(--input-border-color-focus);
+            border: 2px solid var(--input-1-focus);
         }
     }
     input.error {
-        border-color: #ff4d4d;
+        border-color: var(--input-1-error);
         background-color: transparent;
     }
 
     input.success {
-        border-color: #0eb9de;
+        border-color: var(--input-1-success);
         background-color: transparent;
     }
-    .error-text {
-        font-size: 16px;
-        color: #ff4d4d;
-        margin-top: 4px;
-        }
 }
 
 
@@ -77,7 +112,7 @@
 .remember-container{
     margin-top: 10px;
     label{
-        color: var(--label-text-color);
+        color: var(--text-main);
     }
 }
 
@@ -88,7 +123,7 @@ input[type="checkbox"] {
   width: 22px;
   height: 22px;
 
-  border: 3px solid var(--checkbox-border-color); 
+  border: 2px solid var(--input-1-border); 
   border-radius: 6px;
 
   background-color: transparent;
@@ -101,17 +136,21 @@ input[type="checkbox"] {
 
   transition: all 0.2s ease;
   position: relative;
+
+  &:focus-visible {
+    outline: 2px solid var(--input-1-focus);
+  }
 }
 
 input[type="checkbox"]:checked {
-  background-color: var(--checkbox-bg-color-active); 
-  border-color: var(--checkbox-border-color-active);
+  background-color: var(--input-1-box-active-bg); 
+  border-color: var(--input-1-box-active-bg);
 }
 
 input[type="checkbox"]:checked::after {
   content: "✓";
 
-  color: #F9F6F0;
+  color: var(--input-1-box-active-text);
   font-size: 14px;
   font-weight: bold;
 
@@ -136,13 +175,17 @@ input[type="checkbox"]:checked::after {
     justify-content: center;
     border: none;
     border-radius: 10px;
-    background: var(--button-bg-color-login);
-    color: var(--button-text-color-login);
+    background: var(--btn-2-action-bg);
+    color: var(--btn-2-action-text);
     cursor: pointer;
     transition: background 0.2s ease;
-    &:hover{
-        background: var(--button-bg-color-login-hover);
-        color: var(--button-text-color-login-hover);
+    &:hover:not(:disabled){
+        background: var(--btn-2-action-hover-bg);
+        color: var(--btn-2-action-hover-text);
+    }
+    &:focus:not(:disabled){
+      outline: 2px solid var(--btn-2-action-active-outline);
+      outline-offset: 3px !important;
     }
 }
 
@@ -155,16 +198,20 @@ input[type="checkbox"]:checked::after {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    border: 2px solid var(--button-border-color-register);
+    border: 2px solid var(--btn-3-action-border);
     border-radius: 10px;
-    background: var(--button-bg-color-register);
-    color: var(--button-text-color-register);
+    background: var(--btn-3-action-bg);
+    color: var(--btn-3-action-text);
     cursor: pointer;
     transition: background 0.2s ease;
     &:hover{
-        color: var(--button-text-color-register-hover);
-        background: var(--button-bg-color-register-hover);
-        border: 2px solid var(--button-border-color-register-hover);
+        color: var(--btn-3-action-hover-text);
+        background: var(--btn-3-action-hover-bg);
+        border: 2px solid var(--btn-3-action-hover-border);
+    }
+    &:focus{
+      outline: 2px solid var(--btn-3-action-active-outline);
+      outline-offset: 3px !important;
     }
 }
 
@@ -185,7 +232,7 @@ input[type="checkbox"]:checked::after {
     .looping-rhombuses-spinner .rhombus {
       height: 15px;
       width: 15px;
-      background-color: #ff1d5e;
+      background-color: var(--spinner-color);
       left: calc(15px * 4);
       position: absolute;
       margin: 0 auto;
@@ -218,27 +265,29 @@ input[type="checkbox"]:checked::after {
       }
     }
 
-
-.main-content-wrapper {
-  &.fade-in {
-    animation: fadeInAnimation 0.4s ease-out forwards;
-  }
-}
-
-@keyframes fadeInAnimation {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .login-button:disabled {
-  background: #ccc;
+  opacity: 50%;
   cursor: not-allowed;
   box-shadow: none;
 }
 
+
+//Responsividad
+@media (max-width: 480px) {
+  .login-container {
+    padding: 20px; 
+    min-height: unset; 
+    gap: 20px;
+  }
+
+  .login-card{
+    padding: 20px; 
+    min-height: unset; 
+    gap: 20px;
+  }
+
+  .login-title{
+      font-size: 2rem; 
+  }
+
+}
