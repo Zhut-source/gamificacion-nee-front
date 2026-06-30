@@ -238,9 +238,6 @@
     border: 2px solid var(--dynamic-color);
     background-color: color-mix(in srgb, var(--dynamic-color) 12%, #ffffff);
   }
-  &:disabled{
-    
-  }
 
   &:focus {
     outline: 2px solid var(--btn-2-action-active-outline);

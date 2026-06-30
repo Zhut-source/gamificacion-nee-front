@@ -17,7 +17,7 @@
 
   //Acentos
   --color-accent-1: #ffd700;
-  --color-accent-2: pink;
+  --color-accent-2: #995500;
   --color-accent-3: #4f46e5;
   --color-accent-4: #18c5d9;
   --color-error: #ff4d4d;
@@ -65,7 +65,7 @@
   --btn-3-action-hover-bg: var(--color-accent-4);
   --btn-3-action-hover-text: var(--color-dark);
   --btn-3-action-hover-border: var(--color-accent-4);
-  --btn-3-action-active-bg: var(--color-accent);
+  --btn-3-action-active-bg: var(--color-accent-4);
   --btn-3-action-active-text: var(--color-dark);
   --btn-3-action-active-outline: var(--color-accent-3);
 
@@ -84,6 +84,9 @@
   --progress-base-bg: var(--color-dark);
   --progress-fill-bg: var(--color-success);
 
+  --double-color:var(--color-black);
+  --double-color-inverter:var(--color-white);
+
   // BG CARD PASTEL
   --pastel-color-0: #f0f4ff;
   --pastel-color-1: #eefbf3;
@@ -98,42 +101,9 @@
   --saturated-color-3: #ec4899;
   --saturated-color-4: #a855f7;
 
-  //PROFILE ESTUDIANTE/PROFESOR
-  --profile-bg-color: #f9f6f0;
-  --profile-text-color: #2b2b2a;
 
-  --card-profile-bg-color: #ffffff;
-  --card-profile-border-color: #2b2b2a;
 
-  --button-bg-color-save-changes: #2b2b2a;
-  --button-text-color-save-changes: #f9f6f0;
-  --button-bg-color-save-changes-hover: #f9f6f0;
-  --button-text-color-save-changes-hover: #2b2b2a;
-  --button-bg-color-save-changes-activo: #0eb9de;
-  --button-text-color-save-changes-activo: #2b2b2a;
-
-  --select-border-color: #2b2b2a;
-  --select-text-color: #2b2b2a;
-  --select-list-bg-color: #ffffff;
-  --select-list-bg-color-hover: #0eb9de;
-
-  --status-container-bg-color: #f9f6f0;
-  --status-text-color: #0eb9de;
-  --status-border-color: #0eb9de;
-
-  --check-bg-color: #0eb9de;
-
-  --slider-circle-bg-color: #ffffff;
-  --slider-bg-color-checked: #0eb9de;
-  --slider-circle-color-checked: #000000;
-  --slider-bg-color: #2b2b2a;
-
-  --bg-primary: #f9f6f0;
-  --bg-card: #ffffff;
-  --text-primary: #2b2b2a;
-  --button-bg: #2b2b2a;
-  --button-text: #f9f6f0;
-  --accent: #0eb9de;
+  
 }
 
 *,
@@ -225,6 +195,7 @@ body.high-contrast {
   --text-secundary: var(--color-dark);
   --text-muted: #7a7a7a;
   --border-main: var(--color-dark);
+  --border-carrucel: var(--color-white);
 
   // Botones y Acciones Primarias
   --btn-1-action-bg: var(--color-white);
@@ -252,8 +223,8 @@ body.high-contrast {
   --btn-3-action-hover-bg: var(--color-accent-1);
   --btn-3-action-hover-text: var(--color-black);
   --btn-3-action-hover-border: var(--color-accent-1);
-  --btn-3-action-active-bg: var(--color-accent);
-  --btn-3-action-active-text: var(--color-dark);
+  --btn-3-action-active-bg: var(--color-accent-1);
+  --btn-3-action-active-text: var(--color-black);
   --btn-3-action-active-outline: var(--color-accent-3);
 
   // Inputs y Controles
@@ -271,8 +242,10 @@ body.high-contrast {
   --progress-base-bg: var(--color-white);
   --progress-fill-bg: var(--color-accent-1);
 
+  --double-color:var(--color-white);
+  --double-color-inverter:var(--color-black);
+
   .challenge-card:not(:disabled) {
-    // En fondo oscuro, el fondo se vuelve negro/transparente con un tinte sutil (30%)
     background-color: color-mix(
       in srgb,
       var(--dynamic-color) 30%,
@@ -284,66 +257,4 @@ body.high-contrast {
   .challenge-card:disabled {
     color: var(--text-secundary) !important;
   }
-  
-
-  /// COLORES DE LANDING PAGE
-  --bg-color-card-landing: #121212;
-  --text-titulo-landing: #ffffff;
-  --text-p-landing: #ffffff;
-  --button-bg-color-comenzar: #ffffff;
-  --button-text-color-comenzar: #000000;
-  --button-bg-color-comenzar-hover: #ffd700;
-
-  //DASHBOARD ESTUDIANTE
-  --container-dashboard-bg-color: #000000;
-  --container-dashboard-text-color: #ffffff;
-
-  --progress-bg-color: #ffffff;
-  --progress-fill-bg-color: #ffd700;
-  --card-bg-color: #121212;
-  --card-border-color: #ffffff;
-
-  --button-speaker-bg-color: #ffffff;
-  --button-speaker-text-color: #000000;
-  --button-speaker-bg-color-hover: #000000;
-  --button-speaker-text-color-hover: #ffffff;
-
-  --carousel-bg-card-color: #121212;
-  --carousel-border-card-color: #ffffff;
-
-  //PROFILE ESTUDIANTE/MAESTRO
-  --profile-bg-color: #000000;
-  --profile-text-color: #ffffff;
-
-  --card-profile-bg-color: #121212;
-  --card-profile-border-color: #ffffff;
-
-  --button-bg-color-save-changes: #ffffff;
-  --button-text-color-save-changes: #000000;
-  --button-bg-color-save-changes-hover: #ffd700;
-  --button-text-color-save-changes-hover: #000000;
-  --button-bg-color-save-changes-activo: #ffd700;
-  --button-text-color-save-changes-activo: #000000;
-
-  --select-border-color: #ffffff;
-  --select-text-color: #ffffff;
-  --select-list-bg-color: #000000;
-
-  --status-container-bg-color: #000000;
-  --status-text-color: #ffd700;
-  --status-border-color: #ffd700;
-
-  --check-bg-color: #ffd700;
-
-  --slider-circle-bg-color: #000000;
-  --slider-bg-color-checked: #ffd700;
-  --slider-circle-color-checked: #000000;
-  --slider-bg-color: #ffffff;
-
-  --bg-primary: #000000;
-  --bg-card: #121212;
-  --text-primary: #ffffff;
-  --button-bg: #ffffff;
-  --button-text: #000000;
-  --accent: #ffd700;
 }

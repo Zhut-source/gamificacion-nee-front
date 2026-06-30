@@ -9,12 +9,13 @@ import {
   tap,
 } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = environment.apiUrl;
 
   private isLoggedIn$$ = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.isLoggedIn$$.asObservable();

@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AudioService } from '@core/services/audio.service';
 import { AuthService } from '@core/services/auth.service';
+import { ConfirmService } from '@core/services/confirm.service';
 import { ProgressService } from '@core/services/progress.service';
 import { TtsService } from '@core/services/tts.service';
 import { PatronesComponent } from 'src/app/components/games/patrones/patrones.component';
@@ -58,6 +59,8 @@ export class ChallengeViewComponent implements OnInit {
     private progressService: ProgressService,
     public tts: TtsService,
     private audioService: AudioService,
+    private cdr: ChangeDetectorRef,
+    private confirmService: ConfirmService
   ) {}
 
   ngOnInit() {
@@ -87,13 +90,11 @@ export class ChallengeViewComponent implements OnInit {
           this.isDataLoading = false;
 
           if (this.isLevelFullyCompleted) {
-            // === FLUJO DE SELECCIÓN LIBRE (Ya completó las 3) ===
-            this.currentView = 'game'; // Saltamos la intro y el video directo al juego
-            this.currentDifficulty = 'easy'; // Por defecto inicia en fácil para libre elección
+            this.currentView = 'game'; 
+            this.currentDifficulty = 'easy'; 
             this.startSilentTimer();
             this.inicializarTableroJuego();
           } else {
-            // === FLUJO GUIADO (Primera vez de forma escalonada) ===
             if (!this.completedDifficulties.includes('easy')) {
               this.currentDifficulty = 'easy';
             } else if (!this.completedDifficulties.includes('medium')) {
@@ -106,8 +107,22 @@ export class ChallengeViewComponent implements OnInit {
       });
   }
 
-  startVideo() {
+ async startVideo() {
+    if (this.currentView === 'game') {
+      const confirmar = await this.confirmService.ask({
+        title: '¿Pausar partida?',
+        message: '¿Quieres pausar tu partida actual para volver a ver el video introductorio?',
+        confirmText: 'Ver video',
+        cancelText: 'Seguir jugando'
+      });
+      
+      if (!confirmar) return;
+    }
+
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    this.tts.stop();
     this.currentView = 'video';
+    this.cdr.detectChanges();
   }
 
   startGame() {
@@ -121,10 +136,6 @@ export class ChallengeViewComponent implements OnInit {
     setTimeout(() => {
       this.isGameLoading = false;
     }, 1200);
-  }
-
-  goBack() {
-    this.router.navigate(['/student/dashboard']);
   }
 
   canPlayDifficulty(diff: string): boolean {
@@ -227,11 +238,7 @@ export class ChallengeViewComponent implements OnInit {
               alert(
                 '¡Has completado todas las dificultades de este nivel! Regresando al mapa...',
               );
-
-              if (this.timerInterval) {
-                clearInterval(this.timerInterval);
-              }
-              this.goBack();
+              this.limpiarRecursosYSalir();
             }
           }
         }
@@ -322,6 +329,37 @@ export class ChallengeViewComponent implements OnInit {
         `[Speedrun] Tiempo acumulado: ${this.globalSpeedrunTimer}s | Intentos totales: ${this.globalAttemptsCount}`,
       );
     }, 1000);
+  }
+
+  async volverAlDashboard() {
+    if (this.currentView === 'game') {
+      const isSpeedrun = this.isSpeedrunMode;
+      const title = isSpeedrun ? '¡Atención! Modo Carrera ⏱️' : '¿Abandonar partida?';
+      const message = isSpeedrun 
+        ? 'Si sales ahora, perderás tu racha y tiempo actual. ¿Estás seguro de que deseas abandonar el nivel?'
+        : 'Estás en medio de una partida. Si regresas al tablero, el progreso de este intento no se guardará.';
+
+      const confirmarSalida = await this.confirmService.ask({
+        title: title,
+        message: message,
+        confirmText: 'Sí, salir',
+        cancelText: 'Mejor me quedo'
+      });
+
+      if (confirmarSalida) {
+        this.limpiarRecursosYSalir();
+      }
+      
+    } else {
+      this.limpiarRecursosYSalir();
+    }
+  }
+
+  private limpiarRecursosYSalir() {
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    if (this.globalSpeedrunInterval) clearInterval(this.globalSpeedrunInterval);
+    this.tts.stop();
+    this.router.navigate(['/student/dashboard']);
   }
 
   resetSpeedrunMetrics() {

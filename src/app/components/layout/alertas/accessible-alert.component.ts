@@ -66,7 +66,6 @@ export class AccessibleAlertComponent implements OnInit, OnDestroy {
       if (this.tts.isPlaying) {
         this.tts.stop();
       } else {
-        // Ejecuta tu servicio de texto a voz existente
         this.tts.speak(this.alert.message); 
       }
     }

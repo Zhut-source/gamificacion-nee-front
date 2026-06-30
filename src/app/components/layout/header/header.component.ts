@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AccessibilityService } from '@core/services/accessibility.service';
 import { AuthService } from '@core/services/auth.service';
+import { ConfirmService } from '@core/services/confirm.service';
 import { Subscription } from 'rxjs';
 
 
@@ -25,7 +26,8 @@ export class HeaderComponent implements OnInit, OnDestroy{
   constructor(
     private authService: AuthService, 
     private router: Router,
-    private accessibilityService: AccessibilityService
+    private accessibilityService: AccessibilityService,
+    private confirmService: ConfirmService
   ) {
         this.isLoggedIn$ = this.authService.isLoggedIn$;
   }
@@ -57,6 +59,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
+
 
   onLogout() {
     this.authService.logout();

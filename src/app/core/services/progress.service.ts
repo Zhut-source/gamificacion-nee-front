@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface ClassroomMetricsResponse {
   kpis: {
@@ -26,7 +27,7 @@ export interface StudentDetailsResponse {
   providedIn: 'root',
 })
 export class ProgressService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

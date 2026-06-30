@@ -42,12 +42,12 @@
 .profile-container {
   width: 100%;
   min-width: 412px;
-  padding: 40px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   background-color: transparent;
-  color: var(--profile-text-color);
-  gap: 16px;
+  color: var(--text-main);
+  gap: 6px;
 
   section {
     scroll-snap-align: center;
@@ -58,19 +58,47 @@
     all: unset;
     padding: 12px 16px;
     background-color: transparent;
-    border: 2px solid var(--input-border-color);
+    border: 2px solid var(--input-1-border);
     border-radius: 10px;
     outline: none;
     transition: all 0.2s ease;
     box-sizing: border-box;
 
     &::placeholder {
-      color: var(--input-placeholder-color);
+      color: var(--input-1-placeholder);
     }
 
     &:focus {
-      border-color: var(--input-border-color-focus);
+      border-color: var(--input-1-focus);
     }
+  }
+}
+
+.btn-back-workspace {
+  all: unset;
+  gap: 6px;
+  max-width: fit-content;
+  height: 20px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--btn-3-action-border);
+  border-radius: 18px;
+  background: transparent;
+  color: var(--btn-3-action-text);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  &:hover {
+    color: var(--btn-3-action-hover-text);
+    background: var(--btn-3-action-hover-bg);
+    border: 2px solid var(--btn-3-action-hover-border);
+  }
+  &:focus {
+    outline: 2px solid var(--btn-3-action-active-outline);
+    outline-offset: 3px !important;
   }
 }
 
@@ -79,20 +107,20 @@
 // ==========================================================================
 .card {
   width: 100%;
-  padding: 1rem;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  background-color: var(--card-profile-bg-color);
-  border: 2px solid var(--card-profile-border-color);
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-carrucel);
   border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 12px;
 
   &.join-class.highlight-pulse {
     animation: pulse-highlight 2s ease-in-out;
   }
 
-  // Elementos internos con animación Fade (Copia exacta de tu lógica de Login)
   .fade-item {
     opacity: 0;
     animation: fadeInUpProfile 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -151,7 +179,7 @@
 .input-area.grid-profile {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 1.5rem 1rem;
+  gap: 1rem 1rem;
   align-items: center;
 
   .disabled-input {
@@ -159,8 +187,8 @@
     padding: 12px 16px;
     background-color: transparent;
     border-radius: 10px;
-    color: #7a7a7a;
-    border: 2px solid #7a7a7a;
+    color: var(--text-muted);
+    border: 2px solid var(--text-muted);
     cursor: not-allowed;
     grid-column: span 2;
     box-sizing: border-box;
@@ -177,22 +205,22 @@
     gap: 5px;
     border: none;
     border-radius: 10px;
-    background: var(--button-bg-color-save-changes);
-    color: var(--button-text-color-save-changes);
+    background: var(--btn-2-action-bg);
+    color: var(--btn-2-action-text);
     cursor: pointer;
     transition: background 0.2s ease;
 
     &:focus {
-      outline: 2px solid rgb(255, 0, 255);
+      outline: 2px solid var(--btn-2-action-active-outline);
     }
 
     &:hover {
-      background: var(--button-bg-color-save-changes-hover);
-      color: var(--button-text-color-save-changes-hover);
+      background: var(--btn-2-action-hover-bg);
+      color: var(--btn-2-action-hover-text);
     }
     &.active {
-      background: var(--button-bg-color-save-changes-activo);
-      color: var(--button-text-color-save-changes-activo);
+      background: var(--btn-2-action-active-bg);
+      color: var(--btn-2-action-active-text);
     }
   }
 
@@ -211,14 +239,14 @@
       justify-content: center;
       border: none;
       border-radius: 10px;
-      background: var(--button-bg-color-save-changes);
-      color: var(--button-text-color-save-changes);
+      background: var(--btn-2-action-bg);
+      color: var(--btn-2-action-text);
       cursor: pointer;
       transition: background 0.2s ease;
 
       &:hover {
-        background: var(--button-bg-color-save-changes-hover);
-        color: var(--button-text-color-save-changes-hover);
+        background: var(--btn-2-action-hover-bg);
+        color: var(--btn-2-action-hover-text);
       }
     }
   }
@@ -228,7 +256,7 @@
 .input-area.grid-join {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 1.75rem 1.25rem;
+  gap: 1rem 1rem;
   align-items: center;
 
   .status-value {
@@ -238,21 +266,21 @@
     gap: 10px;
 
     &.class-none {
-      color: #7a7a7a;
+      color: var(--text-muted);
       font-style: italic;
     }
 
     .status-tag {
-      background-color: transparent;
-      color: var(--status-text-color);
+      background-color: var(--btn-3-action-bg);
+      color: var(--btn-3-action-hover-border);
       padding: 0.25rem 0.6rem;
       border-radius: 10px;
       text-transform: uppercase;
-      border: 2px solid var(--status-border-color);
+      border: 2px solid var(--btn-3-action-hover-border);
 
       &.field-disabled {
-        color: #7a7a7a;
-        border-color: #7a7a7a;
+        color: var(--text-muted);
+        border-color: var(--text-muted);
       }
     }
   }
@@ -266,17 +294,17 @@
     justify-content: center;
     border: none;
     border-radius: 10px;
-    background: var(--button-bg-color-login);
-    color: var(--button-text-color-login);
+    background: var(--btn-2-action-bg);
+      color: var(--btn-2-action-text);
     cursor: pointer;
     transition: background 0.2s ease;
 
     &:hover {
-      background: var(--button-bg-color-login-hover);
-      color: var(--button-text-color-login-hover);
-    }
+        background: var(--btn-2-action-hover-bg);
+        color: var(--btn-2-action-hover-text);
+      }
     &:disabled {
-      background: #ccc;
+      background: var(--text-muted);
       cursor: not-allowed;
       box-shadow: none;
     }
@@ -287,7 +315,7 @@
 .input-area.grid6 {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 1.5rem 1rem;
+  gap: 1rem 1rem;
   align-items: center;
 
   label {
@@ -309,14 +337,14 @@
       justify-content: center;
       border: none;
       border-radius: 10px;
-      background: var(--button-bg-color-save-changes);
-      color: var(--button-text-color-save-changes);
+      background: var(--btn-2-action-bg);
+      color: var(--btn-2-action-text);
       cursor: pointer;
       transition: background 0.2s ease;
 
       &:hover {
-        background: var(--button-bg-color-save-changes-hover);
-        color: var(--button-text-color-save-changes-hover);
+        background: var(--btn-2-action-hover-bg);
+        color: var(--btn-2-action-hover-text);
       }
     }
   }
@@ -326,7 +354,7 @@
 .input-area.grid-accessibility {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 1.5rem 2rem;
+  gap: 1rem 1rem;
   align-items: center;
   max-width: 650px;
   margin: 0;
@@ -347,19 +375,19 @@
     width: 100%;
     max-width: 200px;
     padding: 0.6rem 1rem;
-    border: 2px solid var(--select-border-color);
+    border: 2px solid var(--border-carrucel);
     border-radius: 10px;
     background-color: transparent;
-    color: var(--select-text-color);
+    color: var(--text-main);
     outline: none;
     cursor: pointer;
     transition: border-color 0.2s;
 
     option {
-      background-color: var(--select-list-bg-color);
+      background-color: var(--bg-body);
     }
     &:focus {
-      border-color: var(--input-border-color-focus);
+      border-color: var(--btn-3-action-active-outline);
     }
   }
 
@@ -382,7 +410,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: var(--slider-bg-color);
+      background-color: var(--double-color);
       transition: 0.3s;
       border-radius: 34px;
 
@@ -393,16 +421,16 @@
         width: 18px;
         left: 4px;
         bottom: 4px;
-        background-color: var(--slider-circle-bg-color);
+        background-color: var(--double-color-inverter);
         transition: 0.3s;
         border-radius: 50%;
       }
     }
 
     input:checked + .slider {
-      background-color: var(--slider-bg-color-checked);
+      background-color: var(--btn-3-action-active-bg);
       &:before {
-        background-color: var(--slider-circle-color-checked);
+        background-color: var(--color-black);
       }
     }
     input:checked + .slider:before {
@@ -419,8 +447,8 @@
       width: 20px;
       height: 20px;
       cursor: pointer;
-      color: black;
-      accent-color: var(--check-bg-color);
+      color: var(--input-1-box-active-bg);
+      accent-color: var(--input-1-box-active-bg);
     }
   }
 }
@@ -448,8 +476,8 @@
       grid-column: auto;
     }
     .edit-btn {
-      align-self: flex-start; 
-      margin-top: 0; 
+      align-self: flex-start;
+      margin-top: 0;
       margin-right: 0;
       width: auto;
       min-width: 120px;

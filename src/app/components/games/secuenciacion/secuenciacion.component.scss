@@ -135,15 +135,15 @@
 
 .sequence-timeline {
   flex-grow: 1;
-  background-color: #ffffff;
+  background-color: var(--bg-body);
   padding: 15px;
   border-radius: 12px;
-  border: 2px solid var(--button-speaker-bg-color);
+  border: 2px solid var(--border-carrucel);
 
   .timeline-title {
     margin: 0 0 10px 0;
     font-weight: bold;
-    color: #333;
+    color: var(--text-main);
   }
 
   .sequence-track {
@@ -155,7 +155,7 @@
     overflow-y: auto;
 
     .empty-text {
-      color: #94a3b8;
+      color: var(--text-muted);
       font-style: italic;
     }
 
