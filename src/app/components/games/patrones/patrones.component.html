@@ -35,8 +35,24 @@
       <div class="instructions-content">
         <p class="empty-text" style="margin-bottom: 10px; display: block;">
           <strong>Misión:</strong> Apaga todas las luces del tablero.<br/><br/>
-          Al hacer clic en una luz, esta cambiará su estado (de encendido a apagado o viceversa), ¡pero también cambiarán las luces que están arriba, abajo, a la izquierda y a la derecha!
+          Al tocar una luz, se invertirá su estado y el de sus vecinas adyacentes formando una cruz:
         </p>
+
+        <div class="pattern-demo-container" aria-hidden="true">
+          <div class="mini-grid">
+            <div class="mini-cell"></div>
+            <div class="mini-cell is-affected"></div>
+            <div class="mini-cell"></div>
+            
+            <div class="mini-cell is-affected"></div>
+            <div class="mini-cell is-center is-affected">👆</div>
+            <div class="mini-cell is-affected"></div>
+            
+            <div class="mini-cell"></div>
+            <div class="mini-cell is-affected"></div>
+            <div class="mini-cell"></div>
+          </div>
+        </div>
         
         <div class="stats-box">
           <span class="stat-label">Movimientos realizados:</span>

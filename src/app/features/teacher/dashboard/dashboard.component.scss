@@ -7,8 +7,8 @@
   gap: 2rem;
   padding: 3.5rem;
   max-width: 100%;
-  background-color: var(--container-dashboard-bg-color);
-  color: var(--container-dashboard-text-color);
+  background-color: var(--bg-body);
+  color: var(--text-main);
 }
 
 .loading-overlay {
@@ -107,7 +107,7 @@
 
 // Estructura Base de Tarjetas Reutilizables
 .card {
-  background-color: var(--card-bg-color, #FFFFFF);
+  background-color: var(--bg-surface);
   border: 2px solid var(--card-border-color, #FFFFFF);
   border-radius: 16px;
   padding: 2rem;

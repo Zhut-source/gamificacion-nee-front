@@ -25,6 +25,7 @@ import { SecuenciacionComponent } from 'src/app/components/games/secuenciacion/s
 })
 export class ChallengeViewComponent implements OnInit {
   @ViewChild(SecuenciacionComponent) gameComponent!: SecuenciacionComponent;
+  @ViewChild(PatronesComponent) patGameComponent!: PatronesComponent; 
 
   userId: number = 0;
   challengeId: number = 0;
@@ -160,8 +161,11 @@ export class ChallengeViewComponent implements OnInit {
     }
 
     this.pistasUsadas++;
-    if (this.gameComponent) {
+
+    if (this.challengeId === 1 && this.gameComponent) {
       this.gameComponent.mostrarPista();
+    } else if (this.challengeId === 2 && this.patGameComponent) {
+      this.patGameComponent.mostrarPista();
     }
   }
 

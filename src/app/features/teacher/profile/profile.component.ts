@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 import { ClassroomService } from '@core/services/classroom.service';
 import { UserService } from '@core/services/user.service';
@@ -23,6 +24,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private authService: AuthService, 
+    private router: Router,
     private classroomService: ClassroomService,
     private userService: UserService
    ) {}
@@ -153,6 +155,10 @@ export class ProfileComponent implements OnInit {
       },
       error: () => alert('Error al actualizar nombre')
     });
+  }
+
+  volverAlDashboard() {
+    this.router.navigate(['/student/dashboard']);
   }
 
   //METODOS DE ACCESIBILIDAD

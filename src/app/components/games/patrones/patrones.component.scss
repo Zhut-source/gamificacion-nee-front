@@ -165,6 +165,57 @@
   }
 }
 
+// ==========================================
+// APOYO VISUAL (LA CRUZ DEMOSTRATIVA)
+// ==========================================
+.pattern-demo-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #2b2b2a;
+  border-radius: 12px;
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.2);
+  
+  .mini-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
+    gap: 6px;
+  }
+
+  .mini-cell {
+    background-color: #4b5563;
+    border-bottom: 4px solid #1f2937;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+
+    // Las luces que se encienden en forma de cruz
+    &.is-affected {
+      background-color: #fde047;
+      border-bottom-color: #ca8a04;
+      box-shadow: 0 0 10px rgba(253, 224, 71, 0.4);
+    }
+
+    // La celda central que se presiona
+    &.is-center {
+      transform: scale(1.1);
+      z-index: 2;
+      animation: clickSimulation 2s infinite ease-in-out;
+    }
+  }
+}
+
+// Animación para enseñar que se debe hacer clic ahí
+@keyframes clickSimulation {
+  0%, 100% { transform: scale(1.1) translateY(0); border-bottom-width: 4px; }
+  50% { transform: scale(1.1) translateY(4px); border-bottom-width: 0px; }
+}
+
 // Adaptación de pista para el modo Alto Contraste global
 body.high-contrast {
   .board-container { border: 2px solid #ffffff; }
