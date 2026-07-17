@@ -1,0 +1,69 @@
+// Reutiliza tus clases base: .dashboard-container, .card, .btn-back-workspace, .input-df, .students-table
+
+.role-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  
+  &.estudiante { background-color: #E0F2FE; color: #0369A1; border: 1px solid #38BDF8; }
+  &.maestro { background-color: #F3E8FF; color: #A16207; border: 1px solid #FDE047; }
+}
+
+.action-btn-danger {
+  all: unset; padding: 6px 12px;
+  background: #FEE2E2; color: #DC2626;
+  border: 1px solid #DC2626; border-radius: 6px;
+  font-weight: bold; cursor: pointer; transition: 0.2s;
+  &:hover { background: #DC2626; color: white; }
+}
+
+.action-btn-success {
+  all: unset; padding: 6px 12px;
+  background: #DCFCE7; color: #15803D;
+  border: 1px solid #15803D; border-radius: 6px;
+  font-weight: bold; cursor: pointer; transition: 0.2s;
+  &:hover { background: #15803D; color: white; }
+}
+
+// Estilos dinámicos para filas suspendidas
+.row-attention {
+  background-color: rgba(#DC2626, 0.05);
+  opacity: 0.8;
+  td { border-color: rgba(#DC2626, 0.1); }
+}
+
+.btn-back-workspace {
+  all: unset;
+  gap: 6px;
+  max-width: fit-content;
+  height: 20px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--btn-3-action-border);
+  border-radius: 18px;
+  background: transparent;
+  color: var(--btn-3-action-text);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  &:hover {
+    color: var(--btn-3-action-hover-text);
+    background: var(--btn-3-action-hover-bg);
+    border: 2px solid var(--btn-3-action-hover-border);
+  }
+  &:focus {
+    outline: 2px solid var(--btn-3-action-active-outline);
+    outline-offset: 3px !important;
+  }
+}
+
+// Adaptación Alto Contraste
+body.high-contrast {
+  .role-badge { background: #000; border: 2px solid #FFF; }
+  .row-attention { background-color: #330000 !important; }
+}

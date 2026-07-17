@@ -1,0 +1,199 @@
+// Reutiliza tus clases base (dashboard-container, card, input-df, btn-back-workspace)
+
+.dashboard-container {
+  padding: 40px;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  max-width: 100%;
+  min-height: calc(100vh - 80px);
+
+  @media (max-width: 700px) { padding: 20px; }
+
+  .input-df {
+    all: unset;
+    padding: 12px 16px;
+    background-color: transparent;
+    border: 2px solid var(--input-1-border);
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s ease;
+    &::placeholder {
+      color: var(--input-1-placeholder);
+    }
+
+    &:focus {
+      border-color: var(--input-1-focus);
+    }
+  }
+}
+
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+
+  &.fade-out {
+    opacity: 0;
+    pointer-events: none; 
+  }
+
+  .spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+
+//spinner
+.half-circle-spinner, .half-circle-spinner * {
+      box-sizing: border-box;
+    }
+
+    .half-circle-spinner {
+      width: 60px;
+      height: 60px;
+      border-radius: 100%;
+      position: relative;
+    }
+
+    .half-circle-spinner .circle {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 100%;
+      border: calc(60px / 10) solid transparent;
+    }
+
+    .half-circle-spinner .circle.circle-1 {
+      border-top-color: var(--spinner-color);
+      animation: half-circle-spinner-animation 1s infinite;
+    }
+
+    .half-circle-spinner .circle.circle-2 {
+      border-bottom-color:  var(--spinner-color);
+      animation: half-circle-spinner-animation 1s infinite alternate;
+    }
+
+    @keyframes half-circle-spinner-animation {
+      0% {
+        transform: rotate(0deg);
+      }
+      100%{
+        transform: rotate(360deg);
+      }
+    }
+//
+
+.card {
+  background-color: var(--bg-surface);
+  border: 2px solid var(--card-border-color, #FFFFFF);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-back-workspace {
+  all: unset;
+  gap: 6px;
+  max-width: fit-content;
+  height: 20px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--btn-3-action-border);
+  border-radius: 18px;
+  background: transparent;
+  color: var(--btn-3-action-text);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  &:hover {
+    color: var(--btn-3-action-hover-text);
+    background: var(--btn-3-action-hover-bg);
+    border: 2px solid var(--btn-3-action-hover-border);
+  }
+  &:focus {
+    outline: 2px solid var(--btn-3-action-active-outline);
+    outline-offset: 3px !important;
+  }
+}
+
+.tabs-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--lines-color-header);
+
+  button {
+    background: transparent;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #7A7A7A;
+    cursor: pointer;
+    border-bottom: 4px solid transparent;
+    transition: all 0.2s;
+
+    &:hover { color: var(--text-main); }
+    
+    &.active {
+      color: var(--lines-color-header);
+      border-bottom-color: var(--lines-color-header);
+    }
+  }
+}
+
+.catalog-workspace {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 20px;
+  align-items: start;
+
+  .input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .generate-btn {
+      margin-top: 10px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--btn-2-action-bg);
+      color: var(--btn-2-action-text);
+      font-weight: bold;
+      cursor: pointer;
+      &:hover { 
+        background-color: var(--btn-2-action-hover-bg);
+        color: var(--btn-2-action-hover-text); 
+      }
+      &:disabled { opacity: 0.5; cursor: not-allowed; }
+    }
+  }
+
+  .action-btn-danger {
+    padding: 6px 12px;
+    background: #FEE2E2;
+    color: #DC2626;
+    border: 1px solid #DC2626;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    &:hover { background: #DC2626; color: white; }
+  }
+}
+
+// Reutiliza tus estilos de .students-table aquí o impórtalos
+
+@media (max-width: 900px) {
+  .catalog-workspace { grid-template-columns: 1fr; }
+}

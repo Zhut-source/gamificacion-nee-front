@@ -12,28 +12,26 @@
 .login-container{
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: calc(100vh - 100px);
     background-color: transparent;
+    padding: 1rem;
 }
 
 .login-card{
+    margin: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    gap: 30px;
+    gap: clamp(15px, 4vh, 30px);
     background: var(--bg-surface);
-    padding: 40px;
+    padding: clamp(20px, 4vh, 40px);
     border-radius: 18px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-
     width: 100%;
     max-width: 500px;
     min-width: 350px;
     
-    height: auto;
-    min-height: 600px;
 
     .login-title{
         color: var(--text-main);
@@ -110,7 +108,10 @@
 
 
 .remember-container{
-    margin-top: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 0.2rem;
     label{
         color: var(--text-main);
     }
@@ -164,54 +165,56 @@ input[type="checkbox"]:checked::after {
     gap: 12px;
 }
 
-.login-button{
+.login-button, 
+.register-button {
     all: unset;
-    padding: 0.5rem;  
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    min-height: 50px;
+    box-sizing: border-box; 
+    height: 48px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    border: none;
     border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.login-button {
     background: var(--btn-2-action-bg);
     color: var(--btn-2-action-text);
-    cursor: pointer;
-    transition: background 0.2s ease;
-    &:hover:not(:disabled){
+    border: none;
+
+    &:hover:not(:disabled) {
         background: var(--btn-2-action-hover-bg);
         color: var(--btn-2-action-hover-text);
     }
-    &:focus:not(:disabled){
-      outline: 2px solid var(--btn-2-action-active-outline);
-      outline-offset: 3px !important;
+    &:focus:not(:disabled) {
+        outline: 2px solid var(--btn-2-action-active-outline);
+        outline-offset: 3px !important;
+    }
+    &:disabled {
+        opacity: 50%;
+        cursor: not-allowed;
+        box-shadow: none;
     }
 }
 
-.register-button{
-    all: unset;
-    padding: 0.5rem;  
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    min-height: 50px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--btn-3-action-border);
-    border-radius: 10px;
+// Colores específicos del botón Registrarse
+.register-button {
     background: var(--btn-3-action-bg);
     color: var(--btn-3-action-text);
-    cursor: pointer;
-    transition: background 0.2s ease;
-    &:hover{
+    border: 2px solid var(--btn-3-action-border);
+
+    &:hover {
         color: var(--btn-3-action-hover-text);
         background: var(--btn-3-action-hover-bg);
         border: 2px solid var(--btn-3-action-hover-border);
     }
-    &:focus{
-      outline: 2px solid var(--btn-3-action-active-outline);
-      outline-offset: 3px !important;
+    &:focus {
+        outline: 2px solid var(--btn-3-action-active-outline);
+        outline-offset: 3px !important;
     }
 }
 
@@ -271,6 +274,25 @@ input[type="checkbox"]:checked::after {
   box-shadow: none;
 }
 
+@media (max-width: 480px) {
+  .login-container {
+    padding: 20px; 
+    min-height: unset; 
+    gap: 20px;
+  }
+
+  .login-card{
+    padding: 20px; 
+    min-height: unset; 
+    gap: 20px;
+  }
+
+  .login-title{
+      font-size: 2rem; 
+  }
+
+}
+
 
 //Responsividad
 @media (max-width: 480px) {
@@ -290,4 +312,25 @@ input[type="checkbox"]:checked::after {
       font-size: 2rem; 
   }
 
+}
+
+@media (max-height: 800px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+
+  .action-area{
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .login-button, 
+  .register-button {
+    min-height: 44px;
+    flex: 1;
+  }
+
+  .action-area {
+    gap: 8px;
+  }
 }

@@ -13,6 +13,7 @@ import {
   ClassroomService,
   StudentClassStatus,
 } from '@core/services/classroom.service';
+import { NotificationService } from '@core/services/notification.service';
 import { TtsService } from '@core/services/tts.service';
 import { UserService } from '@core/services/user.service';
 import { Subscription } from 'rxjs';
@@ -37,6 +38,7 @@ export class ProfileComponent implements OnInit {
   isDyslexiaActive = false;
   currentTheme = 'claro';
   private accessibilitySub = new Subscription();
+  mensajito: any;
 
   constructor(
     private authService: AuthService,
@@ -46,6 +48,7 @@ export class ProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private accessibilityService: AccessibilityService,
     public tts: TtsService,
+    private notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
@@ -173,8 +176,10 @@ export class ProfileComponent implements OnInit {
       .updateProfile(this.user.id, this.infoForm.value.name)
       .subscribe({
         next: (res) => {
-          alert('Nombre actualizado correctamente');
-          // Actualizar el usuario en el localStorage para que el Header también cambie
+          this.notificationService.showAlert(
+            'Nombre actualizado correctamente',
+            'success',
+          );
           const updatedUser = { ...this.user, name: res.user.name };
           localStorage.setItem('user', JSON.stringify(updatedUser));
           this.user = updatedUser;
@@ -182,7 +187,12 @@ export class ProfileComponent implements OnInit {
           this.isEditingName = false;
           this.infoForm.get('name')?.disable();
         },
-        error: () => alert('Error al actualizar nombre'),
+        error: (err) => {
+          const mensajeError =
+            err.error?.message ||
+            'Error al actualizar el nombre. Inténtalo de nuevo.';
+          this.notificationService.showAlert(mensajeError, 'error');
+        },
       });
   }
 
@@ -193,7 +203,7 @@ export class ProfileComponent implements OnInit {
       this.passwordForm.value;
 
     if (newPassword !== confirmPassword) {
-      alert('Las contraseñas nuevas no coinciden');
+      this.notificationService.showAlert('Las contraseñas nuevas no coinciden', 'error');
       return;
     }
 
@@ -201,10 +211,13 @@ export class ProfileComponent implements OnInit {
 
     this.userService.changePassword(data).subscribe({
       next: () => {
-        alert('Contraseña cambiada con éxito');
+        this.notificationService.showAlert('Contraseña cambiada con éxito', 'success');
         this.passwordForm.reset();
       },
-      error: (err) => alert(err.error.message),
+      error: (err) => {
+        const mensajeError = err.error?.message || 'No se pudo cambiar la contraseña. Inténtalo de nuevo.';
+      this.notificationService.showAlert(mensajeError, 'error');
+      },
     });
   }
 
@@ -215,11 +228,16 @@ export class ProfileComponent implements OnInit {
       .joinClass(this.user.id, this.classForm.value.code)
       .subscribe({
         next: (res) => {
-          alert(res.message);
+          this.notificationService.showAlert(res.message, 'success');
           this.classForm.reset();
           this.loadMyClass();
         },
-        error: (err) => alert(err.error.message),
+        error: (err) => {
+          const mensajeError =
+            err.error?.message ||
+            'Error al unirse al aula. Verifica el código e inténtalo de nuevo.';
+          this.notificationService.showAlert(mensajeError, 'error');
+        },
       });
   }
 

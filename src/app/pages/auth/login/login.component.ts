@@ -83,8 +83,6 @@ export class LoginComponent implements OnInit {
 
     this.isLoading = true;
     const emailValue = this.loginForm.value.email ?? '';
-
-    // Guardar o destruir el correo según la elección del checkbox
     if (this.loginForm.value.remember) {
       localStorage.setItem('remembered_email', emailValue);
     } else {
@@ -98,7 +96,9 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(loginData).subscribe({
       next: (response: any) => {
-        if (response?.user?.role === 'maestro') {
+        if (response?.user?.role === 'admin') {
+          this.router.navigate(['/admin/dashboard']);
+        } else if (response?.user?.role === 'maestro') {
           this.router.navigate(['/teacher/dashboard']);
         } else {
           this.router.navigate(['/student/dashboard']);

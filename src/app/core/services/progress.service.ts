@@ -8,6 +8,7 @@ export interface ClassroomMetricsResponse {
     totalEstudiantes: number;
     progresoPromedio: number;
     estudiantesConDificultad: number;
+    estudiantesBuenDesempeno: number;
   };
   estudiantes: any[];
 }

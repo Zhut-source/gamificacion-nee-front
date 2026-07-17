@@ -11,21 +11,36 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AudioService } from '@core/services/audio.service';
 import { AuthService } from '@core/services/auth.service';
 import { ConfirmService } from '@core/services/confirm.service';
+import { NotificationService } from '@core/services/notification.service';
 import { ProgressService } from '@core/services/progress.service';
 import { TtsService } from '@core/services/tts.service';
+import { CondicionalesComponent } from 'src/app/components/games/condicionales/condicionales.component';
+import { DescomposicionComponent } from 'src/app/components/games/descomposicion/descomposicion.component';
 import { PatronesComponent } from 'src/app/components/games/patrones/patrones.component';
+import { RepeticionesComponent } from 'src/app/components/games/repeticiones/repeticiones.component';
 import { SecuenciacionComponent } from 'src/app/components/games/secuenciacion/secuenciacion.component';
 
 @Component({
   selector: 'app-challenge-view',
   standalone: true,
-  imports: [CommonModule, SecuenciacionComponent, FormsModule, PatronesComponent],
+  imports: [
+    CommonModule,
+    SecuenciacionComponent,
+    FormsModule,
+    PatronesComponent,
+    RepeticionesComponent,
+    CondicionalesComponent,
+    DescomposicionComponent,
+  ],
   templateUrl: './challenge-view.component.html',
   styleUrl: './challenge-view.component.scss',
 })
 export class ChallengeViewComponent implements OnInit {
   @ViewChild(SecuenciacionComponent) gameComponent!: SecuenciacionComponent;
-  @ViewChild(PatronesComponent) patGameComponent!: PatronesComponent; 
+  @ViewChild(PatronesComponent) patGameComponent!: PatronesComponent;
+  @ViewChild(RepeticionesComponent) repGameComponent!: RepeticionesComponent;
+  @ViewChild(CondicionalesComponent) conGameComponent!: CondicionalesComponent;
+  @ViewChild(DescomposicionComponent) desGameComponent!: DescomposicionComponent;
 
   userId: number = 0;
   challengeId: number = 0;
@@ -52,6 +67,7 @@ export class ChallengeViewComponent implements OnInit {
   globalSpeedrunTimer: number = 0;
   globalSpeedrunInterval: any;
   globalAttemptsCount: number = 0;
+  videoUrl: string = 'assets/videos/videoplaybackweb.mp4';
 
   constructor(
     private route: ActivatedRoute,
@@ -61,7 +77,8 @@ export class ChallengeViewComponent implements OnInit {
     public tts: TtsService,
     private audioService: AudioService,
     private cdr: ChangeDetectorRef,
-    private confirmService: ConfirmService
+    private confirmService: ConfirmService,
+    private notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
@@ -86,13 +103,17 @@ export class ChallengeViewComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.challengeData = res;
+          if (this.challengeData?.nombre) {
+             const nombreLimpio = this.formatearNombreVideo(this.challengeData.nombre);
+             this.videoUrl = `assets/videos/intro${nombreLimpio}.mp4`;
+          }
           this.completedDifficulties = res.dificultades_completadas || [];
           this.isLevelFullyCompleted = res.is_fully_completed;
           this.isDataLoading = false;
 
           if (this.isLevelFullyCompleted) {
-            this.currentView = 'game'; 
-            this.currentDifficulty = 'easy'; 
+            this.currentView = 'game';
+            this.currentDifficulty = 'easy';
             this.startSilentTimer();
             this.inicializarTableroJuego();
           } else {
@@ -108,15 +129,30 @@ export class ChallengeViewComponent implements OnInit {
       });
   }
 
- async startVideo() {
+  private formatearNombreVideo(nombre: string): string {
+    if (!nombre) return '';
+    let limpio = nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return limpio
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join('');
+  }
+
+  onVideoError() {
+    console.warn(`Video dinámico no encontrado en: ${this.videoUrl}. Cargando video de respaldo...`);
+    this.videoUrl = 'assets/videos/videoplaybackweb.mp4';
+  }
+
+  async startVideo() {
     if (this.currentView === 'game') {
       const confirmar = await this.confirmService.ask({
         title: '¿Pausar partida?',
-        message: '¿Quieres pausar tu partida actual para volver a ver el video introductorio?',
+        message:
+          '¿Quieres pausar tu partida actual para volver a ver el video introductorio?',
         confirmText: 'Ver video',
-        cancelText: 'Seguir jugando'
+        cancelText: 'Seguir jugando',
       });
-      
+
       if (!confirmar) return;
     }
 
@@ -154,19 +190,9 @@ export class ChallengeViewComponent implements OnInit {
     this.lastActivityTime = Date.now();
   }
 
-  usarPista() {
-    if (this.currentView !== 'game') {
-      alert('La pista solo está disponible cuando inicies el juego.');
-      return;
-    }
-
+  onHintUsed() {
     this.pistasUsadas++;
-
-    if (this.challengeId === 1 && this.gameComponent) {
-      this.gameComponent.mostrarPista();
-    } else if (this.challengeId === 2 && this.patGameComponent) {
-      this.patGameComponent.mostrarPista();
-    }
+    console.log(`Pista utilizada. Total pistas en este intento: ${this.pistasUsadas}`);
   }
 
   startSilentTimer() {
@@ -193,12 +219,13 @@ export class ChallengeViewComponent implements OnInit {
       dificultad: this.currentDifficulty,
       estado: result.status === 'success' ? 'completado' : 'fallido',
       tiempo_segundos: this.activeTimeInSeconds,
-      pistas_utilizadas: this.pistasUsadas
+      pistas_utilizadas: this.pistasUsadas,
     };
 
     this.progressService.saveAttempt(attemptData).subscribe({
       next: () => console.log('✅ Intento registrado en la BD con éxito.'),
-      error: (err) => console.error('❌ Error registrando intento en la BD:', err)
+      error: (err) =>
+        console.error('❌ Error registrando intento en la BD:', err),
     });
 
     this.feedback.status = result.status;
@@ -239,8 +266,9 @@ export class ChallengeViewComponent implements OnInit {
               this.progressService
                 .awardBadge(this.userId, 'lvl1_complete')
                 .subscribe();
-              alert(
+              this.notificationService.showAlert(
                 '¡Has completado todas las dificultades de este nivel! Regresando al mapa...',
+                'success',
               );
               this.limpiarRecursosYSalir();
             }
@@ -303,8 +331,9 @@ export class ChallengeViewComponent implements OnInit {
   toggleSpeedrunMode() {
     if (this.isSpeedrunMode) {
       this.resetSpeedrunMetrics();
-      alert(
+      this.notificationService.showAlert(
         'Modo Carrera cancelado. Se han restaurado los controles normales.',
+        'info',
       );
     } else {
       this.isSpeedrunMode = true;
@@ -319,11 +348,13 @@ export class ChallengeViewComponent implements OnInit {
         this.gameComponent.initGame('easy');
       }
 
-      alert(
+      this.notificationService.showAlert(
         '¡Modo Carrera Iniciado! Completa Fácil, Medio y Difícil de seguido. ¡El tiempo global está corriendo!',
+        'success',
       );
     }
   }
+
   startGlobalSpeedrunTimer() {
     if (this.globalSpeedrunInterval) clearInterval(this.globalSpeedrunInterval);
 
@@ -338,8 +369,10 @@ export class ChallengeViewComponent implements OnInit {
   async volverAlDashboard() {
     if (this.currentView === 'game') {
       const isSpeedrun = this.isSpeedrunMode;
-      const title = isSpeedrun ? '¡Atención! Modo Carrera ⏱️' : '¿Abandonar partida?';
-      const message = isSpeedrun 
+      const title = isSpeedrun
+        ? '¡Atención! Modo Carrera ⏱️'
+        : '¿Abandonar partida?';
+      const message = isSpeedrun
         ? 'Si sales ahora, perderás tu racha y tiempo actual. ¿Estás seguro de que deseas abandonar el nivel?'
         : 'Estás en medio de una partida. Si regresas al tablero, el progreso de este intento no se guardará.';
 
@@ -347,13 +380,12 @@ export class ChallengeViewComponent implements OnInit {
         title: title,
         message: message,
         confirmText: 'Sí, salir',
-        cancelText: 'Mejor me quedo'
+        cancelText: 'Mejor me quedo',
       });
 
       if (confirmarSalida) {
         this.limpiarRecursosYSalir();
       }
-      
     } else {
       this.limpiarRecursosYSalir();
     }
@@ -372,4 +404,5 @@ export class ChallengeViewComponent implements OnInit {
     this.globalSpeedrunTimer = 0;
     this.globalAttemptsCount = 0;
   }
+
 }

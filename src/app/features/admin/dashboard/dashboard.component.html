@@ -1,0 +1,178 @@
+<main class="dashboard-container">
+  @if (isLoading) {
+    <div
+      class="loading-overlay"
+      [class.fade-out]="isFadingOut"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="spinner-container">
+        <div class="fulfilling-square-spinner">
+          <div class="spinner-inner"></div>
+        </div>
+        <p class="help-text">Cargando panel administrativo...</p>
+      </div>
+    </div>
+  } @else {
+    <header class="admin-header">
+      <h1 class="main-title">Panel de Control Global</h1>
+      <p class="subtitle">
+        Bienvenido, {{ adminUser?.name }}. Aquí tienes el resumen de la
+        plataforma.
+      </p>
+    </header>
+
+    <!-- KPIs Globales -->
+    <section class="metrics-grid">
+      <article class="metric-card">
+        <div class="metric-info">
+          <h2 class="metric-title">Estudiantes Activos</h2>
+          <p class="metric-value">{{ kpis?.totalEstudiantes || 0 }}</p>
+        </div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-info">
+          <h2 class="metric-title">Maestros Registrados</h2>
+          <p class="metric-value">{{ kpis?.totalMaestros || 0 }}</p>
+        </div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-info">
+          <h2 class="metric-title">Aulas Virtuales</h2>
+          <p class="metric-value">{{ kpis?.totalAulas || 0 }}</p>
+        </div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-info">
+          <h2 class="metric-title">Desafíos Habilitados</h2>
+          <p class="metric-value text-accent">{{ kpis?.totalDesafios || 0 }}</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Módulos de Gestión (Tarjetas de Navegación) -->
+    <section class="management-modules">
+      <h2 class="section-title">Módulos de Gestión</h2>
+
+      <div class="modules-grid">
+        <!-- Módulo: Usuarios -->
+        <button class="module-card" (click)="goToModule('users')">
+          <div class="icon-wrapper">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <div class="module-content">
+            <h3>Gestión de Usuarios</h3>
+            <p>
+              Modera estudiantes y maestros, resetea contraseñas y gestiona
+              suspensiones de cuentas.
+            </p>
+          </div>
+        </button>
+
+        <!-- Módulo: Catálogos/Infraestructura -->
+        <button class="module-card" (click)="goToModule('catalogs')">
+          <div class="icon-wrapper">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+              />
+            </svg>
+          </div>
+          <div class="module-content">
+            <h3>Infraestructura Académica</h3>
+            <p>
+              Añade o edita carreras, materias, periodos y horarios disponibles
+              en la plataforma.
+            </p>
+          </div>
+        </button>
+
+        <!-- Módulo: Aulas -->
+        <button class="module-card" (click)="goToModule('classrooms')">
+          <div class="icon-wrapper">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M2 3h20" />
+              <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3" />
+              <path d="m7 21 5-5 5 5" />
+            </svg>
+          </div>
+          <div class="module-content">
+            <h3>Supervisión de Aulas</h3>
+            <p>
+              Visualiza todas las clases activas, reasigna maestros y gestiona
+              desvinculaciones por error.
+            </p>
+          </div>
+        </button>
+
+        <!-- Módulo: Contenido Pedagógico -->
+        <button class="module-card" (click)="goToModule('content')">
+          <div class="icon-wrapper">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect width="20" height="12" x="2" y="6" rx="3" />
+              <path d="M6 12h4" />
+              <path d="M8 10v4" />
+              <path d="M15 13h.01" />
+              <path d="M18 11h.01" />
+            </svg>
+          </div>
+          <div class="module-content">
+            <h3>Contenido Pedagógico (DUA)</h3>
+            <p>
+              Modifica los textos descriptivos, títulos y objetivos de cada
+              minijuego de programación.
+            </p>
+          </div>
+        </button>
+      </div>
+    </section>
+  }
+</main>

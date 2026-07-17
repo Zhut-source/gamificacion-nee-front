@@ -1,0 +1,109 @@
+<main class="dashboard-container">
+  
+  <button (click)="goBack()" class="btn-back-workspace">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+    <span>Volver al Panel</span>
+  </button>
+
+  @if (isLoading) {
+    <p style="margin-top: 2rem;">Cargando infraestructura de aulas...</p>
+  } @else {
+
+    <!-- VISTA 1: LISTADO GLOBAL DE AULAS -->
+    @if (!selectedClassroom) {
+      <header class="admin-header" style="margin-top: 20px;">
+        <h1 class="main-title">Supervisión de Aulas Virtuales</h1>
+        <p class="subtitle">Monitorea todas las clases creadas por el cuerpo docente en la plataforma.</p>
+      </header>
+
+      <section class="card">
+        <div class="table-responsive-wrapper">
+          <table class="students-table">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nombre del Aula</th>
+                <th>Maestro Titular</th>
+                <th>Periodo</th>
+                <th style="text-align: center;">Alumnos</th>
+                <th style="text-align: right;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (aula of classrooms; track aula.id) {
+                <tr>
+                  <td><code style="background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 4px;">{{ aula.code }}</code></td>
+                  <td><strong>{{ aula.aula_nombre }}</strong></td>
+                  <td>{{ aula.maestro_nombre || 'Sin maestro' }}</td>
+                  <td>{{ aula.periodo_nombre || 'No definido' }}</td>
+                  <td style="text-align: center;">
+                    <span class="badge" [class.badge-empty]="aula.total_alumnos == 0">{{ aula.total_alumnos }}</span>
+                  </td>
+                  <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                    <button class="action-btn" (click)="viewStudents(aula)">Ver Alumnos</button>
+                    <button class="action-btn-danger" (click)="onDeleteClassroom(aula.id)">Eliminar</button>
+                  </td>
+                </tr>
+              }
+              @if (classrooms.length === 0) {
+                <tr><td colspan="6" style="text-align: center; padding: 2rem;">No hay aulas creadas en el sistema.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <!-- VISTA 2: DETALLE DEL AULA (ALUMNOS) -->
+    @if (selectedClassroom) {
+      <header class="admin-header" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h1 class="main-title">{{ selectedClassroom.aula_nombre }}</h1>
+          <p class="subtitle">Profesor: {{ selectedClassroom.maestro_nombre }} | Código: {{ selectedClassroom.code }}</p>
+        </div>
+        <button class="action-btn" (click)="closeDetails()" style="background-color: var(--accent, #0eb9de); color: #000;">
+          Cerrar Detalle
+        </button>
+      </header>
+
+      <section class="card">
+        @if (isLoadingStudents) {
+          <p>Cargando lista de estudiantes...</p>
+        } @else {
+          <h2 style="margin-bottom: 1rem;">Estudiantes Inscritos ({{ studentsInClass.length }})</h2>
+          
+          <div class="table-responsive-wrapper">
+            <table class="students-table">
+              <thead>
+                <tr>
+                  <th>Nombre del Estudiante</th>
+                  <th>Correo Institucional</th>
+                  <th>Fecha de Ingreso</th>
+                  <th style="text-align: right;">Acción Administrativa</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (student of studentsInClass; track student.id) {
+                  <tr>
+                    <td><strong>{{ student.name }}</strong></td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.created_at | date:'shortDate' }}</td>
+                    <td style="text-align: right;">
+                      <!-- EL BOTÓN CRÍTICO DE DESVINCULACIÓN -->
+                      <button class="action-btn-warning" (click)="onUnlinkStudent(student)">
+                        Expulsar del Aula
+                      </button>
+                    </td>
+                  </tr>
+                }
+                @if (studentsInClass.length === 0) {
+                  <tr><td colspan="4" style="text-align: center; padding: 2rem;">No hay estudiantes en esta aula.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+    }
+  }
+</main>

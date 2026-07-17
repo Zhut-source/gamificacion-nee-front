@@ -19,7 +19,10 @@ export const roleGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  if (currentUser.role === 'maestro') {
+
+  if(currentUser.role === 'admin'){
+    router.navigate(['/admin/dashboard']);
+  } else if (currentUser.role === 'maestro') {
     router.navigate(['/teacher/dashboard']);
   } else {
     router.navigate(['/student/dashboard']);

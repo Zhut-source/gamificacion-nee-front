@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationService } from '@core/services/notification.service';
 import {
   ProgressService,
   StudentDetailsResponse,
@@ -24,6 +25,7 @@ export class StudentDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private progressService: ProgressService,
+    private notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
@@ -42,7 +44,6 @@ export class StudentDetailsComponent implements OnInit {
     this.progressService.getStudentDetails(this.studentId).subscribe({
       next: (res) => {
         this.details = res;
-
         this.isFadingOut = true;
         setTimeout(() => {
           this.isLoading = false;
@@ -50,9 +51,11 @@ export class StudentDetailsComponent implements OnInit {
         }, 300);
       },
       error: (err) => {
-        console.error('Error cargando detalles:', err);
         this.isLoading = false;
-        alert('No se pudieron cargar los detalles del estudiante.');
+        const mensajeError =
+          err.error?.message ||
+          'No se pudieron cargar los detalles del estudiante.';
+        this.notificationService.showAlert(mensajeError, 'error');
       },
     });
   }

@@ -8,7 +8,7 @@
       (ngSubmit)="onRegister()"
     >
       <div class="input-group fade-item">
-        <label for="name">Nombre</label>
+        <label for="name">Nombre completo</label>
 
         <input
           type="text"
@@ -108,7 +108,7 @@
               [checked]="registerForm.get('role')?.value === 'maestro'"
               (change)="selectRole('maestro')"
             />
-            <label for="maestro"> Soy maestro </label>
+            <label for="maestro"> Soy docente </label>
           </div>
           <div class="role-item">
             <input

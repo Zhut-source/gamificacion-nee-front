@@ -1,5 +1,30 @@
 <div class="game-environment">
   <div class="board-container">
+    
+    <!-- NUEVO: OVERLAY DE ERROR INTERACTIVO Y ACCESIBLE -->
+    @if (failureMessage) {
+      <div 
+        class="failure-overlay" 
+        (click)="resetAfterFailure()" 
+        role="alert" 
+        tabindex="0" 
+        (keydown.enter)="resetAfterFailure()"
+        aria-label="Notificación de fallo en la secuencia. Presiona Enter o haz clic para reiniciar el nivel."
+      >
+        <div class="failure-message-box" (click)="$event.stopPropagation()">
+          <span role="img" aria-label="Advertencia" class="failure-emoji">⚠️</span>
+          <p class="failure-text">{{ failureMessage }}</p>
+          <button 
+            class="failure-btn" 
+            (click)="resetAfterFailure()"
+            aria-label="Devolver el robot al inicio de la cuadrícula"
+          >
+            Intentar de nuevo
+          </button>
+        </div>
+      </div>
+    }
+
     <div
       class="game-grid"
       [style.grid-template-columns]="'repeat(' + gridSize + ', 1fr)'"
@@ -13,11 +38,20 @@
             [class.cell-hint]="cell.isHint"
           >
             @if (playerPosition.x === cell.x && playerPosition.y === cell.y) {
-              <div class="player-character" [class.robot-exploded]="isDestroying">🤖</div>
+              <!-- Accesibilidad: Rol de imagen con descripción textual para NEE -->
+              <div 
+                class="player-character" 
+                [class.robot-exploded]="isDestroying"
+                role="img"
+                aria-label="Robot jugador"
+              >
+                🤖
+              </div>
             }
 
             @if (cell.type === "goal") {
-              <div class="goal-indicator">🚩</div>
+              <!-- Accesibilidad: Rol de imagen para la meta -->
+              <div class="goal-indicator" role="img" aria-label="Bandera de meta">🚩</div>
             }
           </div>
         }
@@ -31,189 +65,80 @@
 
       <div class="sequence-track">
         @if (playerSequence.length === 0) {
+          <!-- Accesibilidad: Instrucciones claras de interacción simplificadas para NEE -->
           <span class="empty-text">
             Añade comandos para comenzar... <br />
-            -1 click en el item para borrar <br />
-            -Puedes usar las flechas de teclado o W A S D respectivamente ESC o
-            DEL para retroceder<br />
-            -SPACE BAR para probar codigo<br />
+            • Haz clic en un bloque para borrarlo <br />
+            • Puedes usar las flechas del teclado o W, A, S, D <br />
+            • ESC o Retroceso para borrar el último paso <br />
+            • BARRA ESPACIADORA para probar el código<br />
           </span>
         }
 
         @for (cmd of playerSequence; track $index) {
           <button
             class="command-block"
+            [class.active-command]="currentCommandIndex === $index"
             tabindex="0"
             (click)="removeCommand($index)"
             (keydown.enter)="removeCommand($index)"
-            title="Doble clic o doble Enter para eliminar"
             [attr.aria-label]="
-              'Comando ' + cmd + ' en posición ' + ($index + 1)
+              'Paso ' + ($index + 1) + ': Mover hacia ' + cmd + '. Presiona Enter para eliminar este paso.'
             "
           >
+            <!-- Accesibilidad: aria-hidden="true" en SVG para evitar lectura de paths -->
             @if (cmd === "UP") {
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-arrow-up-icon lucide-arrow-up"
-              >
-                <path d="m5 12 7-7 7 7" />
-                <path d="M12 19V5" />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up" aria-hidden="true"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg>
             }
             @if (cmd === "DOWN") {
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-arrow-down-icon lucide-arrow-down"
-              >
-                <path d="M12 5v14" />
-                <path d="m19 12-7 7-7-7" />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
             }
             @if (cmd === "LEFT") {
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-arrow-left-icon lucide-arrow-left"
-              >
-                <path d="m12 19-7-7 7-7" />
-                <path d="M19 12H5" />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
             }
             @if (cmd === "RIGHT") {
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-arrow-right-icon lucide-arrow-right"
-              >
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
             }
           </button>
         }
       </div>
     </div>
 
+    <!-- El control-panel se mantiene idéntico, pero con aria-hidden en los SVG de dirección -->
     <div class="control-panel">
       <div class="direction-buttons">
         <button
           class="dir-btn"
           (click)="addCommand('UP')"
           [disabled]="isPlaying"
-          aria-label="Mover arriba"
+          aria-label="Agregar paso: Mover arriba"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-arrow-up-icon lucide-arrow-up"
-          >
-            <path d="m5 12 7-7 7 7" />
-            <path d="M12 19V5" />
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up" aria-hidden="true"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg>
         </button>
         <div class="horizontal-btns">
           <button
             class="dir-btn"
             (click)="addCommand('LEFT')"
             [disabled]="isPlaying"
-            aria-label="Mover izquierda"
+            aria-label="Agregar paso: Mover izquierda"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-arrow-left-icon lucide-arrow-left"
-            >
-              <path d="m12 19-7-7 7-7" />
-              <path d="M19 12H5" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
           </button>
           <button
             class="dir-btn"
             (click)="addCommand('DOWN')"
             [disabled]="isPlaying"
-            aria-label="Mover abajo"
+            aria-label="Agregar paso: Mover abajo"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-arrow-down-icon lucide-arrow-down"
-            >
-              <path d="M12 5v14" />
-              <path d="m19 12-7 7-7-7" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
           </button>
           <button
             class="dir-btn"
             (click)="addCommand('RIGHT')"
             [disabled]="isPlaying"
-            aria-label="Mover derecha"
+            aria-label="Agregar paso: Mover derecha"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-arrow-right-icon lucide-arrow-right"
-            >
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
           </button>
         </div>
       </div>
@@ -223,56 +148,32 @@
           class="run-btn"
           (click)="runSequence()"
           [disabled]="isPlaying || playerSequence.length === 0"
-          [attr.aria-label]="
-            isPlaying
-              ? 'Ejecutando secuencia de comandos'
-              : 'Probar código actual'
-          "
+          [attr.aria-label]="isPlaying ? 'Ejecutando secuencia' : 'Probar código de la secuencia'"
         >
           @if (!isPlaying) {
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-play-icon lucide-play"
-              aria-hidden="true"
-            >
-              <path
-                d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"
-              />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play" aria-hidden="true"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
           }
           <span>{{ isPlaying ? "Ejecutando..." : "PROBAR CÓDIGO" }}</span>
         </button>
+        
         <button
           class="reset-btn"
           (click)="initGame(difficulty)"
           [disabled]="isPlaying"
+          aria-label="Limpiar secuencia y reiniciar nivel completo"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-repeat-icon lucide-repeat"
-          >
-            <path d="m17 2 4 4-4 4" />
-            <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
-            <path d="m7 22-4-4 4-4" />
-            <path d="M21 13v1a4 4 0 0 1-4 4H3" />
-          </svg>
-          <span>Reiniciar Nivel</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-repeat" aria-hidden="true"><path d="m17 2 4 4-4 4" /><path d="M3 11v-1a4 4 0 0 1 4-4h14" /><path d="m7 22-4-4 4-4" /><path d="M21 13v1a4 4 0 0 1-4 4H3" /></svg>
+          <span>Reiniciar</span>
+        </button>
+        
+        <button
+          type="button"
+          class="hint-btn"
+          (click)="mostrarPista()"
+          aria-label="Mostrar pista del camino correcto durante 3 segundos"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg>
+          <span>Pista</span>
         </button>
       </div>
     </div>

@@ -11,7 +11,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   gap: 30px;
   background: var(--bg-surface);
   padding: 40px;
@@ -19,11 +18,10 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
   width: 100%;
-  max-width: 500px;
+  max-width: 50%;
   min-width: 350px;
   
   height: auto;
-  min-height: 600px;
 
   .titulo-landing-page {
     color: var(--text-main);
@@ -33,16 +31,18 @@
 
 
 .text-landing {
-  text-align: left;
+  text-align: center;
   color: var(--text-main);
   margin: 0;
   line-height: 1.6;
+
+
 }
 
 .comenzar {
   all: unset;
-  height: 150px;
   width: 150px;
+  padding: 15px 0px;
   background-color: var(--btn-2-action-bg);
   border: none;
   color: var(--btn-2-action-text);
@@ -50,20 +50,36 @@
   transition:
     transform 0.2s ease,
     background 0.2s ease;
-  border-radius: 50%;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(10, 10, 10, 0.15);
 
+
+  animation: pulseActiveCareer 2s infinite ease-in-out;
+
   &:hover {
     transform: scale(1.05);
     background: var(--btn-2-action-hover-bg);
+    color: var(--btn-2-action-hover-text);
   }
   &:focus {
     outline: 2px solid var(--btn-2-action-active-outline);
     outline-offset: 3px !important;
+  }
+}
+
+@keyframes pulseActiveCareer {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8); 
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(21, 128, 61, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(21, 128, 61, 0);
   }
 }
 

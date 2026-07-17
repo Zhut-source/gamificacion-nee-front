@@ -1,0 +1,157 @@
+<main class="dashboard-container">
+  <button (click)="goBack()" class="btn-back-workspace">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path d="M6 8L2 12L6 16" />
+      <path d="M2 12H22" />
+    </svg>
+    <span>Volver</span>
+  </button>
+
+  <header class="admin-header" style="margin-top: 20px">
+    <h1 class="main-title">Infraestructura Académica</h1>
+    <p class="subtitle">
+      Gestiona las opciones disponibles para la creación de aulas.
+    </p>
+  </header>
+
+  @if (isLoading) {
+    <div
+      class="loading-overlay"
+      [class.fade-out]="isFadingOut"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="spinner-container">
+        <div class="half-circle-spinner">
+          <div class="circle circle-1"></div>
+          <div class="circle circle-2"></div>
+        </div>
+        <p class="help-text">Cargando datos...</p>
+      </div>
+    </div>
+  } @else {
+    <!-- SISTEMA DE TABS -->
+    <div class="tabs-container">
+      <button
+        [class.active]="activeTab === 'carreras'"
+        (click)="setTab('carreras')"
+      >
+        Carreras
+      </button>
+      <button
+        [class.active]="activeTab === 'materias'"
+        (click)="setTab('materias')"
+      >
+        Materias
+      </button>
+      <button
+        [class.active]="activeTab === 'horarios'"
+        (click)="setTab('horarios')"
+      >
+        Horarios
+      </button>
+      <button
+        [class.active]="activeTab === 'periodos'"
+        (click)="setTab('periodos')"
+      >
+        Periodos
+      </button>
+    </div>
+
+    <div class="catalog-workspace">
+      <!-- LADO IZQUIERDO: Formulario de Creación -->
+      <section class="form-section card">
+        <h2>Añadir Nuevo Registro</h2>
+        <form
+          [formGroup]="createForm"
+          (ngSubmit)="onSubmit()"
+          class="input-area"
+        >
+          <!-- Si es materia, necesita un Dropdown extra para elegir a qué carrera pertenece -->
+          @if (activeTab === "materias") {
+            <label class="control-label">Pertenece a la Carrera:</label>
+            <select class="input-df" formControlName="carreraId">
+              <option value="" disabled selected>Seleccione...</option>
+              @for (c of catalogs.carreras; track c.id) {
+                <option [value]="c.id">{{ c.nombre }}</option>
+              }
+            </select>
+          }
+
+          <label class="control-label">Nombre del registro:</label>
+          <input
+            type="text"
+            class="input-df"
+            formControlName="nombre"
+            placeholder="Ej. Ingeniería en Sistemas"
+          />
+
+          <button
+            type="submit"
+            class="generate-btn"
+            [disabled]="createForm.invalid"
+          >
+            Guardar en {{ activeTab }}
+          </button>
+        </form>
+      </section>
+
+      <!-- LADO DERECHO: Tabla de Registros Actuales -->
+      <section class="table-section card">
+        <h2>Registros Existentes</h2>
+
+        <div class="table-responsive-wrapper">
+          <table class="students-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                @if (activeTab === "materias") {
+                  <th>Carrera Perteneciente</th>
+                }
+                <th style="text-align: right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Iteramos sobre el array del tab activo -->
+              @for (item of catalogs[activeTab]; track item.id) {
+                <tr>
+                  <td style="color: #7a7a7a">#{{ item.id }}</td>
+                  <td>
+                    <strong>{{ item.nombre }}</strong>
+                  </td>
+                  @if (activeTab === "materias") {
+                    <td>{{ item.carrera_nombre }}</td>
+                  }
+                  <td style="text-align: right">
+                    <button
+                      class="action-btn-danger"
+                      (click)="onDelete(item.id)"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              }
+              @if (catalogs[activeTab].length === 0) {
+                <tr>
+                  <td colspan="4" style="text-align: center; padding: 20px">
+                    No hay registros.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  }
+</main>

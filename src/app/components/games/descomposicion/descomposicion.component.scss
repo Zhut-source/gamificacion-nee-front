@@ -1,0 +1,298 @@
+:host {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.game-environment {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  width: 100%;
+}
+
+.side-panels {
+  flex: 1;
+  max-width: 400px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.board-container {
+  flex: 0 0 450px;
+  max-width: 450px;
+  background-color: #2b2b2a;
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow:
+    inset 0 4px 8px rgba(0, 0, 0, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.1);
+
+  .game-grid {
+    display: grid;
+    gap: 4px;
+    border: 2px solid #1f2937;
+    background-color: #1f2937;
+  }
+
+  .grid-cell {
+    aspect-ratio: 1 / 1;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    position: relative;
+    cursor: crosshair;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+
+    .cell-number {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #1f2937;
+      pointer-events: none;
+    }
+
+    &.is-selected {
+      background-color: rgba(#0eb9de, 0.4) !important;
+      border: 2px solid #0eb9de;
+    }
+    &.is-error {
+      background-color: rgba(#ef4444, 0.6) !important;
+      animation: shake 0.3s ease-in-out;
+    }
+    &.is-filled {
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+      .cell-number {
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    // ESTILO DE LA PISTA INTELIGENTE
+    &.cell-hint {
+      animation: pulseHintLight 1s infinite alternate ease-in-out;
+      border: 3px dashed #ef4444 !important;
+      z-index: 10;
+    }
+  }
+}
+
+@keyframes pulseHintLight {
+  from {
+    transform: scale(0.95);
+    box-shadow: 0 0 0px #ef4444;
+  }
+  to {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ef4444;
+    z-index: 10;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.sequence-timeline {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid var(--button-speaker-bg-color, #e5e7eb);
+  flex-grow: 1;
+
+  .timeline-title {
+    margin: 0 0 15px 0;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--text-primary, #111827);
+  }
+  .empty-text {
+    color: var(--container-dashboard-text-color, #4b5563);
+    line-height: 1.6;
+  }
+
+  // ESTILOS DE LAS VIDAS
+  .lives-indicator {
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    span {
+      display: inline-block;
+      transition: all 0.3s;
+    }
+    span.lost {
+      filter: grayscale(100%);
+      opacity: 0.3;
+      transform: scale(0.8);
+    }
+  }
+
+  // ESTILOS DEL TUTORIAL ANIMADO DUA
+  .tutorial-box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .tutorial-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 40px);
+      gap: 2px;
+
+      .t-cell {
+        aspect-ratio: 1;
+        background: #e2e8f0;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .cell-number {
+          font-weight: bold;
+          color: #475569;
+        }
+
+        &.anim-1 {
+          animation: fillStep1 3s infinite;
+        }
+        &.anim-2 {
+          animation: fillStep2 3s infinite;
+        }
+      }
+    }
+  }
+
+  .stats-box {
+    padding: 15px;
+    background-color: rgba(#0eb9de, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(#0eb9de, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .stat-label {
+      font-weight: bold;
+      color: var(--text-primary, #111827);
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #0eb9de;
+    }
+  }
+}
+
+// Animaciones del Tutorial
+@keyframes fillStep1 {
+  0%,
+  10% {
+    background: #e2e8f0;
+  }
+  20%,
+  80% {
+    background: rgba(#0eb9de, 0.4);
+    border: 2px solid #0eb9de;
+  }
+  90%,
+  100% {
+    background: #60a5fa;
+    color: white;
+    border: none;
+  }
+}
+@keyframes fillStep2 {
+  0%,
+  30% {
+    background: #e2e8f0;
+  }
+  40%,
+  80% {
+    background: rgba(#0eb9de, 0.4);
+    border: 2px solid #0eb9de;
+    border-left: none;
+  }
+  90%,
+  100% {
+    background: #60a5fa;
+    color: white;
+    border: none;
+  }
+}
+
+.action-buttons{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+  }
+
+.control-panel .action-buttons button {
+
+  padding: 12px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 1.1rem;
+
+  &.hint-btn {
+    background-color: #8b5cf6;
+    border-bottom: 4px solid #6d28d9;
+  }
+
+  &.reset-btn {
+    background-color: #f59e0b;
+    border-bottom: 4px solid #d97706;
+  }
+  &:active:not(:disabled) {
+    transform: translateY(4px);
+    border-bottom: 0;
+  }
+}
+
+body.high-contrast {
+  .tutorial-box {
+    background: #000;
+    border-color: #fff;
+  }
+  .grid-cell.cell-hint {
+    border: 4px dashed #ffd700 !important;
+    background-color: transparent !important;
+  }
+}
+
+@media (max-width: 1030px) {
+  .game-environment {
+    flex-direction: column;
+    align-items: center;
+  }
+  .board-container,
+  .side-panels {
+    width: 100%;
+    max-width: 450px;
+  }
+}

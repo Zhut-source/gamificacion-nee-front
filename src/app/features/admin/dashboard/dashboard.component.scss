@@ -1,0 +1,196 @@
+.dashboard-container {
+  padding: 40px;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  max-width: 100%;
+  min-height: calc(100vh - 80px);
+
+  @media (max-width: 700px) { padding: 20px; }
+  @media (max-height: 600px) { 
+    
+  }
+}
+
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+
+  &.fade-out {
+    opacity: 0;
+    pointer-events: none; 
+  }
+
+  .spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+
+.main-content-wrapper {
+  &.fade-in {
+    animation: fadeInAnimation 0.4s ease-out forwards;
+  }
+}
+
+@keyframes fadeInAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-header {
+  margin-bottom: 2rem;
+  .main-title { margin-bottom: 0.5rem; color: var(--text-main); }
+  .subtitle { font-size: 1.1rem; color: var(--text-muted); }
+}
+
+// Reutilizamos el estilo de grid de métricas del Maestro
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3.5rem;
+
+  .metric-card {
+    background-color: var(--bg-surface);
+    border: 2px solid var(--border-carrucel);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+    .metric-title { font-size: 1rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .metric-value { font-size: 2.5rem; font-weight: 800; margin: 0; color: var(--text-main); }
+    .text-accent { color: var(--spinner-color); }
+  }
+}
+
+// Estilo de los Botones/Tarjetas de Módulos
+.management-modules {
+  .section-title { margin-bottom: 1.5rem; color: var(--text-main); }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .module-card {
+    all: unset; // Quita los estilos base del botón
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    background-color: var(--bg-surface);
+    border: 2px solid var(--border-carrucel);
+    border-radius: 16px;
+    padding: 2rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+
+    .icon-wrapper {
+      background-color: var(--btn-2-action-bg);
+      color: var(--btn-2-action-text);
+      padding: 1rem;
+      border-radius: 12px;
+      display: inline-flex;
+      transition: background-color 0.2s ease;
+    }
+
+    .module-content {
+      h3 { margin: 0 0 0.5rem 0; font-size: 1.3rem; color: var(--text-main); }
+      p { margin: 0; color: var(--text-muted); line-height: 1.5; text-align: left; }
+    }
+
+    &:hover, &:focus-visible {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      border-color: var(--btn-2-action-hover-bg);
+      outline: none;
+
+      .icon-wrapper {
+        background-color: var(--btn-2-action-hover-bg);
+        color: var(--btn-2-action-hover-text);
+      }
+    }
+  }
+}
+
+//spinner
+
+.fulfilling-square-spinner,
+.fulfilling-square-spinner * {
+  box-sizing: border-box;
+}
+
+.fulfilling-square-spinner {
+  height: 50px;
+  width: 50px;
+  position: relative;
+  border: 4px solid var(--spinner-color);
+  animation: fulfilling-square-spinner-animation 2.5s infinite ease;
+}
+
+.fulfilling-square-spinner .spinner-inner {
+  vertical-align: top;
+  display: inline-block;
+  background-color: var(--spinner-color);
+  width: 100%;
+  opacity: 1;
+  animation: fulfilling-square-spinner-inner-animation 2.5s infinite ease-in;
+}
+
+.help-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+@keyframes fulfilling-square-spinner-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(180deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fulfilling-square-spinner-inner-animation {
+  0% {
+    height: 0%;
+  }
+  25% {
+    height: 0%;
+  }
+  50% {
+    height: 100%;
+  }
+  75% {
+    height: 100%;
+  }
+  100% {
+    height: 0%;
+  }
+}

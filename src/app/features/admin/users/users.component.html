@@ -1,0 +1,89 @@
+<main class="dashboard-container">
+  
+  <button (click)="goBack()" class="btn-back-workspace">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+    <span>Volver al Panel</span>
+  </button>
+
+  <header class="admin-header" style="margin-top: 20px;">
+    <h1 class="main-title">Moderación de Usuarios</h1>
+    <p class="subtitle">Gestiona el acceso de estudiantes y docentes a la plataforma DUA.</p>
+  </header>
+
+  @if (isLoading) {
+    <p>Cargando registros...</p>
+  } @else {
+
+    <section class="card management-card">
+      <div class="toolbar-panel" style="margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+        
+        <input type="text" class="input-df" style="flex: 1; min-width: 250px;" 
+               placeholder="Buscar por nombre o correo..." 
+               [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()">
+        
+        <select class="input-df" style="width: 200px;" 
+                [(ngModel)]="roleFilter" (ngModelChange)="applyFilters()">
+          <option value="all">Todos los roles</option>
+          <option value="estudiante">Solo Estudiantes</option>
+          <option value="maestro">Solo Maestros</option>
+        </select>
+        
+      </div>
+
+      <div class="table-responsive-wrapper">
+        <table class="students-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Rol</th>
+              <th>Registro / Aula Actual</th>
+              <th>Estado de Cuenta</th>
+              <th style="text-align: right;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of filteredUsers; track user.id) {
+              <tr [class.row-attention]="!user.is_active">
+                
+                <td>
+                  <strong>{{ user.name }}</strong><br>
+                  <small style="color: #7A7A7A;">{{ user.email }}</small>
+                </td>
+                
+                <td>
+                  <span class="role-badge" [ngClass]="user.role">{{ user.role }}</span>
+                </td>
+                
+                <td>
+                  <small>{{ user.created_at | date:'shortDate' }}</small><br>
+                  <strong>{{ user.aula_actual || '-' }}</strong>
+                </td>
+                
+                <td>
+                  @if (user.is_active) {
+                    <span class="status-badge status-completed">● Activo</span>
+                  } @else {
+                    <span class="status-badge status-alert">⚠ Inhabilitado</span>
+                  }
+                </td>
+
+                <td style="text-align: right;">
+                  <button 
+                    [class]="user.is_active ? 'action-btn-danger' : 'action-btn-success'" 
+                    (click)="toggleStatus(user)">
+                    {{ user.is_active ? 'Banear Acceso' : 'Reactivar Cuenta' }}
+                  </button>
+                </td>
+
+              </tr>
+            }
+            @if (filteredUsers.length === 0) {
+              <tr><td colspan="5" style="text-align: center; padding: 2rem;">No se encontraron usuarios.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  }
+</main>

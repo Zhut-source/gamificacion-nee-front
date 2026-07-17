@@ -30,6 +30,10 @@
   border-radius: 12px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 
+  position: relative; 
+  overflow: hidden;
+  align-self: flex-start;
+
   .game-grid {
     display: grid;
     gap: 4px;
@@ -85,6 +89,85 @@
       }
     }
   }
+}
+
+.failure-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.85); /* Fondo oscuro semitransparente contrastado */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  padding: 20px;
+  animation: fadeInFailure 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  cursor: pointer;
+}
+
+.failure-message-box {
+  background-color: var(--bg-surface, #ffffff);
+  border: 4px solid #ef4444; /* Rojo de alerta visible */
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 85%;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  cursor: default; /* No induce a pensar que el texto es arrastrable */
+
+  .failure-emoji {
+    font-size: 2.5rem;
+    animation: alertWobble 0.5s ease;
+  }
+
+  .failure-text {
+    color: var(--text-main, #1e293b);
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .failure-btn {
+    all: unset;
+    background-color: #ef4444;
+    color: white;
+    font-weight: bold;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 0px #b91c1c;
+    transition: transform 0.1s, background-color 0.2s;
+    
+    &:hover, &:focus {
+      background-color: #f87171;
+      outline: 2px solid white;
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(4px);
+      box-shadow: none;
+    }
+  }
+}
+
+/* ANIMACIONES */
+@keyframes fadeInFailure {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes alertWobble {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
 }
 
 @keyframes robotExplosion {
@@ -167,12 +250,25 @@
       font-size: 1.5rem;
       cursor: pointer;
       transition: all 0.2s;
+      position: relative; /* Ayuda a que el scale no se corte */
 
       &:hover,
       &:focus {
         background-color: #fca5a5;
         border-color: #ef4444;
         outline: none;
+      }
+
+      /* ====== NUEVO ESTILO DE ILUMINACIÓN ====== */
+      &.active-command {
+        background-color: #fef08a; /* Fondo amarillo de pista */
+        border-color: #eab308; /* Borde amarillo intenso */
+        box-shadow: 0 0 12px rgba(234, 179, 8, 0.7); /* Resplandor */
+        transform: scale(1.1); /* Efecto de "latido" o expansión */
+        z-index: 10;
+
+        /* Evita que se ponga rojo (hover de borrar) mientras se está ejecutando */
+        pointer-events: none;
       }
     }
   }
@@ -238,6 +334,10 @@
       cursor: pointer;
       color: white;
 
+      &.hint-btn {
+        background-color: #8b5cf6;
+        border-bottom: 4px solid #6d28d9;
+      }
       &.run-btn {
         background-color: #10b981;
         border-bottom: 4px solid #059669;
@@ -292,12 +392,15 @@
   .board-container {
     flex: 0 0 500px;
     width: 500px;
+    align-self: center;
   }
 
   .side-panels {
     max-width: 100%;
   }
 }
+
+
 
 @media (max-width: 1030px) {
   .game-environment {
@@ -353,4 +456,9 @@
       height: 48px;
     }
   }
+}
+
+.hint-btn {
+  background-color: #8b5cf6;
+  border-bottom: 4px solid #6d28d9;
 }

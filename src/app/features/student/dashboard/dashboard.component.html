@@ -1,252 +1,200 @@
-<main class="dashboard-container">
+<main class="dashboard-wrapper">
   @if (showBadgeNotification) {
-    <div
-      class="badge-notification-banner"
-      style="
-        background-color: var(--accent);
-        color: #000;
-        padding: 15px 20px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        animation: slideDown 0.5s ease;
-      "
-    >
+    <div class="badge-notification-banner">
       <div style="display: flex; align-items: center; gap: 10px">
         <span style="font-size: 1.5rem">🏆</span>
-        <strong
-          >¡Felicidades! Has desbloqueado nuevas insignias de
-          rendimiento.</strong
-        >
+        <strong>¡Felicidades! Has desbloqueado nuevas insignias de rendimiento.</strong>
       </div>
-      <button
-        (click)="scrollToBadges()"
-        style="
-          background: #000;
-          color: white;
-          border: none;
-          padding: 8px 16px;
-          border-radius: 8px;
-          font-weight: bold;
-          cursor: pointer;
-        "
-      >
-        Ver mis insignias
-      </button>
+      <button (click)="scrollToSection('badges-section')" class="btn-banner">Ver mis insignias</button>
     </div>
   }
+
   @if (isLoading) {
-    <div
-      class="loading-overlay"
-      [class.fade-out]="isFadingOut"
-      role="status"
-      aria-live="polite"
-    >
+    <div class="loading-overlay" [class.fade-out]="isFadingOut" role="status" aria-live="polite">
       <div class="spinner-container">
-        <div class="fulfilling-square-spinner">
-          <div class="spinner-inner"></div>
-        </div>
+        <div class="fulfilling-square-spinner"><div class="spinner-inner"></div></div>
         <p class="help-text">Cargando tus desafíos de aprendizaje...</p>
       </div>
     </div>
   } @else {
+    
     @if (!currentClass) {
       <section class="no-class-section" aria-labelledby="no-class-title">
         <div class="card info">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="64"
-            height="64"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-gamepad-2"
-            style="color: #6366f1; margin-bottom: 1.5rem"
-          >
-            <line x1="6" x2="10" y1="12" y2="12" />
-            <line x1="8" x2="8" y1="10" y2="14" />
-            <line x1="15" x2="15.01" y1="13" y2="13" />
-            <line x1="18" x2="18.01" y1="11" y2="11" />
-            <rect width="20" height="12" x="2" y="6" rx="3" />
-          </svg>
-
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gamepad-2"><line x1="6" x2="10" y1="12" y2="12" /><line x1="8" x2="8" y1="10" y2="14" /><line x1="15" x2="15.01" y1="13" y2="13" /><line x1="18" x2="18.01" y1="11" y2="11" /><rect width="20" height="12" x="2" y="6" rx="3" /></svg>
           <h2 id="no-class-title" class="main-title">¡Únete a tu clase!</h2>
-
-          <p class="challenge-description">
-            Para comenzar a resolver desafíos de programación, fortalecer tu
-            pensamiento lógico y ganar increíbles insignias, necesitas estar
-            vinculado a un aula activa.
-          </p>
-
-          <button type="button" class="join-btn" (click)="goToJoinClass()">
-            Ingresar código de clase
-          </button>
+          <p class="challenge-description">Para comenzar a resolver niveles, fortalecer tu pensamiento lógico y ganar increíbles insignias, necesitas estar vinculado a un aula activa.</p>
+          <button type="button" class="join-btn" (click)="goToJoinClass()">Ingresar código de clase</button>
         </div>
       </section>
     } @else {
-      <section class="progress-section">
-        <h1 class="main-title">Listo para el siguiente desafío</h1>
-
-        <div class="progress-container">
-          <div
-            class="progress-bar-wrapper"
-            role="progressbar"
-            [attr.aria-valuenow]="progressValue"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            [attr.aria-label]="
-              'Progreso general: ' + (progressValue | number: '1.0-0') + '%'
-            "
-          >
-            <div
-              class="progress-bar-fill"
-              [style.width.%]="animatedProgress"
-            ></div>
+      
+      <main class="dashboard snap-container">
+        
+        <nav class="quick-nav" aria-label="Navegación rápida">
+          <div class="nav-item" (click)="scrollToSection('progress-section')">
+            <span class="nav-label" [class.show]="activeSectionId === 'progress-section'">Progreso</span>
+            <div class="nav-dot" [class.active]="activeSectionId === 'progress-section'"></div>
           </div>
-          <span class="progress-percentage"
-            >{{ animatedProgress | number: "1.0-0" }}% Completado</span
-          >
-        </div>
-      </section>
-      <section class="challenges-section">
-        <h2 id="challenges-title" class="section-title">Tus Desafíos</h2>
 
-        <div class="challenges-grid">
-          @for (challenge of challenges; track challenge.id; let i = $index) {
-            <button
-              type="button"
-              class="challenge-card"
-              [ngClass]="'status-' + challenge.status"
-              [class.cursor-pointer]="challenge.status !== 'locked'"
-              [disabled]="challenge.status === 'locked'"
-              (click)="goToChallenge(challenge)"
-              [style.--dynamic-color]="challenge.status !== 'locked' ? 'var(--saturated-color-' + (i % 5) + ')' : ''"
-            >
-              <header class="card-header">
-                <div class="level-info">
-                  <span class="level-number">Nivel {{ challenge.nivel }}</span>
-                  <h3 class="level-title">{{ challenge.nombre }}</h3>
+          <div class="nav-item has-subnav">
+            <div class="main-level" (click)="startOrContinueJourney()">
+              <span class="nav-label" [class.show]="activeSectionId.includes('challenge-')">Desafíos</span>
+              <div class="nav-dot" [class.active]="activeSectionId.includes('challenge-')"></div>
+            </div>
+            
+            <div class="sub-nav-levels" [class.expanded]="activeSectionId.includes('challenge-')">
+              @for (challenge of challenges; track challenge.id) {
+                <div class="nav-item" (click)="scrollToSection('challenge-' + challenge.id); $event.stopPropagation()">
+                  <span class="nav-label" [class.show]="activeSectionId === 'challenge-' + challenge.id">Nivel {{ challenge.nivel }}</span>
+                  <div 
+                    class="sub-dot" 
+                    [class.active]="activeSectionId === 'challenge-' + challenge.id"
+                    [attr.title]="'Nivel ' + challenge.nivel">
+                  </div>
                 </div>
-                <div class="action-card">
-                  <img
-                    [src]="getChallengeImagePath(challenge.nombre)"
-                    [alt]="'Ilustración del nivel ' + challenge.nombre"
-                    class="challenge-illustration"
-                    (error)="onImageError($event)"
-                  />
-                  <button
-                    class="speaker-button"
-                    title="Escuchar nivel"
-                    aria-label="Escuchar nivel"
-                    [class.active]="
-                      tts.isPlaying && activeChallengeId === challenge.id
-                    "
-                    (click)="$event.stopPropagation(); leerNivel(challenge)"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="30"
-                      height="30"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="lucide lucide-volume2-icon lucide-volume-2"
-                    >
-                      <path
-                        d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"
-                      />
-                      <path d="M16 9a5 5 0 0 1 0 6" />
-                      <path d="M19.364 18.364a9 9 0 0 0 0-12.728" />
-                    </svg>
+              }
+            </div>
+          </div>
+
+          <div class="nav-item" (click)="scrollToSection('badges-section')">
+            <span class="nav-label" [class.show]="activeSectionId === 'badges-section'">Insignias</span>
+            <div class="nav-dot" [class.active]="activeSectionId === 'badges-section'"></div>
+          </div>
+        </nav>
+
+        <section id="progress-section" class="snap-section progress-section" tabindex="-1">
+          <div class="progress-content">
+            <h1 class="main-title">
+              {{ progressValue === 0 ? '¿Estás listo para jugar con la lógica?' : '¡Sigue divirtiéndote en el juego!' }}
+            </h1>
+
+            <div class="progress-container">
+              <div class="progress-bar-wrapper" role="progressbar" [attr.aria-valuenow]="progressValue" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar-fill" [style.width.%]="animatedProgress"></div>
+              </div>
+              <span class="progress-percentage">{{ animatedProgress | number: "1.0-0" }}% Completado</span>
+            </div>
+
+            <button class="btn-start-journey pulse-btn" (click)="startOrContinueJourney()">
+              <span>{{ progressValue === 0 ? 'Comenzar' : 'Continuar' }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </div>
+        </section>
+
+        <div class="challenges-wrapper">
+          <!-- TÍTULO CAMBIADO A H3 -->
+          <h3 id="challenges-title" class="section-title sticky-title">Tus Desafíos</h3>
+
+          @for (challenge of challenges; track challenge.id; let i = $index) {
+            <section [id]="'challenge-' + challenge.id" class="snap-section challenge-fullscreen" tabindex="-1">
+              
+              @if (i > 0) {
+                <button class="scroll-arrow up" (click)="scrollToSection('challenge-' + challenges[i - 1].id)" aria-label="Nivel anterior">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                </button>
+              } @else {
+                 <button class="scroll-arrow up" (click)="scrollToSection('progress-section')" aria-label="Ir a Progreso">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                </button>
+              }
+
+              <div class="card-challenges horizontal-card" (click)="goToChallenge(challenge)" [class.locked]="challenge.status === 'locked'" [style.--dynamic-color]="challenge.status !== 'locked' ? 'var(--saturated-color-' + (i % 5) + ')' : ''">
+                
+                <!-- ÁREA 1: IZQUIERDA (Ahora incluye la descripción) -->
+                <div class="area-left">
+                  <div class="titles-card">
+                    <span class="level-tag">Nivel {{ challenge.nivel }}</span>
+                    <!-- Cambiado a H4 -->
+                    <h4 class="challenge-title">{{ challenge.nombre }}</h4>
+                    <p class="challenge-description">{{ challenge.descripcion_nivel }}</p>
+                  </div>
+                </div>
+
+                <!-- ÁREA 2: CENTRO (Imagen más grande y estado) -->
+                <div class="area-center">
+                  <div class="challenge-image-container">
+                    <img [src]="getChallengeImagePath(challenge.nombre)" [alt]="challenge.nombre" class="challenge-illustration" (error)="onImageError($event)"/>
+                  </div>
+                  <div class="status-block">
+                    @if (challenge.status === "completed") {
+                      <span class="status-tag completed"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Completado</span>
+                    } @else if (challenge.status === "locked") {
+                      <span class="status-tag locked"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Bloqueado</span>
+                    } @else {
+                      <span class="status-tag disponible">Disponible</span>
+                    }
+                  </div>
+                </div>
+
+                <!-- ÁREA 3: DERECHA (Botones apilados y centrados) -->
+                <div class="area-right">
+                  <button type="button" class="speaker-button" [class.active]="tts.isPlaying && activeChallengeId === challenge.id" (click)="leerNivel(challenge); $event.stopPropagation()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
                     <span>Escuchar</span>
                   </button>
-                </div>
-              </header>
 
-              <div class="card-body">
-                <p class="challenge-description">
-                  {{ challenge.descripcion_nivel }}
-                </p>
-              </div>
-
-              <footer class="card-footer">
-                <div class="status-indicator">
-                  @if (challenge.status === "completed") {
-                    <span> Completado</span>
-                  } @else if (challenge.status === "available") {
-                    <span> Disponible</span>
+                  @if (challenge.status !== "locked") {
+                    <button type="button" class="btn-learn" (click)="goToChallenge(challenge); $event.stopPropagation()">
+                      <span>Aprender</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right-icon lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                    </button>
                   } @else {
-                    <span> Bloqueado</span>
+                    <button type="button" class="btn-learn disabled" disabled (click)="$event.stopPropagation()">
+                      <span>Aprender</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock-keyhole-icon lucide-lock-keyhole"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
+                    </button>
                   }
                 </div>
-              </footer>
-            </button>
+              </div>
+
+              <button class="scroll-arrow down" (click)="scrollToSection(challenges[i + 1] ? 'challenge-' + challenges[i + 1].id : 'badges-section'); $event.stopPropagation()" aria-label="Siguiente sección">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </section>
           }
         </div>
-      </section>
 
-      <section
-        class="badges-section unlocked-badges"
-        aria-labelledby="unlocked-title"
-      >
-        <h2 id="unlocked-title" class="section-title">Insignias Ganadas</h2>
-
-        <div class="carousel-panel">
-          <div class="carousel-track">
-            @for (badge of unlockedBadges; track badge.id) {
-              <div class="badge-item">
-                <img
-                  [src]="badge.imagen_url"
-                  [alt]="badge.nombre"
-                  class="badge-image"
-                />
-                <span class="badge-name">{{ badge.nombre }}</span>
+        <section id="badges-section" class="snap-section badges-fullscreen" tabindex="-1">
+          <div class="badges-content">
+            <div class="badges-sub-wrapper">
+              <h2 id="unlocked-title" class="section-title">Insignias Ganadas</h2>
+              <div class="carousel-panel">
+                <div class="carousel-track">
+                  @for (badge of unlockedBadges; track badge.id) {
+                    <div class="badge-item">
+                      <img [src]="badge.imagen_url" [alt]="badge.nombre" class="badge-image"/>
+                      <span class="badge-name">{{ badge.nombre }}</span>
+                    </div>
+                  }
+                  @if (unlockedBadges.length === 0) {
+                    <p class="statusBadges-text">Aún no has ganado insignias. ¡Sigue jugando!</p>
+                  }
+                </div>
               </div>
-            }
-            @if (unlockedBadges.length === 0) {
-              <p class="statusBadges-text">
-                Aún no has ganado insignias. ¡Sigue jugando!
-              </p>
-            }
-          </div>
-        </div>
-      </section>
+            </div>
 
-      <section
-        class="badges-section locked-badges"
-        aria-labelledby="locked-title"
-      >
-        <h2 id="locked-title" class="section-title">Insignias por Ganar</h2>
-
-        <div class="carousel-panel">
-          <div class="carousel-track">
-            @for (badge of lockedBadges; track badge.id) {
-              <div class="badge-item badge-disabled">
-                <img
-                  [src]="badge.imagen_url"
-                  [alt]="'Bloqueada: ' + badge.nombre"
-                  class="badge-image"
-                />
-                <span class="badge-name">{{ badge.nombre }}</span>
+            <div class="badges-sub-wrapper">
+              <h2 id="locked-title" class="section-title">Insignias por Ganar</h2>
+              <div class="carousel-panel">
+                <div class="carousel-track">
+                  @for (badge of lockedBadges; track badge.id) {
+                    <div class="badge-item badge-disabled">
+                      <img [src]="badge.imagen_url" [alt]="badge.nombre" class="badge-image"/>
+                      <span class="badge-name">{{ badge.nombre }}</span>
+                    </div>
+                  }
+                  @if (lockedBadges.length === 0) {
+                    <p class="statusBadges-text" style="color: #7a7a7a;">No hay insignias por desbloquear.</p>
+                  }
+                </div>
               </div>
-            }
-            @if (lockedBadges.length === 0) {
-              <p class="statusBadges-text" style="color: #7a7a7a; width: 100%; text-align: center">
-                No hay insignias por desbloquear. ¡Sigue jugando!
-              </p>
-            }
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+      </main>
     }
   }
 </main>

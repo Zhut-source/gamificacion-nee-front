@@ -1,0 +1,120 @@
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.content-card {
+  padding: 1.5rem;
+  
+  .card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: 10px;
+  }
+
+  .level-badge {
+    background-color: var(--accent, #0eb9de);
+    color: #000;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .textarea-df {
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  .dynamic-list-group {
+    background-color: rgba(0,0,0,0.02);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.05);
+
+    .add-item-btn {
+      background: transparent;
+      border: 2px dashed #7A7A7A;
+      color: #7A7A7A;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      &:hover { border-color: var(--text-main); color: var(--text-main); }
+    }
+
+    .objective-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+
+      .bullet { font-size: 1.5rem; color: var(--accent); }
+      .flex-fill { flex-grow: 1; }
+      .remove-btn {
+        background: #FEE2E2; color: #DC2626;
+        border: none; border-radius: 50%;
+        width: 30px; height: 30px;
+        cursor: pointer;
+        &:hover { background: #DC2626; color: white; }
+      }
+    }
+  }
+
+  .save-btn {
+    width: 100%;
+    font-size: 1.2rem;
+    padding: 15px;
+    background-color: #10B981; // Verde éxito
+    &:hover { background-color: #059669; }
+  }
+}
+
+.btn-back-workspace {
+  all: unset;
+  gap: 6px;
+  max-width: fit-content;
+  height: 20px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--btn-3-action-border);
+  border-radius: 18px;
+  background: transparent;
+  color: var(--btn-3-action-text);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  &:hover {
+    color: var(--btn-3-action-hover-text);
+    background: var(--btn-3-action-hover-bg);
+    border: 2px solid var(--btn-3-action-hover-border);
+  }
+  &:focus {
+    outline: 2px solid var(--btn-3-action-active-outline);
+    outline-offset: 3px !important;
+  }
+}
+
+// Adaptación de tema para reutilizar tus estilos globales
+body.high-contrast {
+  .dynamic-list-group { background: transparent; border-color: #FFF; }
+  .add-item-btn { border-color: #FFF !important; color: #FFF !important; }
+}

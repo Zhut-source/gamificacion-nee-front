@@ -33,6 +33,7 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
     status: 'success' | 'failed';
     message: string;
   }>();
+  @Output() hintUsed = new EventEmitter<void>();
 
   difficulty: 'easy' | 'medium' | 'hard' = 'easy';
   gridSize: number = 4;
@@ -42,6 +43,10 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
   isPlaying: boolean = false;
   gameStatus: 'idle' | 'running' | 'success' | 'failed' = 'idle';
   isDestroying: boolean = false;
+  currentCommandIndex: number = -1;
+
+  failureMessage: string | null = null;
+  
 
   constructor(private audioService: AudioService) {}
 
@@ -68,6 +73,13 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
     if (difficulty === 'hard') this.gridSize = 8;
 
     this.generateGuaranteedBoard();
+  }
+
+  resetAfterFailure() {
+    this.playerPosition = { x: 0, y: 0 };
+    this.failureMessage = null;
+    this.gameStatus = 'idle';
+    this.isDestroying = false;
   }
 
   generateGuaranteedBoard() {
@@ -126,6 +138,8 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
 
   mostrarPista() {
     if (this.grid.some((row) => row.some((cell) => cell.isHint))) return;
+
+    this.hintUsed.emit();
 
     const queue: { x: number; y: number; path: { x: number; y: number }[] }[] =
       [];
@@ -201,10 +215,13 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
     if (this.playerSequence.length === 0) return;
     this.gameStatus = 'running';
     this.isPlaying = true;
+    this.currentCommandIndex = -1;
+    this.failureMessage = null;
 
     let currentX = 0;
     let currentY = 0;
     for (let i = 0; i < this.playerSequence.length; i++) {
+      this.currentCommandIndex = i;
       const cmd = this.playerSequence[i];
 
       if (cmd === 'RIGHT') currentX++;
@@ -218,14 +235,15 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
       if (this.isOutOfBounds(currentX, currentY)) {
         this.gameStatus = 'failed';
         this.isPlaying = false;
+        this.currentCommandIndex = -1;
 
         this.audioService.playSound('robot-off');
         this.isDestroying = true;
 
         await this.delay(400);
-
-        this.playerPosition = { x: 0, y: 0 };
+        
         this.isDestroying = false;
+        this.failureMessage = 'La secuencia que usaste hizo que te salieras del mapa. ¡Haz clic aquí para reiniciar!';
 
         this.gameResult.emit({
           status: 'failed',
@@ -237,14 +255,15 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
       if (this.isWall(currentX, currentY)) {
         this.gameStatus = 'failed';
         this.isPlaying = false;
+        this.currentCommandIndex = -1;
 
         this.isDestroying = true;
         this.audioService.playSound('robot-off');
 
         await this.delay(400);
 
-        this.playerPosition = { x: 0, y: 0 };
         this.isDestroying = false;
+        this.failureMessage = '¡Ups! Chocaste con un obstáculo. ¡Haz clic aquí para reiniciar!';
         
         this.gameResult.emit({
           status: 'failed',
@@ -254,6 +273,7 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
       }
       await this.delay(500);
     }
+    this.currentCommandIndex = -1;
 
     if (this.grid[currentY][currentX].type === 'goal') {
       this.gameStatus = 'success';
@@ -261,6 +281,7 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
       this.gameResult.emit({ status: 'success', message: '¡Ruta perfecta!' });
     } else {
       this.gameStatus = 'failed';
+      this.failureMessage = 'No llegaste a la meta con esa secuencia. ¡Haz clic aquí para reiniciar!';
       this.gameResult.emit({
         status: 'failed',
         message: 'Asegúrate de llegar a la bandera.',

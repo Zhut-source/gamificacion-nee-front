@@ -1,143 +1,220 @@
 // ==========================================================================
-// CONFIGURACIÓN Y CONTENEDOR PRINCIPAL VISTA
+// CONFIGURACIÓN DE CONTENEDOR PRINCIPAL Y FULL SCREEN SCROLL
 // ==========================================================================
 .student-details-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  padding: 3.5rem;
-  max-width: 100%;
-  background-color: var(--container-dashboard-bg-color);
-  color: var(--container-dashboard-text-color);
+  // Ocupa el alto total de la ventana (ajusta el 80px si tu navbar es más alto/bajo)
+  height: calc(100vh - 80px);
+  gap: 1rem;
+  padding: 1rem;
+  width: 100%;
+  background-color: var(--container-dashboard-bg-color, transparent);
+  box-sizing: border-box;
 }
 
-// Estructura semántica base para Cards del Dashboard
-.card {
-  background-color: var(--card-bg-color, #ffffff);
-  border: 2px solid var(--card-border-color, #ffffff);
-  border-radius: 16px;
-  padding: 2rem;
+.btn-back-workspace {
+  all: unset;
+  gap: 6px;
+  max-width: fit-content;
+  height: 20px;
+  padding: 0.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-}
-
-// Utilidad de texto resaltado gamificado
-.text-accent {
-  color: var(--accent, #0eb9de);
-}
-
-// ==========================================================================
-// 1. CARD PRINCIPAL DE ENCABEZADO
-// ==========================================================================
-.header-section {
-  width: 100%;
-
-  .header-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--btn-3-action-border);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--btn-3-action-text);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  &:hover {
+    color: var(--btn-3-action-hover-text);
+    background: var(--btn-3-action-hover-bg);
+    border: 2px solid var(--btn-3-action-hover-border);
   }
-
-  .main-title {
-    margin: 0;
-    color: var(--text-titulo-landing, #2b2b2a);
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-
-    .dynamic-student-name {
-      display: inline-block;
-      font-weight: 800;
-      color: var(--text-primary, #2b2b2a);
-    }
+  &:focus {
+    outline: 2px solid var(--btn-3-action-active-outline);
+    outline-offset: 3px !important;
   }
 }
 
 // ==========================================================================
-// 2. SECCIÓN DE MÉTRICAS DEL ESTUDIANTE (MÉTRICAS TRIPLE FLEX)
+// 1. NUEVA GRILLA SUPERIOR (4 CARDS JUNTAS)
 // ==========================================================================
-.metrics-section {
+.top-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); // 4 columnas
+  gap: 1.5rem;
   width: 100%;
+  flex-shrink: 0; // Evita que esta sección se encoja
 
-  .metrics-flex-layout {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: stretch;
-    gap: 2rem;
-    width: 100%;
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr); // 2 columnas en tablets
   }
 
-  .mini-metric-card {
-    flex: 1;
-    min-width: 0; // Protege contra anchos destructivos de palabra (OpenDyslexic)
-    background-color: var(--carousel-bg-card-color, #f9f6f0);
-    border: 2px solid var(--carousel-border-card-color, #2b2b2a);
-    border-radius: 12px;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; // 1 columna en móviles
+  }
+
+  // Tarjeta de Perfil y Botón Volver
+  .profile-card {
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.5rem;
+    background-color: var(--card-bg-color, #ffffff);
+    border: 2px solid var(--card-border-color, #ffffff);
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-    .metric-label {
+    .profile-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: fit-content;
+        background: transparent;
+        color: var(--text-main, #2b2b2a);
+        border: none;
+        padding: 0;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          color 0.2s ease,
+          transform 0.2s ease;
+
+        svg {
+          transition: transform 0.2s ease;
+        }
+
+        &:hover {
+          color: var(--accent, #0eb9de);
+          svg {
+            transform: translateX(-4px);
+          }
+        }
+      }
+
+      .profile-info {
+        .main-title {
+          margin: 0;
+          font-size: 1.25rem;
+          color: var(--text-titulo-landing, #2b2b2a);
+          word-wrap: break-word;
+
+          .dynamic-student-name {
+            font-weight: 800;
+          }
+        }
+
+        .student-email {
+          margin: 0.25rem 0 0 0;
+          color: #7a7a7a;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  // Tarjetas de Métricas (Iguales al layout anterior)
+  .metric-card {
+    background-color: var(--card-bg-color, #ffffff);
+    border: 2px solid var(--card-border-color, #ffffff);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 140px;
+
+    .metric-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .metric-title {
       font-weight: 600;
-      color: var(--label-text-color, #2b2b2a);
+      color: var(--text-primary, #2b2b2a);
+      font-size: 1.05rem;
       margin: 0;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      overflow-wrap: anywhere;
     }
 
     .metric-value {
       font-weight: 800;
-      font-size: 2rem; // Mantiene consistencia de escala sin definir pixel estricto
+      font-size: 2.2rem;
+      color: var(--text-primary, #2b2b2a);
       margin: 0;
-      overflow-wrap: anywhere;
-      line-height: 1.2;
+      line-height: 1.1;
+
+      &.text-accent {
+        color: var(--accent, #0eb9de);
+      }
+      &.datetime-value {
+        font-size: 1.5rem;
+      }
     }
 
     .metric-subtext {
-      font-size: 1rem;
-      font-weight: 400;
+      font-size: 0.9rem;
+      font-weight: 500;
       color: #7a7a7a;
       display: block;
       margin-top: 0.25rem;
-    }
-
-    .datetime-value {
-      font-size: 1.75rem;
+      text-transform: none;
     }
   }
 }
 
 // ==========================================================================
-// 3. TABLA DE NIVELES RESPONSIVA
+// 2. SECCIÓN DE NIVELES (CON SCROLL VERTICAL)
 // ==========================================================================
 .levels-section {
+  flex: 1; // Toma todo el espacio sobrante verticalmente
+  display: flex;
+  flex-direction: column;
+  min-height: 0; // Crucial para permitir scroll interior en flexbox
   width: 100%;
 
   .table-container-card {
+    flex: 1; // La tarjeta también toma el espacio total
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    background-color: var(--card-bg-color, #ffffff);
+    border: 2px solid var(--card-border-color, #ffffff);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-height: 0;
+    gap: 1rem;
   }
 
   .table-section-title {
     margin: 0;
     color: var(--text-titulo-landing, #2b2b2a);
+    font-size: 1.25rem;
+    flex-shrink: 0; // El título no se encoge
   }
 
-  // Contenedor elástico de la tabla (Soporta Reflow WCAG 2.2)
   .table-responsive-wrapper {
-    width: 100%;
-    overflow-x: auto;
+    flex: 1;
+    overflow-y: auto; // Activa scroll vertical
+    overflow-x: auto; // Activa scroll horizontal si es necesario
     border-radius: 8px;
     border: 1px solid #e2e8f0;
     background-color: transparent;
 
-    // Indicador visible de foco por teclado para usuarios de tecnologías asistivas
     &:focus-visible {
       outline: 3px solid var(--accent, #0eb9de);
       outline-offset: 2px;
@@ -148,40 +225,39 @@
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    min-width: 800px; // Evita el colapso de celdas de texto inclusivo
+    min-width: 800px;
 
     th,
     td {
-      padding: 1.25rem 1.5rem;
+      padding: 1rem 1.25rem;
       vertical-align: middle;
       border-bottom: 1px solid #e2e8f0;
-      overflow-wrap: anywhere; // Impide desbordes laterales
+      overflow-wrap: anywhere;
     }
 
     thead {
-      background-color: #f8fafc;
-
       th {
+        position: sticky; // Encabezado fijo al hacer scroll
+        top: 0;
+        z-index: 10;
+        background-color: #f8fafc;
         font-weight: 700;
         color: var(--text-primary, #2b2b2a);
         white-space: nowrap;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); // Sombra sutil
       }
     }
 
     tbody {
       tr {
         transition: background-color 0.15s ease;
-
         &:hover {
-          background-color: rgba(#0eb9de, 0.03);
+          background-color: rgba(#0eb9de, 0.04);
         }
-
-        // Fila destacada de atención pedagógica
         &.row-attention {
-          background-color: rgba(#e11d48, 0.02);
-
+          background-color: rgba(#e11d48, 0.1);
           &:hover {
-            background-color: rgba(#e11d48, 0.05);
+            background-color: rgba(#e11d48, 0.15);
           }
         }
       }
@@ -191,19 +267,17 @@
         display: block;
       }
 
-      // Sistema de Badges/Insignias Adaptables
       .difficulty-badge,
       .status-badge {
         display: inline-block;
         padding: 0.35rem 0.75rem;
         border-radius: 20px;
         font-weight: 700;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         text-align: center;
         white-space: nowrap;
       }
 
-      // Modificadores de Dificultad
       .difficulty-easy {
         background-color: #dcfce7;
         color: #15803d;
@@ -217,7 +291,6 @@
         color: #b91c1c;
       }
 
-      // Modificadores de Estado Gamificado
       .status-completed {
         background-color: var(--button-bg-color-comenzar, #2b2b2a);
         color: var(--button-text-color-comenzar, #f9f6f0);
@@ -242,53 +315,8 @@
 }
 
 // ==========================================================================
-// ADAPTACIONES COMPLEMENTARIAS AL MODO ALTO CONTRASTE GLOBALES
+// ESTILOS DE CARGA Y ANIMACIONES
 // ==========================================================================
-body.high-contrast {
-  .card {
-    background-color: #000000 !important;
-    border: 2px solid #ffffff !important;
-  }
-
-  .mini-metric-card {
-    background-color: #000000 !important;
-    border: 2px solid #ffffff !important;
-
-    .metric-subtext {
-      color: #ffffff !important;
-    }
-  }
-
-  .table-responsive-wrapper {
-    border-color: #ffffff !important;
-  }
-
-  .levels-table {
-    thead {
-      background-color: #121212 !important;
-      th {
-        border-bottom: 2px solid #ffffff !important;
-      }
-    }
-    td {
-      border-bottom: 1px solid #ffffff !important;
-    }
-
-    tbody {
-      tr:hover {
-        background-color: #121212 !important;
-      }
-
-      .difficulty-badge,
-      .status-badge {
-        background-color: #000000 !important;
-        color: #ffffff !important;
-        border: 2px solid #ffffff !important;
-      }
-    }
-  }
-}
-
 .loading-overlay {
   display: flex;
   justify-content: center;
@@ -297,12 +325,10 @@ body.high-contrast {
   width: 100%;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
-
   &.fade-out {
     opacity: 0;
     pointer-events: none;
   }
-
   .spinner-container {
     display: flex;
     flex-direction: column;
@@ -311,43 +337,23 @@ body.high-contrast {
   }
 }
 
-.main-content-wrapper {
-  &.fade-in {
-    animation: fadeInAnimation 0.4s ease-out forwards;
-  }
-}
-
-@keyframes fadeInAnimation {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fulfilling-square-spinner,
-.fulfilling-square-spinner * {
-  box-sizing: border-box;
-}
-
 .fulfilling-square-spinner {
   height: 50px;
   width: 50px;
   position: relative;
-  border: 4px solid #ff1d5e;
+  border: 4px solid var(--spinner-color, #ff1d5e);
   animation: fulfilling-square-spinner-animation 2.5s infinite ease;
-}
+  box-sizing: border-box;
 
-.fulfilling-square-spinner .spinner-inner {
-  vertical-align: top;
-  display: inline-block;
-  background-color: #ff1d5e;
-  width: 100%;
-  opacity: 1;
-  animation: fulfilling-square-spinner-inner-animation 2.5s infinite ease-in;
+  .spinner-inner {
+    vertical-align: top;
+    display: inline-block;
+    background-color: var(--spinner-color, #ff1d5e);
+    width: 100%;
+    opacity: 1;
+    animation: fulfilling-square-spinner-inner-animation 2.5s infinite ease-in;
+    box-sizing: border-box;
+  }
 }
 
 .help-text {
@@ -392,28 +398,38 @@ body.high-contrast {
 }
 
 // ==========================================================================
-// MEDIA QUERIES (DISPOSITIVOS MÓVILES Y RESPONSIVE)
+// ALTO CONTRASTE GLOBALES
 // ==========================================================================
-@media (max-width: 840px) {
-  .student-details-container {
-    padding: 1.5rem;
-    gap: 1.5rem;
+body.high-contrast {
+  .card,
+  .metric-card,
+  .profile-card {
+    background-color: #000000 !important;
+    border: 2px solid #ffffff !important;
   }
-
-  .card {
-    padding: 1.25rem;
+  .metric-subtext,
+  .student-email {
+    color: #ffffff !important;
   }
-
-  // Transformación horizontal a vertical de las tres mini cards métricas
-  .metrics-section {
-    .metrics-flex-layout {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1rem;
+  .table-responsive-wrapper {
+    border-color: #ffffff !important;
+  }
+  .levels-table {
+    thead th {
+      background-color: #121212 !important;
+      border-bottom: 2px solid #ffffff !important;
     }
-
-    .mini-metric-card {
-      width: 100%;
+    td {
+      border-bottom: 1px solid #ffffff !important;
+    }
+    tbody tr:hover {
+      background-color: #121212 !important;
+    }
+    .difficulty-badge,
+    .status-badge {
+      background-color: #000000 !important;
+      color: #ffffff !important;
+      border: 2px solid #ffffff !important;
     }
   }
 }

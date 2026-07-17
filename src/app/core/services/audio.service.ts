@@ -25,6 +25,10 @@ export class AudioService {
       'robot-cargando',
       'assets/audio/games/secuenciacion/charging.mp3',
     );
+    this.preloadSound(
+      'switch',
+      'assets/audio/games/patrones/light-switch-sound.mp3',
+    );
   }
 
   preloadSound(key: string, src: string) {

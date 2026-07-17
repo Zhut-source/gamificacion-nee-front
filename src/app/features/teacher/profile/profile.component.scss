@@ -34,7 +34,27 @@
   }
 }
 
+.spotlight-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); /* Oscurece sutilmente */
+  backdrop-filter: blur(5px); /* Aplica el blur tapando el perfil */
+  z-index: 50; /* Se pone sobre todo el contenido normal */
+}
+
+/* La clase que rescata elementos del blur (sin escalas ni bordes) */
+.elevated {
+  position: relative;
+  z-index: 51 !important; /* Pasa por encima del overlay (50) */
+  pointer-events: auto; /* Asegura que puedas dar clic al botón y llenar los inputs */
+}
+
 .btn-back-workspace {
+  position: relative;
+  z-index: 52; 
   all: unset;
   gap: 6px;
   max-width: fit-content;
@@ -46,8 +66,7 @@
   align-items: center;
   justify-content: center;
   border: 2px solid var(--btn-3-action-border);
-  border-radius: 18px;
-  background: transparent;
+  border-radius: 9999px;
   color: var(--btn-3-action-text);
   cursor: pointer;
   transition: background 0.2s ease;
@@ -59,6 +78,15 @@
   &:focus {
     outline: 2px solid var(--btn-3-action-active-outline);
     outline-offset: 3px !important;
+  }
+  &.elevated {
+    background-color: var(--bg-body);
+
+    &:hover {
+    color: var(--btn-3-action-hover-text);
+    background: var(--btn-3-action-hover-bg);
+    border: 2px solid var(--btn-3-action-hover-border);
+  }
   }
 }
 
@@ -205,7 +233,7 @@
 .area-create-class {
   .input-area.grid-create {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr 1fr;
     align-items: flex-end;
     gap: 1.25rem;
 
@@ -528,6 +556,30 @@
       accent-color: var(--input-1-box-active-bg);
     }
   }
+
+  .spotlight-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75); // Oscuro pero translúcido
+    backdrop-filter: blur(3px); // Difumina lo que está detrás
+    z-index: 50; // Se pone por encima de todo
+    animation: fadeInOverlay 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeInOverlay {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  // La sección que debe sobresalir de la oscuridad
+  
 
   @media (max-width: 700px) {
     display: flex;

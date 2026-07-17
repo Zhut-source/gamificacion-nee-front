@@ -1,7 +1,11 @@
 <main class="profile-container">
+    @if (isSpotlightActive) {
+    <div class="spotlight-overlay" (click)="clearSpotlight()"></div>
+  }
     <button 
     type="button" 
-    class="btn-back-workspace" 
+    class="btn-back-workspace"
+    [class.elevated]="isSpotlightActive"
     (click)="volverAlDashboard()"
     aria-label="Volver al panel principal de desafíos"
   >
@@ -31,25 +35,61 @@
         </div>
     </section>
 
-    <section class="area-create-class">
+    <section id="create-class" class="area-create-class" [class.elevated]="isSpotlightActive">
         <div class="card create-class">
             <h1 class="title create-class-title">
                 Crear clase
             </h1>
             <form class="input-area grid-create" [formGroup]="createClassForm" (ngSubmit)="onCreateClass()">
+                
                 <div class="field-group">
-                    <label for="classroom-name" class="control-label">Nombre del aula:</label>
-                    <input 
-                    type="text" 
-                    id="classroom-name" 
-                    placeholder="Ej: Aula 102 - Matemáticas" 
-                    autocomplete="off"
-                    formControlName="classroomName"
-                    required
-                    >
+                    <label class="control-label">Periodo Académico:</label>
+                    <select class="input-df" formControlName="periodoId">
+                        <option value="" disabled selected>Seleccione un periodo</option>
+                        @for (p of periodos; track p.id) { <option [value]="p.id">{{ p.nombre }}</option> }
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label class="control-label">Horario:</label>
+                    <select class="input-df" formControlName="horarioId">
+                        <option value="" disabled selected>Seleccione un horario</option>
+                        @for (h of horarios; track h.id) { <option [value]="h.id">{{ h.nombre }}</option> }
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label class="control-label">Carrera Tecnológica:</label>
+                    <select class="input-df" formControlName="carreraId" (change)="onCarreraChange($event)">
+                        <option value="" disabled selected>Seleccione la carrera</option>
+                        @for (c of carreras; track c.id) { <option [value]="c.id">{{ c.nombre }}</option> }
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label class="control-label">Asignatura / Materia:</label>
+                    <select class="input-df" formControlName="materiaId">
+                        <option value="" disabled selected>Primero seleccione una carrera</option>
+                        @for (m of materiasFiltradas; track m.id) { <option [value]="m.id">{{ m.nombre }}</option> }
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label class="control-label">Nivel / Semestre:</label>
+                    <select class="input-df" formControlName="nivel">
+                        <option value="" disabled selected>Seleccione</option>
+                        @for (n of niveles; track n) { <option [value]="n">{{ n }}</option> }
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label class="control-label">Paralelo:</label>
+                    <select class="input-df" formControlName="aulaNum">
+                        <option value="" disabled selected>Seleccione</option>
+                        @for (a of aulasFisicas; track a) { <option [value]="a">Paralelo {{ a }}</option> }
+                    </select>
                 </div>
                 
-                <button type="submit" class="generate-btn" [disabled]="createClassForm.invalid">
+                <button type="submit" class="generate-btn" [disabled]="createClassForm.invalid" style="grid-column: 1 / -1; margin-top: 15px;">
                     Crear clase
                 </button>
             </form>

@@ -1,0 +1,97 @@
+<main class="dashboard-container">
+  
+  <button (click)="goBack()" class="btn-back-workspace">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+    <span>Volver al Panel</span>
+  </button>
+
+  @if (isLoading) {
+    <p style="margin-top: 2rem;">Cargando contenido pedagógico...</p>
+  } @else {
+
+    <!-- VISTA 1: LISTADO DE DESAFÍOS (Lectura) -->
+    @if (!selectedChallenge) {
+      <header class="admin-header" style="margin-top: 20px;">
+        <h1 class="main-title">Contenido Pedagógico (DUA)</h1>
+        <p class="subtitle">Adapta las instrucciones y objetivos de los minijuegos para hacerlos más comprensibles.</p>
+      </header>
+
+      <div class="challenges-grid">
+        @for (challenge of challenges; track challenge.id) {
+          <article class="card content-card">
+            <div class="card-header-flex">
+              <span class="level-badge">Nivel {{ challenge.nivel }}</span>
+              <button class="action-btn" (click)="editChallenge(challenge)">Editar Textos</button>
+            </div>
+            <h2 style="margin: 10px 0;">{{ challenge.nombre }}</h2>
+            <p style="color: #7A7A7A; font-size: 0.9rem;"><strong>Desc. Tarjeta:</strong> {{ challenge.descripcion_nivel }}</p>
+            <p style="color: #7A7A7A; font-size: 0.9rem;"><strong>Desc. Juego:</strong> {{ challenge.descripcion_juego }}</p>
+            <p style="color: #7A7A7A; font-size: 0.9rem; margin-bottom: 0;"><strong>{{ challenge.objetivos?.length || 0 }} Objetivos</strong></p>
+          </article>
+        }
+      </div>
+    }
+
+    <!-- VISTA 2: FORMULARIO DE EDICIÓN -->
+    @if (selectedChallenge) {
+      <header class="admin-header" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <h1 class="main-title">Editando: Nivel {{ selectedChallenge.nivel }}</h1>
+          <p class="subtitle">Cualquier cambio afectará inmediatamente lo que ven y escuchan (TTS) los estudiantes.</p>
+        </div>
+        <button class="action-btn-danger" (click)="closeEdit()" style="background-color: transparent; color: var(--text-main); border: 2px solid var(--text-main);">
+          Cancelar
+        </button>
+      </header>
+
+      <section class="card form-container">
+        <form [formGroup]="editForm" (ngSubmit)="onSave()" class="input-area">
+          
+          <div class="field-group">
+            <label class="control-label">Nombre del Desafío:</label>
+            <input type="text" class="input-df" formControlName="nombre">
+          </div>
+
+          <div class="field-group">
+            <label class="control-label">Descripción Corta (Tarjeta del Dashboard):</label>
+            <textarea class="input-df textarea-df" formControlName="descripcion_nivel" rows="2"></textarea>
+          </div>
+
+          <div class="field-group">
+            <label class="control-label">Instrucción Larga (Dentro del Entorno de Juego):</label>
+            <textarea class="input-df textarea-df" formControlName="descripcion_juego" rows="3"></textarea>
+            <small style="color: #7A7A7A;">Este texto es el que leerá la síntesis de voz (TTS) de forma predeterminada.</small>
+          </div>
+
+          <!-- LA LISTA DINÁMICA DE OBJETIVOS -->
+          <div class="field-group dynamic-list-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <label class="control-label" style="margin: 0;">Checklist de Objetivos:</label>
+              <button type="button" class="add-item-btn" (click)="addObjective()">+ Añadir Objetivo</button>
+            </div>
+            
+            <div formArrayName="objetivos" class="objectives-list">
+              @for (objCtrl of objetivosArray.controls; track $index; let i = $index) {
+                <div class="objective-item">
+                  <span class="bullet">•</span>
+                  <input type="text" class="input-df flex-fill" [formControlName]="i">
+                  <button type="button" class="remove-btn" (click)="removeObjective(i)" title="Eliminar este objetivo">✖</button>
+                </div>
+              }
+              @if (objetivosArray.length === 0) {
+                <p style="color: #7A7A7A; font-style: italic;">No hay objetivos definidos.</p>
+              }
+            </div>
+          </div>
+
+          <hr style="border: 1px solid rgba(0,0,0,0.1); margin: 20px 0;">
+
+          <button type="submit" class="generate-btn save-btn" [disabled]="editForm.invalid">
+            Guardar Contenido Pedagógico
+          </button>
+        </form>
+      </section>
+    }
+
+  }
+</main>

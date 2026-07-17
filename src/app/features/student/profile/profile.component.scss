@@ -1,6 +1,10 @@
 // ==========================================================================
 // CONFIGURACIÓN DE ANIMACIONES (Respetando límites WCAG 2.2 < 0.5s)
 // ==========================================================================
+
+
+
+
 @keyframes fadeInUpProfile {
   from {
     opacity: 0;
@@ -547,6 +551,9 @@
     }
   }
 }
+
+
+
 
 @media (max-width: 480px) {
   .profile-container {
