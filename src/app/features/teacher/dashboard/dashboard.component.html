@@ -1,6 +1,11 @@
 <main class="teacher-dashboard">
   @if (isLoading) {
-    <div class="loading-overlay" [class.fade-out]="isFadingOut" role="status" aria-live="polite">
+    <div
+      class="loading-overlay"
+      [class.fade-out]="isFadingOut"
+      role="status"
+      aria-live="polite"
+    >
       <div class="spinner-container">
         <div class="fulfilling-square-spinner">
           <div class="spinner-inner"></div>
@@ -12,31 +17,60 @@
     @if (classrooms.length === 0) {
       <section class="no-class-section" aria-labelledby="no-class-title">
         <div class="card info">
-          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-presentation"
+          >
             <path d="M2 3h20" />
             <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3" />
             <path d="m7 21 5-5 5 5" />
           </svg>
-          <h1 id="no-class-title" class="main-title">¡Crea tu primera clase!</h1>
-          <p class="challenge-description">Para comenzar a gestionar tus alumnos y ver progresos, primero debes crear un aula virtual.</p>
-          <button type="button" class="join-btn" (click)="goToCreateClass()">Crear una clase</button>
+          <h1 id="no-class-title" class="main-title">
+            ¡Crea tu primera clase!
+          </h1>
+          <p class="challenge-description">
+            Para comenzar a gestionar tus alumnos y ver progresos, primero debes
+            crear un aula virtual.
+          </p>
+          <button type="button" class="join-btn" (click)="goToCreateClass()">
+            Crear una clase
+          </button>
         </div>
       </section>
     } @else {
       <main class="dashboard">
         <section class="class-section">
-          
           <!-- NUEVA GRILLA SUPERIOR: 4 CARDS (1 SELECTOR + 3 MÉTRICAS) -->
-          <section class="top-dashboard-grid" aria-label="Métricas y selección del aula" *ngIf="metrics">
-            
+          <section
+            class="top-dashboard-grid"
+            aria-label="Métricas y selección del aula"
+            *ngIf="metrics"
+          >
             <!-- Card 1: Selector de Aula -->
             <article class="card selector-card">
               <div class="selector-content">
                 <div class="field-group">
-                  <label for="dashboard-classroom-select" class="selector-label">Aula activa</label>
-                  <select id="dashboard-classroom-select" class="select-control" [value]="selectedAulaId" (change)="onAulaChange($event)">
+                  <label for="dashboard-classroom-select" class="selector-label"
+                    >Aula activa</label
+                  >
+                  <select
+                    id="dashboard-classroom-select"
+                    class="select-control"
+                    [value]="selectedAulaId"
+                    (change)="onAulaChange($event)"
+                  >
                     @for (classroom of classrooms; track classroom.id) {
-                      <option [value]="classroom.id">{{ classroom.name }}</option>
+                      <option [value]="classroom.id">
+                        {{ classroom.name }}
+                      </option>
                     }
                   </select>
                 </div>
@@ -50,8 +84,16 @@
 
                 @if (selectedAulaCode) {
                   <div class="code-display-box">
-                    <span class="code-text">Código: <code>{{ selectedAulaCode }}</code></span>
-                    <button class="action-btn-small" (click)="copyClassCode()" title="Copiar código">Copiar</button>
+                    <span class="code-text"
+                      >Código: <code>{{ selectedAulaCode }}</code></span
+                    >
+                    <button
+                      class="action-btn-small"
+                      (click)="copyClassCode()"
+                      title="Copiar código"
+                    >
+                      Copiar
+                    </button>
                   </div>
                 }
               </div>
@@ -69,7 +111,9 @@
             <article class="metric-card metric-success">
               <div class="metric-info">
                 <h2 class="metric-title">Estudiantes con buen desempeño</h2>
-                <p class="metric-value">{{ metrics.kpis.estudiantesBuenDesempeno }}</p>
+                <p class="metric-value">
+                  {{ metrics.kpis.estudiantesBuenDesempeno }}
+                </p>
               </div>
             </article>
 
@@ -77,34 +121,73 @@
             <article class="metric-card metric-alert">
               <div class="metric-info">
                 <h2 class="metric-title">Estudiantes con dificultades</h2>
-                <p class="metric-value">{{ metrics.kpis.estudiantesConDificultad }}</p>
+                <p class="metric-value">
+                  {{ metrics.kpis.estudiantesConDificultad }}
+                </p>
               </div>
             </article>
           </section>
 
           <!-- SECCIÓN DE LISTADO DE ESTUDIANTES (Sin cambios estructurales) -->
-          <section class="management-section" aria-labelledby="management-title">
+          <section
+            class="management-section"
+            aria-labelledby="management-title"
+          >
             <div class="card management-card">
               <header class="management-header">
-                <h2 id="management-title" class="management-card-title">Listado de Estudiantes</h2>
+                <h2 id="management-title" class="management-card-title">
+                  Listado de Estudiantes
+                </h2>
                 <div class="toolbar-panel">
-                  <button class="action-btn registrar" (click)="openRegisterModal()">+ Registrar Estudiante</button>
+                  <button
+                    class="action-btn registrar"
+                    (click)="openRegisterModal()"
+                  >
+                    + Registrar Estudiante
+                  </button>
+
+                  <!-- Input de búsqueda vinculado con evento input -->
                   <div class="search-box">
-                    <label for="student-search" class="sr-only">Buscar estudiante por nombre</label>
-                    <input type="search" id="student-search" placeholder="Buscar estudiante..." autocomplete="off" />
+                    <label for="student-search" class="sr-only"
+                      >Buscar estudiante por nombre o correo</label
+                    >
+                    <input
+                      type="search"
+                      id="student-search"
+                      placeholder="Buscar estudiante..."
+                      autocomplete="off"
+                      [value]="searchQuery"
+                      (input)="onSearchChange($event)"
+                    />
                   </div>
+
+                  <!-- Selector con las opciones de estado expandidas -->
                   <div class="filter-box">
-                    <label for="student-filter" class="sr-only">Filtrar lista de estudiantes</label>
-                    <select id="student-filter" class="select-control">
+                    <label for="student-filter" class="sr-only"
+                      >Filtrar lista de estudiantes</label
+                    >
+                    <select
+                      id="student-filter"
+                      class="select-control"
+                      [value]="filterType"
+                      (change)="onFilterChange($event)"
+                    >
                       <option value="all">Todos los estudiantes</option>
                       <option value="alert">Con dificultades</option>
-                      <option value="completed">Completados</option>
+                      <option value="success">Buen desempeño</option>
+                      <option value="completed">
+                        Progreso completo (100%)
+                      </option>
                     </select>
                   </div>
                 </div>
               </header>
 
-              <div class="table-container" tabindex="0" aria-label="Tabla de progreso de estudiantes">
+              <div
+                class="table-container"
+                tabindex="0"
+                aria-label="Tabla de progreso de estudiantes"
+              >
                 <table class="students-table">
                   <thead>
                     <tr>
@@ -116,28 +199,58 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @for (student of metrics?.estudiantes; track student.id) {
+                    <!-- Iteración sobre filteredStudents en lugar de metrics.estudiantes -->
+                    @for (student of filteredStudents; track student.id) {
                       <tr [class.row-alert]="student.alerta">
-                        <td><strong class="student-name">{{ student.name }}</strong></td>
-                        <td><span class="student-email">{{ student.email }}</span></td>
+                        <td>
+                          <strong class="student-name">{{
+                            student.name
+                          }}</strong>
+                        </td>
+                        <td>
+                          <span class="student-email">{{ student.email }}</span>
+                        </td>
                         <td>
                           <div class="table-progress-wrapper">
-                            <span class="progress-percentage">{{ student.progreso }}%</span>
+                            <span class="progress-percentage"
+                              >{{ student.progreso }}%</span
+                            >
                           </div>
                         </td>
                         <td>
                           <span class="activity-date">
-                            {{ student.ultima_actividad ? (student.ultima_actividad | date: "short") : "Sin actividad" }}
+                            {{
+                              student.ultima_actividad
+                                ? (student.ultima_actividad | date: "short")
+                                : "Sin actividad"
+                            }}
                           </span>
                         </td>
                         <td>
-                          <button type="button" class="action-btn" (click)="viewStudentDetails(student.id)">Ver detalles</button>
+                          <button
+                            type="button"
+                            class="action-btn"
+                            (click)="viewStudentDetails(student.id)"
+                          >
+                            Ver detalles
+                          </button>
                         </td>
                       </tr>
                     }
-                    @if (metrics?.estudiantes?.length === 0) {
+
+                    <!-- Mensaje personalizado cuando no hay coincidencias con los filtros activos -->
+                    @if (filteredStudents.length === 0) {
                       <tr>
-                        <td colspan="5" style="text-align: center; padding: 20px">Aún no hay estudiantes unidos a esta aula.</td>
+                        <td
+                          colspan="5"
+                          style="text-align: center; padding: 20px"
+                        >
+                          {{
+                            metrics?.estudiantes?.length === 0
+                              ? "Aún no hay estudiantes unidos a esta aula."
+                              : "Ningún estudiante coincide con la búsqueda o filtro aplicado."
+                          }}
+                        </td>
                       </tr>
                     }
                   </tbody>
@@ -154,27 +267,73 @@
   @if (showRegisterModal) {
     <div class="modal-backdrop">
       <div class="modal-card card">
-        <h2 class="main-title" style="font-size: 1.5rem; margin-bottom: 1rem">Registrar Estudiante</h2>
-        <p style="color: var(--text-muted); margin-bottom: 1.5rem; text-align: center;">
+        <h2 class="main-title" style="font-size: 1.5rem; margin-bottom: 1rem">
+          Registrar Estudiante
+        </h2>
+        <p
+          style="
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            text-align: center;
+          "
+        >
           El estudiante quedará vinculado automáticamente al aula actual.
         </p>
 
-        <form [formGroup]="registerForm" (ngSubmit)="onRegisterStudent()" style="display: flex; flex-direction: column; gap: 1rem">
+        <form
+          [formGroup]="registerForm"
+          (ngSubmit)="onRegisterStudent()"
+          style="display: flex; flex-direction: column; gap: 1rem"
+        >
           <div class="field-group">
             <label class="control-label">Nombre completo</label>
-            <input type="text" class="select-control" formControlName="name" placeholder="Ej: Ana López" />
+            <input
+              type="text"
+              class="select-control"
+              formControlName="name"
+              placeholder="Ej: Ana López"
+            />
           </div>
           <div class="field-group">
             <label class="control-label">Correo institucional</label>
-            <input type="email" class="select-control" formControlName="email" placeholder="estudiante@ug.edu.ec" />
+            <input
+              type="email"
+              class="select-control"
+              formControlName="email"
+              placeholder="estudiante@ug.edu.ec"
+            />
           </div>
           <div class="field-group">
             <label class="control-label">Contraseña inicial</label>
-            <input type="password" class="select-control" formControlName="password" placeholder="Mínimo 6 caracteres" />
+            <input
+              type="password"
+              class="select-control"
+              formControlName="password"
+              placeholder="Mínimo 6 caracteres"
+            />
           </div>
           <div style="display: flex; gap: 10px; margin-top: 1rem">
-            <button type="button" class="action-btn-danger" style="flex: 1; text-align: center" (click)="closeRegisterModal()">Cancelar</button>
-            <button type="submit" class="action-btn" style="flex: 1; text-align: center; background-color: var(--accent); color: #000;" [disabled]="registerForm.invalid">Crear y Vincular</button>
+            <button
+              type="button"
+              class="action-btn-danger"
+              style="flex: 1; text-align: center"
+              (click)="closeRegisterModal()"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="action-btn"
+              style="
+                flex: 1;
+                text-align: center;
+                background-color: var(--accent);
+                color: #000;
+              "
+              [disabled]="registerForm.invalid"
+            >
+              Crear y Vincular
+            </button>
           </div>
         </form>
       </div>

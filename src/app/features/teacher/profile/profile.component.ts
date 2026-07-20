@@ -91,7 +91,6 @@ export class ProfileComponent implements OnInit {
 
     this.route.fragment.subscribe((fragment) => {
       if (fragment === 'create-class') {
-        // Retraso ligero para permitir que la vista se renderice primero
         setTimeout(() => {
           const targetElement = document.getElementById('create-class');
           if (targetElement) {

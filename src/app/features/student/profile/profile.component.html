@@ -1,11 +1,29 @@
 <main class="profile-container">
-  <button 
-    type="button" 
-    class="btn-back-workspace" 
+  @if (isSpotlightActive) {
+    <div class="spotlight-overlay" (click)="clearSpotlight()"></div>
+  }
+  <button
+    type="button"
+    class="btn-back-workspace"
+    [class.elevated]="isSpotlightActive"
     (click)="volverAlDashboard()"
     aria-label="Volver al panel principal de desafíos"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-left-icon lucide-move-left"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="30"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="lucide lucide-move-left-icon lucide-move-left"
+    >
+      <path d="M6 8L2 12L6 16" />
+      <path d="M2 12H22" />
+    </svg>
     <span>Volver</span>
   </button>
   <section class="area-info" [formGroup]="infoForm">
@@ -67,8 +85,7 @@
     </div>
   </section>
 
-  <section class="area-join-class" [formGroup]="classForm">
-
+  <section id="class-code" [class.elevated]="isSpotlightActive">
     <div class="card join-class">
       @if (isLoadingClass) {
         <div class="skeleton-wrapper" aria-hidden="true">
@@ -81,7 +98,7 @@
       <!-- 2. CONTENIDO REAL: Se dibuja y ejecuta el Fade-in cuando la carga finaliza -->
       @else {
         <h1 class="title join-class">Unirse a una clase</h1>
-        <div class="input-area grid-join fade-item">
+        <div class="input-area grid-join fade-item" [formGroup]="classForm">
           <div class="status-label">Estado:</div>
 
           @if (isLoadingClass) {
@@ -229,22 +246,6 @@
             <option value="rapido">Rápido</option>
             <option value="normal" selected>Normal</option>
             <option value="lento">Lento</option>
-          </select>
-        </div>
-
-        <label for="check-animations">Desactivar Animaciones</label>
-        <div class="control-container">
-          <label class="checkbox-control">
-            <input type="checkbox" id="check-animations" checked />
-            <span class="custom-checkbox"></span>
-          </label>
-        </div>
-
-        <label for="select-font-size">Tamaño de Fuente</label>
-        <div class="control-container">
-          <select id="select-font-size" class="select-control">
-            <option value="normal" selected>Normal</option>
-            <option value="grande">Grande</option>
           </select>
         </div>
       </div>

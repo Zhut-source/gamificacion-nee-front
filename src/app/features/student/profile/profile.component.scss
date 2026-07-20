@@ -2,9 +2,6 @@
 // CONFIGURACIÓN DE ANIMACIONES (Respetando límites WCAG 2.2 < 0.5s)
 // ==========================================================================
 
-
-
-
 @keyframes fadeInUpProfile {
   from {
     opacity: 0;
@@ -77,6 +74,24 @@
   }
 }
 
+.spotlight-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); /* Oscurece sutilmente */
+  backdrop-filter: blur(5px); /* Aplica el blur tapando el perfil */
+  z-index: 50; /* Se pone sobre todo el contenido normal */
+}
+
+/* La clase que rescata elementos del blur (sin escalas ni bordes) */
+.elevated {
+  position: relative;
+  z-index: 51 !important; /* Pasa por encima del overlay (50) */
+  pointer-events: auto; /* Asegura que puedas dar clic al botón y llenar los inputs */
+}
+
 .btn-back-workspace {
   all: unset;
   gap: 6px;
@@ -102,6 +117,15 @@
   &:focus {
     outline: 2px solid var(--btn-3-action-active-outline);
     outline-offset: 3px !important;
+  }
+  &.elevated {
+    background-color: var(--bg-body);
+
+    &:hover {
+      color: var(--btn-3-action-hover-text);
+      background: var(--btn-3-action-hover-bg);
+      border: 2px solid var(--btn-3-action-hover-border);
+    }
   }
 }
 
@@ -288,30 +312,32 @@
     }
   }
 
-  .join-btn {
-    padding: 0.5rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 10px;
-    background: var(--btn-2-action-bg);
-      color: var(--btn-2-action-text);
-    cursor: pointer;
-    transition: background 0.2s ease;
+  .join-btn{
+      background-color: var(--button-bg, #2b2b2a);
+      color: var(--button-text, #f9f6f0);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      height: 48px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+      transition:
+        background-color 0.2s,
+        opacity 0.2s;
 
-    &:hover {
-        background: var(--btn-2-action-hover-bg);
-        color: var(--btn-2-action-hover-text);
+      &:hover {
+        background-color: var(--accent, #0eb9de);
+        color: #2b2b2a;
       }
-    &:disabled {
-      background: var(--text-muted);
-      cursor: not-allowed;
-      box-shadow: none;
+      &:disabled {
+        background-color: #a0aab5;
+        color: #ffffff;
+        cursor: not-allowed;
+        opacity: 0.7;
+        border: none;
+      }
     }
-  }
 }
 
 // 3. Cambiar Contraseña
@@ -356,7 +382,7 @@
 // 4. Ajustes de Accesibilidad
 .input-area.grid-accessibility {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 1fr minmax(150px, auto);
   gap: 1rem 1rem;
   align-items: center;
   max-width: 650px;
@@ -551,9 +577,6 @@
     }
   }
 }
-
-
-
 
 @media (max-width: 480px) {
   .profile-container {

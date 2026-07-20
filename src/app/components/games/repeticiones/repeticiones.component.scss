@@ -22,6 +22,14 @@
   gap: 20px;
 }
 
+// MEJORA DE ACCESIBILIDAD POR TECLADO (FOCUS INDICATORS DE ALTO CONTRASTE)
+button:focus-visible,
+select:focus-visible {
+  outline: 3px solid #2563eb !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.4) !important;
+}
+
 .board-container {
   flex: 0 0 500px;
   max-width: 500px;
@@ -44,9 +52,7 @@
     font-size: clamp(1.2rem, 4vw - 0.5rem, 2rem);
     position: relative;
     overflow: hidden;
-    transition:
-      background-color 0.3s,
-      border 0.3s;
+    transition: background-color 0.3s, border 0.3s;
 
     &.cell-empty,
     &.cell-start {
@@ -74,13 +80,10 @@
     .player-character {
       position: absolute;
       z-index: 10;
-      animation:
-        bounce 0.5s ease,
-        wcag-idle-bounce 7s ease-in-out infinite;
+      animation: bounce 0.5s ease, wcag-idle-bounce 7s ease-in-out infinite;
 
       &.robot-exploded {
-        animation: robotExplosion 0.4s forwards
-          cubic-bezier(0.6, -0.28, 0.735, 0.045);
+        animation: robotExplosion 0.4s forwards cubic-bezier(0.6, -0.28, 0.735, 0.045);
         display: inline-block;
       }
     }
@@ -88,49 +91,20 @@
 }
 
 @keyframes robotExplosion {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-    filter: hue-rotate(0deg) saturate(2);
-  }
-  30% {
-    transform: scale(1.4); // Pequeña expansión de impacto
-    filter: hue-rotate(180deg) saturate(5); // Cambia a un color de advertencia (rojo/alerta)
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(0); // Se encoge hasta desaparecer
-    opacity: 0;
-  }
+  0% { transform: scale(1); opacity: 1; filter: hue-rotate(0deg) saturate(2); }
+  30% { transform: scale(1.4); filter: hue-rotate(180deg) saturate(5); opacity: 0.9; }
+  100% { transform: scale(0); opacity: 0; }
 }
 
 @keyframes bounce {
-  0% {
-    transform: translateY(-10px);
-  }
-  50% {
-    transform: translateY(0);
-  }
-  75% {
-    transform: translateY(-3px);
-  }
-  100% {
-    transform: translateY(0);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes wcag-idle-bounce {
-  0%,
-  7%,
-  100% {
-    transform: translateY(0);
-  }
-  2% {
-    transform: translateY(-6px);
-  }
-  4% {
-    transform: translateY(1px);
-  }
+  0%, 7%, 100% { transform: translateY(0); }
+  2% { transform: translateY(-6px); }
+  4% { transform: translateY(1px); }
 }
 
 .sequence-timeline {
@@ -138,12 +112,12 @@
   background-color: #ffffff;
   padding: 15px;
   border-radius: 12px;
-  border: 2px solid var(--button-speaker-bg-color, #2b2b2a);
+  border: 2px solid #2b2b2a;
 
   .timeline-title {
     margin: 0;
     font-weight: bold;
-    color: var(--text-primary, #333);
+    color: #333;
   }
 
   .capacity-indicator {
@@ -164,26 +138,42 @@
     }
   }
 
+  // NUEVOS ESTILOS ACCESIBLES DEL SELECTOR DE REPETICIONES
   .loop-counter-box {
     display: flex;
     align-items: center;
-    gap: 8px;
-    opacity: 0.4;
-    transition: opacity 0.3s;
+    gap: 12px;
+    opacity: 0.5;
+    margin: 12px 0;
+    transition: opacity 0.3s ease;
 
     &.active {
       opacity: 1;
     }
 
     label {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: bold;
+      color: #1e293b;
     }
+
     select {
-      padding: 4px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 2px solid #94a3b8;
+      background-color: #f8fafc;
+      color: #334155;
+      cursor: pointer;
       outline: none;
+      transition: border-color 0.2s, background-color 0.2s;
+
+      &:disabled {
+        background-color: #e2e8f0;
+        color: #94a3b8;
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -226,20 +216,13 @@
         font-size: 1.2rem;
         border-color: #cbd5e1;
         cursor: default;
-        &:hover {
-          background-color: #f1f5f9;
-          border-color: #cbd5e1;
-        } // No se borran individualmente
-      }
-      &.is-full {
-        border: 2px dashed #fca5a5; // Borde rojo tenue cuando no cabe más
+        &:hover { background-color: #f1f5f9; border-color: #cbd5e1; }
       }
     }
 
-    // EL CONTENEDOR VISUAL DEL BUCLE
     .loop-container {
-      background-color: #e0e7ff; // Azul muy clarito
-      border: 2px solid #3b82f6; // Borde azul fuerte
+      background-color: #e0e7ff;
+      border: 2px solid #3b82f6;
       border-radius: 8px;
       display: flex;
       flex-direction: column;
@@ -261,11 +244,7 @@
           all: unset;
           cursor: pointer;
           font-size: 0.9rem;
-          transition: transform 0.2s;
-          &:hover {
-            transform: scale(1.2);
-            color: #fca5a5;
-          }
+          &:hover { color: #fca5a5; }
         }
       }
 
@@ -274,17 +253,13 @@
         display: flex;
         gap: 4px;
         flex-wrap: wrap;
-        min-width: 60px;
       }
 
       &.building-mode {
-        background-color: #fef9c3; // Amarillo alerta
+        background-color: #fef9c3;
         border-color: #eab308;
         border-style: dashed;
-        .loop-header {
-          background-color: #eab308;
-          color: black;
-        }
+        .loop-header { background-color: #eab308; color: black; }
       }
     }
   }
@@ -292,7 +267,7 @@
 
 .control-panel {
   display: flex;
-  justify-content: space-between; // Modificado para que entren 3 columnas
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 15px;
@@ -309,9 +284,6 @@
       border-radius: 8px;
       cursor: pointer;
       color: white;
-      display: flex;
-      align-items: center;
-      gap: 8px;
 
       &.start-loop {
         background-color: #8b5cf6;
@@ -323,15 +295,7 @@
         animation: pulseEnd 1s infinite alternate;
       }
 
-      &:active:not(:disabled) {
-        transform: translateY(4px);
-        border-bottom: 0;
-      }
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        animation: none;
-      }
+      &:disabled { opacity: 0.5; cursor: not-allowed; }
     }
   }
 
@@ -341,10 +305,7 @@
     align-items: center;
     gap: 5px;
 
-    .horizontal-btns {
-      display: flex;
-      gap: 5px;
-    }
+    .horizontal-btns { display: flex; gap: 5px; }
 
     .dir-btn {
       display: flex;
@@ -360,15 +321,7 @@
       cursor: pointer;
       border-bottom: 4px solid #2563eb;
 
-      &:active {
-        transform: translateY(4px);
-        border-bottom: 0;
-      }
-      &:disabled {
-        background-color: #93c5fd;
-        border-bottom-color: #60a5fa;
-        cursor: not-allowed;
-      }
+      &:disabled { background-color: #93c5fd; cursor: not-allowed; }
     }
   }
 
@@ -378,75 +331,47 @@
 
     button {
       padding: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 5px;
       font-weight: bold;
       border: none;
       border-radius: 10px;
       cursor: pointer;
       color: white;
 
-      &.hint-btn {
-        background-color: #8b5cf6;
-        border-bottom: 4px solid #6d28d9;
-      }
-      &.run-btn {
-        background-color: #10b981;
-        border-bottom: 4px solid #059669;
-      }
-      &.reset-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 5px;
-        background-color: #f59e0b;
-        border-bottom: 4px solid #d97706;
-      }
-
-      &:active {
-        transform: translateY(4px);
-        border-bottom: 0;
-      }
-      &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
+      &.hint-btn { background-color: #8b5cf6; border-bottom: 4px solid #6d28d9; }
+      &.run-btn { background-color: #10b981; border-bottom: 4px solid #059669; }
+      &.reset-btn { background-color: #f59e0b; border-bottom: 4px solid #d97706; }
+      &:disabled { opacity: 0.6; cursor: not-allowed; }
     }
   }
 }
 
+// CLASE DE DESTELLO INTEGRADO (DIFERENCIADO PARA DUA)
 .hint-glow {
   position: relative;
   z-index: 100;
   animation: buttonPulseHint 0.8s ease-in-out infinite alternate !important;
-  border-color: #fde047 !important;
+  border-color: #eab308 !important;
   box-shadow: 0 0 15px #fde047 !important;
 }
 
 @keyframes buttonPulseHint {
-  from { transform: scale(1); background-color: inherit; }
-  to { transform: scale(1.1); background-color: #fef08a; color: #000; }
+  from { transform: scale(1); }
+  to { transform: scale(1.06); background-color: #fef08a !important; color: #000 !important; }
 }
 
-// Adaptación DUA
 body.high-contrast .hint-glow {
-  animation: buttonPulseHintHC 0.8s ease-in-out infinite alternate !important;
   border: 4px dashed #FFD700 !important;
+  animation: buttonPulseHintHC 0.8s ease-in-out infinite alternate !important;
 }
+
 @keyframes buttonPulseHintHC {
   from { transform: scale(1); }
-  to { transform: scale(1.1); background-color: #000; color: #FFF; box-shadow: 0 0 20px #FFD700;}
+  to { transform: scale(1.06); background-color: #000; color: #FFF; box-shadow: 0 0 20px #FFD700; }
 }
 
 @keyframes pulseEnd {
-  from {
-    box-shadow: 0 0 0px #ec4899;
-  }
-  to {
-    box-shadow: 0 0 10px #ec4899;
-  }
+  from { box-shadow: 0 0 0px #ec4899; }
+  to { box-shadow: 0 0 10px #ec4899; }
 }
 
 @keyframes flashFull {

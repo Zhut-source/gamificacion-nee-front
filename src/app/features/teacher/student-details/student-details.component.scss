@@ -181,14 +181,12 @@
 // 2. SECCIÓN DE NIVELES (CON SCROLL VERTICAL)
 // ==========================================================================
 .levels-section {
-  flex: 1; // Toma todo el espacio sobrante verticalmente
   display: flex;
   flex-direction: column;
-  min-height: 0; // Crucial para permitir scroll interior en flexbox
+  min-width: 500px; 
   width: 100%;
 
   .table-container-card {
-    flex: 1; // La tarjeta también toma el espacio total
     display: flex;
     flex-direction: column;
     background-color: var(--card-bg-color, #ffffff);
@@ -207,10 +205,12 @@
     flex-shrink: 0; // El título no se encoge
   }
 
+  // CONTENEDOR CON ALTURA FIJA Y SCROLL INTERNO CONTROLADO
   .table-responsive-wrapper {
-    flex: 1;
-    overflow-y: auto; // Activa scroll vertical
-    overflow-x: auto; // Activa scroll horizontal si es necesario
+    height: 400px;          // <--- Altura fija solicitada
+    max-height: 400px;      // Asegura que no se estire bajo ninguna circunstancia flex
+    overflow-y: auto;       // Activa el scroll vertical interno cuando excede los 400px
+    overflow-x: auto;       // Mantiene el scroll horizontal si la tabla es muy ancha
     border-radius: 8px;
     border: 1px solid #e2e8f0;
     background-color: transparent;

@@ -27,6 +27,8 @@
   --color-success: #10b981;
 
   //VARIABLES
+  --logo-color:var(--color-accent-4);
+  
   --spinner-color: var(--color-accent-4);
 
   --lines-color-header: var(--color-accent-4);
@@ -182,6 +184,7 @@ body.accessible-font {
 
 body.high-contrast {
   //VARIABLES
+  --logo-color:var(--color-accent-1);
   --spinner-color: var(--color-accent-1);
 
   --lines-color-header: var(--color-white);

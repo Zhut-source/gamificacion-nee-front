@@ -1,180 +1,128 @@
 <div class="game-environment">
-  
-  <!-- 1. EL TABLERO (Idéntico a Secuenciación) -->
-  <div class="board-container">
-    <div
-      class="game-grid"
-      [style.grid-template-columns]="'repeat(' + gridSize + ', 1fr)'"
-      [style.grid-template-rows]="'repeat(' + gridSize + ', 1fr)'"
-    >
-      @for (row of grid; track rowIndex; let rowIndex = $index) {
-        @for (cell of row; track colIndex; let colIndex = $index) {
-          <div
-            class="grid-cell"
-            [class]="'cell-' + cell.type"
-            [class.cell-hint]="cell.isHint"
-          >
-            @if (playerPosition.x === cell.x && playerPosition.y === cell.y) {
-              <div class="player-character" [class.robot-exploded]="isDestroying">🤖</div>
-            }
-            @if (cell.type === "goal") {
-              <div class="goal-indicator">🚩</div>
-            }
-          </div>
-        }
-      }
-    </div>
-  </div>
-
+  <!-- Paneles laterales de codificación lógica -->
   <div class="side-panels">
-    
-    <!-- 2. LA SECUENCIA CON SOPORTE PARA BUCLES -->
-    <div class="sequence-timeline" aria-label="Tu secuencia de instrucciones">
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px;">
-        <div>
-          <p class="timeline-title">Memoria del Robot:</p>
-          <!-- INDICADOR VISUAL DE LÍMITE (Vital para la mecánica) -->
-          <span class="capacity-indicator" [class.is-full]="isMaxBlocksReached">
-            Bloques usados: {{ playerSequence.length }} / {{ maxBlocks }}
-          </span>
-        </div>
-        
-        <!-- Selector de repeticiones (Solo visible cuando se abre un bucle) -->
-        <div class="loop-counter-box" [class.active]="isBuildingLoop">
-          <label for="loopTimes">Repetir:</label>
-          <select id="loopTimes" [(ngModel)]="currentLoopTimes" [disabled]="!isBuildingLoop">
-            <option [ngValue]="2">2 veces</option>
-            <option [ngValue]="3">3 veces</option>
-            <option [ngValue]="4">4 veces</option>
-            <option [ngValue]="5">5 veces</option>
-            <option [ngValue]="6">6 veces</option>
-          </select>
-        </div>
+    <div class="sequence-timeline" role="region" aria-label="Línea de tiempo de comandos">
+      <h3 class="timeline-title">Tu código secuencial</h3>
+      
+      <span class="capacity-indicator" [class.is-full]="isMaxBlocksReached">
+        Bloques: {{ playerSequence.length }} / {{ maxBlocks }}
+      </span>
+
+      <!-- CAJA REPETICIONES: Enlace dinámico con la animación de pista y foco accesible -->
+      <div class="loop-counter-box" [class.active]="isBuildingLoop">
+        <label for="loop-times-select">Repetir bucle:</label>
+        <select 
+          id="loop-times-select" 
+          [(ngModel)]="currentLoopTimes" 
+          [disabled]="!isBuildingLoop || isPlaying"
+          [class.hint-glow]="activeHintBtn === 'LOOP_TIMES'"
+          aria-label="Seleccionar cantidad de repeticiones para el bucle">
+          <option [value]="2">2 veces</option>
+          <option [value]="3">3 veces</option>
+          <option [value]="4">4 veces</option>
+          <option [value]="5">5 veces</option>
+          <option [value]="6">6 veces</option>
+          <option [value]="7">7 veces</option>
+        </select>
       </div>
 
-      <div class="sequence-track" [class.is-full]="isMaxBlocksReached && !isBuildingLoop">
+      <!-- Pista de bloques de código -->
+      <div class="sequence-track" aria-live="polite">
         @if (playerSequence.length === 0 && !isBuildingLoop) {
-          <span class="empty-text">El espacio es limitado. Usa el botón "Abrir Bucle" para ahorrar memoria...</span>
+          <span class="empty-text">Arrastra o añade comandos desde el panel inferior...</span>
         }
 
-        <!-- Iteración de bloques... (COPIA TU BUCLE @for de la secuencia anterior que hiciste) -->
-        @for (block of playerSequence; track $index; let i = $index) {
-          
+        @for (block of playerSequence; track $index) {
           @if (block.type === 'command') {
-            <button class="command-block" (click)="removeBlock(i)" title="Clic para eliminar">
-              @if (block.value === "UP") { <span class="icon-cmd">⬆️</span> }
-              @if (block.value === "DOWN") { <span class="icon-cmd">⬇️</span> }
-              @if (block.value === "LEFT") { <span class="icon-cmd">⬅️</span> }
-              @if (block.value === "RIGHT") { <span class="icon-cmd">➡️</span> }
+            <button type="button" class="command-block" (click)="removeBlock($index)" [disabled]="isPlaying" aria-label="Eliminar comando">
+              {{ block.value === 'RIGHT' ? '➡' : block.value === 'LEFT' ? '⬅' : block.value === 'DOWN' ? '⬇' : '⬆' }}
             </button>
-          }
-
-          @if (block.type === 'loop') {
-            <div class="loop-container" title="Haz clic en la 'X' para eliminar todo el bucle">
+          } @else if (block.type === 'loop') {
+            <div class="loop-container">
               <div class="loop-header">
-                <span>Repetir {{ block.times }}x</span>
-                <button class="remove-loop-btn" (click)="removeBlock(i)">✖</button>
+                <span>Repetir ({{ block.times }}x)</span>
+                <button type="button" class="remove-loop-btn" (click)="removeBlock($index)" [disabled]="isPlaying" aria-label="Eliminar bucle completo">✖</button>
               </div>
               <div class="loop-body">
-                @for (cmd of block.commands; track $index) {
-                  <div class="command-block mini-block">
-                    @if (cmd === "UP") { ⬆️ }
-                    @if (cmd === "DOWN") { ⬇️ }
-                    @if (cmd === "LEFT") { ⬅️ }
-                    @if (cmd === "RIGHT") { ➡️ }
-                  </div>
+                @for (subCmd of block.commands; track $index) {
+                  <span class="command-block mini-block">
+                    {{ subCmd === 'RIGHT' ? '➡' : subCmd === 'LEFT' ? '⬅' : subCmd === 'DOWN' ? '⬇' : '⬆' }}
+                  </span>
                 }
               </div>
             </div>
           }
-
         }
 
+        <!-- Bloque fantasma interactivo en construcción -->
         @if (isBuildingLoop) {
           <div class="loop-container building-mode">
-             <div class="loop-header"><span>Repetir {{ currentLoopTimes }}x</span></div>
-             <div class="loop-body">
-                @for (cmd of currentLoopCommands; track $index) {
-                  <div class="command-block mini-block">
-                    @if (cmd === "UP") { ⬆️ }
-                    @if (cmd === "DOWN") { ⬇️ }
-                    @if (cmd === "LEFT") { ⬅️ }
-                    @if (cmd === "RIGHT") { ➡️ }
-                  </div>
-                }
-                @if (currentLoopCommands.length === 0) { <span style="color: #666; font-size: 0.8rem;">Añade max. 2 flechas aquí...</span> }
-             </div>
+            <div class="loop-header">
+              <span>Construyendo Bucle...</span>
+            </div>
+            <div class="loop-body">
+              @for (subCmd of currentLoopCommands; track $index) {
+                <span class="command-block mini-block">{{ subCmd === 'RIGHT' ? '➡' : subCmd === 'LEFT' ? '⬅' : subCmd === 'DOWN' ? '⬇' : '⬆' }}</span>
+              }
+              @if (currentLoopCommands.length === 0) {
+                <span class="empty-text" style="font-size: 0.75rem; color: #856404;">Agrega flechas...</span>
+              }
+            </div>
           </div>
         }
       </div>
     </div>
 
-    <!-- 3. PANEL DE CONTROLES (Movimientos + Bucles) -->
+    <!-- Barra de control inferior -->
     <div class="control-panel">
-      
-      <!-- Controles de Flujo (Bucles) -->
       <div class="loop-buttons">
         @if (!isBuildingLoop) {
-          <button class="loop-btn start-loop" 
-                  [class.hint-glow]="activeHintBtn === 'LOOP_START'"
-                  (click)="startLoop()" [disabled]="isPlaying">
-            <span style="font-size: 1.2rem;">🔄</span> Abrir Bucle
+          <button type="button" class="loop-btn start-loop" [class.hint-glow]="activeHintBtn === 'LOOP_START'" [disabled]="isMaxBlocksReached || isPlaying" (click)="startLoop()">
+            🔄 Iniciar Bucle
           </button>
         } @else {
-          <button class="loop-btn end-loop" 
-                  [class.hint-glow]="activeHintBtn === 'LOOP_END'"
-                  (click)="closeLoop()" [disabled]="isPlaying">
-            <span style="font-size: 1.2rem;">🔁</span> Cerrar Bucle
+          <button type="button" class="loop-btn end-loop" [class.hint-glow]="activeHintBtn === 'LOOP_END'" [disabled]="isPlaying" (click)="closeLoop()">
+            📥 Cerrar Bucle
           </button>
         }
       </div>
 
-      <!-- Controles de Dirección -->
-      <div class="direction-buttons">
-        <button class="dir-btn" [class.hint-glow]="activeHintBtn === 'UP'" (click)="addCommand('UP')" [disabled]="isPlaying">⬆️</button>
+      <div class="direction-buttons" role="group" aria-label="Comandos de dirección">
+        <button type="button" class="dir-btn" [class.hint-glow]="activeHintBtn === 'UP'" [disabled]="isPlaying" (click)="addCommand('UP')" aria-label="Mover Arriba">⬆</button>
         <div class="horizontal-btns">
-          <button class="dir-btn" [class.hint-glow]="activeHintBtn === 'LEFT'" (click)="addCommand('LEFT')" [disabled]="isPlaying">⬅️</button>
-          <button class="dir-btn" [class.hint-glow]="activeHintBtn === 'DOWN'" (click)="addCommand('DOWN')" [disabled]="isPlaying">⬇️</button>
-          <button class="dir-btn" [class.hint-glow]="activeHintBtn === 'RIGHT'" (click)="addCommand('RIGHT')" [disabled]="isPlaying">➡️</button>
+          <button type="button" class="dir-btn" [class.hint-glow]="activeHintBtn === 'LEFT'" [disabled]="isPlaying" (click)="addCommand('LEFT')" aria-label="Mover a la Izquierda">⬅</button>
+          <button type="button" class="dir-btn" [class.hint-glow]="activeHintBtn === 'DOWN'" [disabled]="isPlaying" (click)="addCommand('DOWN')" aria-label="Mover Abajo">⬇</button>
+          <button type="button" class="dir-btn" [class.hint-glow]="activeHintBtn === 'RIGHT'" [disabled]="isPlaying" (click)="addCommand('RIGHT')" aria-label="Mover a la Derecha">➡</button>
         </div>
       </div>
 
-      <!-- Controles de Acción -->
       <div class="action-buttons">
-        <button class="run-btn" (click)="runSequence()" [disabled]="isPlaying || playerSequence.length === 0">
-          <span>{{ isPlaying ? "Ejecutando..." : "PROBAR CÓDIGO" }}</span>
-        </button>
-        <button class="reset-btn" (click)="initGame(difficulty)" [disabled]="isPlaying">
-          <span>Reiniciar Nivel</span>
-        </button>
-        <button
-          type="button"
-          class="hint-btn"
-          title="Ver pista o ayuda"
-          (click)="mostrarPista()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-lightbulb-icon lucide-lightbulb"
-          >
-            <path
-              d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"
-            />
-            <path d="M9 18h6" />
-            <path d="M10 22h4" />
-          </svg>
-          <span>Pista</span>
-        </button>
+        <button type="button" class="hint-btn" (click)="mostrarPista()" [disabled]="isPlaying || isHintPlaying" aria-label="Mostrar pista asistida">💡 Pista</button>
+        <button type="button" class="run-btn" (click)="runSequence()" [disabled]="isPlaying || playerSequence.length === 0 || isBuildingLoop" aria-label="Ejecutar algoritmo">▶ Ejecutar</button>
+        <button type="button" class="reset-btn" (click)="initGame(difficultyLevel)" [disabled]="isPlaying" aria-label="Reiniciar nivel">🔄 Reiniciar</button>
       </div>
+    </div>
+  </div>
 
+  <!-- Contenedor del Tablero Gráfico -->
+  <div class="board-container">
+    <div class="game-grid" [ngStyle]="{'grid-template-columns': 'repeat(' + gridSize + ', 1fr)'}" role="grid" aria-label="Tablero de juego">
+      @for (row of grid; track $index; let y = $index) {
+        @for (cell of row; track $index; let x = $index) {
+          <div class="grid-cell" [ngClass]="'cell-' + cell.type" [class.cell-hint]="cell.isHint" role="gridcell">
+            
+            <!-- Personaje del robot en la coordenada actual -->
+            @if (playerPosition.x === x && playerPosition.y === y) {
+              <span class="player-character" [class.robot-exploded]="isDestroying" aria-label="Posición actual del robot">🤖</span>
+            }
+
+            <!-- Decorador de meta bandera -->
+            @if (cell.type === 'goal') {
+              <span aria-label="Bandera de meta">🚩</span>
+            }
+          </div>
+        }
+      }
     </div>
   </div>
 </div>

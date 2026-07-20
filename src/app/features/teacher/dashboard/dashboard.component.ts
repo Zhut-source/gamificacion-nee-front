@@ -35,6 +35,8 @@ export class DashboardComponent implements OnInit {
   showRegisterModal: boolean = false;
   registerForm!: FormGroup;
   selectedAulaName: string = '';
+  searchQuery: string = '';
+  filterType: string = 'all';
 
   constructor(
     private authService: AuthService,
@@ -58,6 +60,43 @@ export class DashboardComponent implements OnInit {
         Validators.minLength(6),
       ]),
     });
+  }
+
+  get filteredStudents() {
+    if (!this.metrics || !this.metrics.estudiantes) return [];
+
+    return this.metrics.estudiantes.filter((student) => {
+      // 1. Filtro por búsqueda de texto (Nombre o Correo)
+      const matchesSearch =
+        student.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        student.email.toLowerCase().includes(this.searchQuery.toLowerCase());
+
+      if (!matchesSearch) return false;
+
+      // 2. Filtro por categorías del selector
+      switch (this.filterType) {
+        case 'alert':
+          return student.alerta === true; // Con dificultades
+        case 'success':
+          // Buen desempeño: podemos basarlo en que no tenga alertas y progreso considerable (ej: >= 70%)
+          return !student.alerta && student.progreso >= 70;
+        case 'completed':
+          return student.progreso === 100; // Progreso completo (100% de niveles)
+        case 'all':
+        default:
+          return true; // Todos los estudiantes
+      }
+    });
+  }
+
+  onSearchChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery = target.value;
+  }
+
+  onFilterChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.filterType = target.value;
   }
 
   loadTeacherClassrooms(): void {

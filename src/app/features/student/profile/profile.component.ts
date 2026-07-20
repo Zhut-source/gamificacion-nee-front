@@ -40,6 +40,8 @@ export class ProfileComponent implements OnInit {
   private accessibilitySub = new Subscription();
   mensajito: any;
 
+  isSpotlightActive: boolean = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -76,40 +78,38 @@ export class ProfileComponent implements OnInit {
       ]),
       confirmPassword: new FormControl('', Validators.required),
     });
+    
+    this.classForm = new FormGroup({
+      code: new FormControl('', Validators.required),
+    });
 
     this.route.fragment.subscribe((fragment) => {
       if (fragment === 'class-code') {
         setTimeout(() => {
           const targetElement = document.getElementById('class-code');
-          if (!targetElement) return;
+          if (targetElement) {
+            this.isSpotlightActive = true;
 
-          // Cambiamos 'auto' por 'smooth' para una animación fluida
-          targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-          // Hacemos focus automático en el input de texto del código
-          const inputElement = targetElement.querySelector(
-            'input#class-code',
-          ) as HTMLInputElement;
-          if (inputElement) {
-            inputElement.focus();
+            targetElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+            });
+            const inputElement = targetElement.querySelector(
+              'input#class-code',
+            ) as HTMLInputElement;
+            if (inputElement) {
+              inputElement.focus();
+            }
+            const cardElement = targetElement.querySelector('.card.join-class');
+            if (cardElement) {
+              cardElement.classList.add('highlight-pulse');
+              setTimeout(() => {
+                cardElement.classList.remove('highlight-pulse');
+              }, 2000);
+            }
           }
-
-          // Añadimos una clase temporal de realce visual
-          const cardElement = targetElement.querySelector('.card.join-class');
-          if (cardElement) {
-            cardElement.classList.add('highlight-pulse');
-            // Removemos la clase después de que termine la animación (p. ej. 2 segundos)
-            setTimeout(() => {
-              cardElement.classList.remove('highlight-pulse');
-            }, 2000);
-          }
-        }, 300); // Ajustamos ligeramente el tiempo para dar margen a la carga de la vista
+        }, 300);
       }
-    });
-
-    // 4. Inicializar formulario de unirse a clase
-    this.classForm = new FormGroup({
-      code: new FormControl('', Validators.required),
     });
 
     this.accessibilitySub.add(
@@ -125,6 +125,11 @@ export class ProfileComponent implements OnInit {
     );
 
     this.loadMyClass();
+  }
+
+  clearSpotlight() {
+    this.isSpotlightActive = false;
+    this.router.navigate(['/student/profile'], { fragment: '' });
   }
 
   loadMyClass(): void {
@@ -203,7 +208,10 @@ export class ProfileComponent implements OnInit {
       this.passwordForm.value;
 
     if (newPassword !== confirmPassword) {
-      this.notificationService.showAlert('Las contraseñas nuevas no coinciden', 'error');
+      this.notificationService.showAlert(
+        'Las contraseñas nuevas no coinciden',
+        'error',
+      );
       return;
     }
 
@@ -211,12 +219,17 @@ export class ProfileComponent implements OnInit {
 
     this.userService.changePassword(data).subscribe({
       next: () => {
-        this.notificationService.showAlert('Contraseña cambiada con éxito', 'success');
+        this.notificationService.showAlert(
+          'Contraseña cambiada con éxito',
+          'success',
+        );
         this.passwordForm.reset();
       },
       error: (err) => {
-        const mensajeError = err.error?.message || 'No se pudo cambiar la contraseña. Inténtalo de nuevo.';
-      this.notificationService.showAlert(mensajeError, 'error');
+        const mensajeError =
+          err.error?.message ||
+          'No se pudo cambiar la contraseña. Inténtalo de nuevo.';
+        this.notificationService.showAlert(mensajeError, 'error');
       },
     });
   }
@@ -231,6 +244,9 @@ export class ProfileComponent implements OnInit {
           this.notificationService.showAlert(res.message, 'success');
           this.classForm.reset();
           this.loadMyClass();
+
+          this.clearSpotlight();
+          this.router.navigate(['/student/dashboard']);
         },
         error: (err) => {
           const mensajeError =
