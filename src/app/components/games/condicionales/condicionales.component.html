@@ -1,17 +1,14 @@
 <div class="game-environment">
-  <!-- ========================================== -->
-  <!-- 1. EL TABLERO (MATRIZ DE CARTAS) - LADO IZQUIERDO -->
-  <!-- ========================================== -->
   <div class="board-container">
     <div class="preview-wrapper">
-      <!-- CAPA DE DESENFOQUE Y BOTÓN DE INICIO -->
       @if (isPreviewMode) {
         <div class="preview-overlay">
           <div class="preview-content">
             <h3>¿Listo para memorizar?</h3>
             <p>Tendrás unos segundos para ver las cartas antes de empezar.</p>
             <button class="start-preview-btn" (click)="startPreview()">
-              👁️ Ver Cartas
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-icon lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Ver Cartas</span>
             </button>
           </div>
         </div>
@@ -33,10 +30,10 @@
             (keydown.enter)="flipCard(card)"
           >
             <div class="card-inner">
-              <!-- Reverso de la carta (oculto) -->
-              <div class="card-back">❓</div>
+              <div class="card-back">
+                <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-question-mark-icon lucide-circle-question-mark"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+              </div>
 
-              <!-- Frente de la carta (operador) -->
               <div class="card-front">
                 <span class="card-symbol">{{ card.symbol }}</span>
                 <span class="card-name">{{ card.name }}</span>
@@ -48,36 +45,22 @@
     </div>
   </div>
 
-  <!-- 2. PANELES LATERALES -->
   <div class="side-panels">
-    <div class="sequence-timeline" aria-label="Instrucciones del juego">
-      <div
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-          margin-bottom: 10px;
-        "
-      >
-        <p class="timeline-title">Memoria Condicional:</p>
+    <div class="result-container" aria-label="Instrucciones del juego">
+      <div class="timeline-header">
+        <p class="timeline-title">Clasificación:</p>
         <span class="capacity-indicator"
           >Intentos de Memoria: {{ movesCount }}</span
         >
       </div>
 
       <div class="instructions-content">
-        <p
-          class="empty-text"
-          style="margin-bottom: 15px; display: block; font-size: 0.9rem"
-        >
-          Encuentra los pares iguales. Cuando encuentres uno, el sistema te
-          preguntará si el símbolo sirve para tomar decisiones
-          (<strong>Condición</strong>) o si es solo para matemáticas.
+        <p class="empty-text">
+          Encuentra los pares iguales. Cuando encuentres uno, clasifica su
+          función agrupándolo en la categoría correspondiente.
         </p>
 
-        <!-- VISOR DE CLASIFICACIÓN (CANASTAS) -->
         <div class="buckets-container">
-          <!-- Canasta de Condicionales -->
           <div class="bucket cond-bucket">
             <h4>Condicionales (SI)</h4>
             <div class="bucket-items">
@@ -89,7 +72,6 @@
             </div>
           </div>
 
-          <!-- Canasta Matemáticas -->
           <div class="bucket math-bucket">
             <h4>Otros Operadores</h4>
             <div class="bucket-items">
@@ -104,7 +86,6 @@
       </div>
     </div>
 
-    <!-- 3. PANEL DE CONTROLES INFERIOR -->
     <div class="control-panel">
       <button
         type="button"
@@ -138,12 +119,12 @@
         (click)="initGame(difficulty)"
         [disabled]="!isPlaying && gameStatus === 'running'"
       >
-        🔄 Reiniciar Cartas
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-repeat" aria-hidden="true"><path d="m17 2 4 4-4 4" /><path d="M3 11v-1a4 4 0 0 1 4-4h14" /><path d="m7 22-4-4 4-4" /><path d="M21 13v1a4 4 0 0 1-4 4H3" /></svg>
+        <span>Reiniciar Cartas</span>
       </button>
     </div>
   </div>
 
-  <!-- 4. MODAL DE CLASIFICACIÓN (Aparece al encontrar un par) -->
   @if (activePairToClassify) {
     <div class="classification-modal-overlay">
       <div class="classification-card">
@@ -154,14 +135,14 @@
           <span class="symbol-name">{{ activePairToClassify.name }}</span>
         </div>
 
-        <p>¿A qué categoría pertenece este operador en programación?</p>
+        <p>Clasifica este operador según su función principal:</p>
 
         <div class="modal-actions">
           <button class="btn-conditional" (click)="classifyPair(true)">
-            ✅ SÍ, ES UN CONDICIONAL
+            Operador Condicional / Lógico
           </button>
           <button class="btn-math" (click)="classifyPair(false)">
-            ❌ NO, ES OTRO OPERADOR
+            Operador Matemático / Asignación
           </button>
         </div>
       </div>

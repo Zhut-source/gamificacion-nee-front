@@ -1,5 +1,6 @@
 <div class="challenge-workspace-wrapper">
-  <button
+  <main class="challenge-main-container">
+    <button
     type="button"
     class="btn-back-workspace"
     (click)="volverAlDashboard()"
@@ -22,7 +23,6 @@
     </svg>
     <span>Volver</span>
   </button>
-  <main class="challenge-main-container">
     <div class="challenge-body-layout">
       <section class="panel-left-controls" aria-labelledby="level-title">
         <div class="panel-card-content">
@@ -159,6 +159,7 @@
               </div>
               <button
                 class="career-speedrun-btn"
+                [disabled]="!isLevelFullyCompleted"
                 [class.active-career]="isSpeedrunMode"
                 (click)="toggleSpeedrunMode()"
                 [attr.aria-label]="
@@ -187,6 +188,11 @@
                   isSpeedrunMode ? "Carrera Activa ⏱️" : "Modo Carrera"
                 }}</span>
               </button>
+              @if (!isLevelFullyCompleted) {
+                <small style="color: #7a7a7a; margin-top: 8px; display: block; text-align: center;">
+                  Completa el nivel primero para desbloquear.
+                </small>
+              }
             </footer>
           }
         </div>

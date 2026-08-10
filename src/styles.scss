@@ -105,6 +105,16 @@
   --saturated-color-2: #f59e0b;
   --saturated-color-3: #ec4899;
   --saturated-color-4: #a855f7;
+
+  //componente navbar
+  --nav-label-color: var(--color-dark);
+  --nav-label-bg: var(--color-white);
+  --nav-label-color-hover: var(--color-white);
+  --nav-label-bg-hover: var(--color-dark);
+  --nav-label-color-active: var(--color-azul-oscuro);
+
+  //titulos variables
+  --title-1-color: var(--color-azul-oscuro);
 }
 
 *,
@@ -246,6 +256,16 @@ body.high-contrast {
 
   --double-color:var(--color-white);
   --double-color-inverter:var(--color-black);
+
+  //componente navbar
+  --nav-label-color: var(--color-white);
+  --nav-label-bg: var(--color-dark);
+  --nav-label-color-hover: var(--color-dark);
+  --nav-label-bg-hover: var(--color-white);
+  --nav-label-color-active: var(--color-accent-1);
+
+  //titulos variables
+  --title-1-color: var(--color-accent-1);
 
   .card-challenges:not(:disabled) {
     background-color: color-mix(

@@ -232,6 +232,7 @@ export class ChallengeViewComponent implements OnInit {
     this.feedback.title = result.title;
     this.feedback.message = result.message;
     this.feedback.show = true;
+    
 
     if (result.status === 'success') {
       this.audioService.playSound('congratulations');
@@ -248,14 +249,12 @@ export class ChallengeViewComponent implements OnInit {
           } else if (this.currentDifficulty === 'medium') {
             this.setDifficulty('hard');
           } else if (this.currentDifficulty === 'hard') {
-            this.isLevelFullyCompleted = true;
-            if (this.globalSpeedrunInterval) {
-              clearInterval(this.globalSpeedrunInterval);
-            }
-
-            this.evaluarFuturasInsignias();
+            // ¡FIN DEL MODO CARRERA!
+            if (this.globalSpeedrunInterval) clearInterval(this.globalSpeedrunInterval);
+            this.evaluarFuturasInsignias(); 
           }
         } else {
+          // FLUJO NORMAL (Primera vez)
           if (!this.isLevelFullyCompleted) {
             if (this.currentDifficulty === 'easy') {
               this.setDifficulty('medium');
@@ -263,13 +262,13 @@ export class ChallengeViewComponent implements OnInit {
               this.setDifficulty('hard');
             } else if (this.currentDifficulty === 'hard') {
               this.isLevelFullyCompleted = true;
-              this.progressService
-                .awardBadge(this.userId, 'lvl1_complete')
-                .subscribe();
-              this.notificationService.showAlert(
-                '¡Has completado todas las dificultades de este nivel! Regresando al mapa...',
-                'success',
-              );
+
+              const badgeCodigo = `lvl${this.challengeId}_complete`;
+              this.progressService.awardBadge(this.userId, badgeCodigo).subscribe();
+              localStorage.setItem('newBadges', JSON.stringify([badgeCodigo]));
+
+              this.notificationService.showAlert('¡Nivel superado! Regresando al mapa...', 'success');
+              if (this.timerInterval) clearInterval(this.timerInterval);
               this.limpiarRecursosYSalir();
             }
           }
@@ -284,25 +283,45 @@ export class ChallengeViewComponent implements OnInit {
   }
 
   evaluarFuturasInsignias() {
-    console.log('--- EVALUACIÓN DE INSIGNIAS ---');
+    let newlyEarned: string[] = []; 
+
+    let gameName = '';
+    if (this.challengeId === 1) gameName = 'Secuenciacion';
+    else if (this.challengeId === 2) gameName = 'Patrones';
+    else if (this.challengeId === 3) gameName = 'Repeticiones';
+    else if (this.challengeId === 4) gameName = 'Condicionales';
+    else if (this.challengeId === 5) gameName = 'Descomposicion';
+
+    const timerCode = `timer${gameName}`;
+    const proCode = `pro${gameName}`;
+    const masterCode = `master${gameName}`;
 
     if (this.globalSpeedrunTimer <= 60) {
-      this.progressService.awardBadge(this.userId, 'proTimer').subscribe();
-      console.log(' ¡Insignia proTIMER Desbloqueada!');
+      this.progressService.awardBadge(this.userId, timerCode).subscribe();
+      newlyEarned.push(timerCode);
     }
+    
     if (this.globalAttemptsCount === 3) {
-      this.progressService
-        .awardBadge(this.userId, 'proSecuenciacion')
-        .subscribe();
-      console.log(' ¡Insignia proSecuenciacion Desbloqueada!');
+      this.progressService.awardBadge(this.userId, proCode).subscribe();
+      newlyEarned.push(proCode);
     }
+    
     if (this.globalSpeedrunTimer <= 60 && this.globalAttemptsCount === 3) {
-      this.progressService
-        .awardBadge(this.userId, 'masterSecuenciacion')
-        .subscribe();
-      console.log(' ¡DIAMANTE! Insignia masterSecuenciacion Desbloqueada!');
+      this.progressService.awardBadge(this.userId, masterCode).subscribe();
+      newlyEarned.push(masterCode);
     }
+    
     this.isSpeedrunMode = false;
+
+    if (newlyEarned.length > 0) {
+      localStorage.setItem('newBadges', JSON.stringify(newlyEarned));
+      this.notificationService.showAlert('¡Carrera completada con éxito! Regresando...', 'success');
+    } else {
+      this.notificationService.showAlert('Carrera terminada. No superaste los tiempos para una insignia, ¡sigue practicando!', 'info');
+    }
+    
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    this.limpiarRecursosYSalir();
   }
 
   leerInstrucciones() {
@@ -339,19 +358,31 @@ export class ChallengeViewComponent implements OnInit {
       this.isSpeedrunMode = true;
       this.globalSpeedrunTimer = 0;
       this.globalAttemptsCount = 0;
-
       this.currentDifficulty = 'easy';
+      this.pistasUsadas = 0;
+      this.activeTimeInSeconds = 0;
 
       this.startGlobalSpeedrunTimer();
-
-      if (this.gameComponent) {
-        this.gameComponent.initGame('easy');
-      }
+      this.reiniciarJuegoActivo();
 
       this.notificationService.showAlert(
         '¡Modo Carrera Iniciado! Completa Fácil, Medio y Difícil de seguido. ¡El tiempo global está corriendo!',
         'success',
       );
+    }
+  }
+
+  private reiniciarJuegoActivo() {
+    if (this.challengeId === 1 && this.gameComponent) {
+      this.gameComponent.initGame('easy');
+    } else if (this.challengeId === 2 && this.patGameComponent) {
+      this.patGameComponent.initGame('easy');
+    } else if (this.challengeId === 3 && this.repGameComponent) {
+      this.repGameComponent.initGame('easy');
+    } else if (this.challengeId === 4 && this.conGameComponent) {
+      this.conGameComponent.initGame('easy');
+    } else if (this.challengeId === 5 && this.desGameComponent) {
+      this.desGameComponent.initGame('easy');
     }
   }
 

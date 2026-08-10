@@ -1,20 +1,32 @@
 <div class="game-environment">
-  <!-- 1. EL TABLERO (MATRIZ SHIKAKU) -->
   <div class="board-container" (mouseleave)="cancelSelection()">
     <div
       class="game-grid"
+      tabindex="0"
+      (focus)="isKeyboardActive = true"
+      (blur)="isKeyboardActive = false"
+      (keydown)="handleKeydown($event)"
+      (touchstart)="onTouchStart($event)"
+      (touchmove)="onTouchMove($event)"
+      (touchend)="onTouchEnd()"
       [style.grid-template-columns]="'repeat(' + gridSize + ', 1fr)'"
       [style.grid-template-rows]="'repeat(' + gridSize + ', 1fr)'"
-      style="user-select: none;"
     >
       @for (row of grid; track rowIndex; let rowIndex = $index) {
         @for (cell of row; track colIndex; let colIndex = $index) {
           <div
             class="grid-cell"
+            [attr.data-r]="rowIndex"
+            [attr.data-c]="colIndex"
             [class.is-selected]="cell.isSelected"
             [class.is-error]="cell.isError"
             [class.is-filled]="cell.areaId !== null"
             [class.cell-hint]="cell.isHint"
+            [class.keyboard-cursor]="
+              isKeyboardActive &&
+              rowIndex === keyboardPos.r &&
+              colIndex === keyboardPos.c
+            "
             [style.background-color]="cell.color"
             (mousedown)="startSelection(rowIndex, colIndex)"
             (mouseenter)="updateSelection(rowIndex, colIndex)"
@@ -29,13 +41,10 @@
     </div>
   </div>
 
-  <!-- 2. PANELES LATERALES -->
   <div class="side-panels">
-    
     <div class="sequence-timeline" aria-label="Instrucciones del juego">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="timeline-header">
         <p class="timeline-title">Descomposición:</p>
-        <!-- INDICADOR DE VIDAS (Máximo 3 destrucciones) -->
         <div class="lives-indicator" title="Pierdes si destruyes 3 grupos">
           <span [class.lost]="destroyedCount >= 1">❤️</span>
           <span [class.lost]="destroyedCount >= 2">❤️</span>
@@ -44,14 +53,15 @@
       </div>
 
       <div class="instructions-content">
-        <p class="empty-text" style="margin-bottom: 15px; display: block;">
-          <strong>Misión:</strong> Divide el tablero en rectángulos.<br/><br/>
-          Haz clic y arrastra. Cada rectángulo debe contener <strong>un solo número</strong>, y su área total debe ser exactamente ese número.
+        <p class="empty-text">
+          <strong>Misión:</strong> Divide el tablero en rectángulos.<br /><br />
+          Haz clic y arrastra (o activa el teclado). Cada rectángulo debe
+          contener <strong>un solo número</strong>, y su área total debe ser
+          exactamente ese número.
         </p>
-        
-        <!-- TUTORIAL ANIMADO (DUA) -->
+
         <div class="tutorial-box">
-          <p style="font-size: 0.8rem; text-align: center; margin-bottom: 5px;"><strong>Ejemplo: Área de 2</strong></p>
+          <p class="tutorial-title"><strong>Ejemplo: Área de 2</strong></p>
           <div class="tutorial-grid">
             <div class="t-cell anim-1"><span class="cell-number">2</span></div>
             <div class="t-cell anim-2"></div>
@@ -67,22 +77,64 @@
       </div>
     </div>
 
-    <!-- 3. PANEL DE CONTROLES -->
-    <div class="control-panel" style="justify-content: flex-end;">
+    <div class="control-panel">
       <div class="action-buttons">
+        <button
+          type="button"
+          class="keyboard-btn"
+          [class.active]="isKeyboardActive"
+          title="Activar control por teclado"
+          (click)="toggleKeyboardMode()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-keyboard-icon lucide-keyboard"
+          >
+            <path d="M10 8h.01" />
+            <path d="M12 12h.01" />
+            <path d="M14 8h.01" />
+            <path d="M16 12h.01" />
+            <path d="M18 8h.01" />
+            <path d="M6 8h.01" />
+            <path d="M7 16h10" />
+            <path d="M8 12h.01" />
+            <rect width="20" height="16" x="2" y="4" rx="2" />
+          </svg>
+          <span>Teclado</span>
+        </button>
+
         <button
           class="reset-btn"
           (click)="initGame(difficulty)"
           [disabled]="isPlaying"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="m17 2 4 4-4 4" />
             <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
             <path d="m7 22-4-4 4-4" />
             <path d="M21 13v1a4 4 0 0 1-4 4H3" />
           </svg>
-          <span>Reiniciar Tablero</span>
+          <span>Reiniciar</span>
         </button>
+
         <button
           type="button"
           class="hint-btn"
@@ -99,7 +151,6 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-lightbulb-icon lucide-lightbulb"
           >
             <path
               d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"

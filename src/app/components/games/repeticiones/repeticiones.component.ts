@@ -7,7 +7,6 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  HostListener,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AudioService } from '@core/services/audio.service';
@@ -51,9 +50,7 @@ export class RepeticionesComponent implements OnInit, OnChanges {
   startPosition = { x: 0, y: 0 };
   playerSequence: CodeBlock[] = [];
 
-  // LÓGICA DE RESTRICCIÓN (EL NÚCLEO DEL JUEGO)
-  maxBlocks: number = 1; // ¿Cuántos bloques principales puede poner?
-
+  maxBlocks: number = 1;
   isBuildingLoop: boolean = false;
   currentLoopCommands: Command[] = [];
   currentLoopTimes: number = 3;
@@ -62,8 +59,8 @@ export class RepeticionesComponent implements OnInit, OnChanges {
   gameStatus: 'idle' | 'running' | 'success' | 'failed' = 'idle';
   isDestroying: boolean = false;
 
-  activeHintBtn: string | null = null; // Controla qué botón brilla
-  isHintPlaying: boolean = false; // Evita solapamiento de pistas
+  activeHintBtn: string | null = null;
+  isHintPlaying: boolean = false;
   solutionPattern: string[] = [];
 
   constructor(private audioService: AudioService) {}
@@ -71,10 +68,15 @@ export class RepeticionesComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.initGame(this.difficultyLevel);
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['difficultyLevel'] && !changes['difficultyLevel'].firstChange) {
       this.initGame(this.difficultyLevel);
     }
+  }
+
+  get isMaxBlocksReached(): boolean {
+    return this.playerSequence.length >= this.maxBlocks && !this.isBuildingLoop;
   }
 
   initGame(difficulty: 'easy' | 'medium' | 'hard') {
@@ -102,7 +104,6 @@ export class RepeticionesComponent implements OnInit, OnChanges {
   }
 
   generatePatternBoard() {
-    // 1. Inicializamos el tablero lleno de muros
     this.grid = [];
     for (let y = 0; y < this.gridSize; y++) {
       let row: Cell[] = [];
@@ -114,7 +115,6 @@ export class RepeticionesComponent implements OnInit, OnChanges {
 
     const maxIdx = this.gridSize - 1;
 
-    // 2. Definimos las 4 esquinas configurables matemáticamente
     const corners = [
       {
         x: 0,
@@ -123,7 +123,7 @@ export class RepeticionesComponent implements OnInit, OnChanges {
         dirY: 'DOWN' as Command,
         sX: 1,
         sY: 1,
-      }, // Sup. Izquierda
+      },
       {
         x: maxIdx,
         y: 0,
@@ -131,7 +131,7 @@ export class RepeticionesComponent implements OnInit, OnChanges {
         dirY: 'DOWN' as Command,
         sX: -1,
         sY: 1,
-      }, // Sup. Derecha
+      },
       {
         x: 0,
         y: maxIdx,
@@ -139,7 +139,7 @@ export class RepeticionesComponent implements OnInit, OnChanges {
         dirY: 'UP' as Command,
         sX: 1,
         sY: -1,
-      }, // Inf. Izquierda
+      },
       {
         x: maxIdx,
         y: maxIdx,
@@ -147,18 +147,17 @@ export class RepeticionesComponent implements OnInit, OnChanges {
         dirY: 'UP' as Command,
         sX: -1,
         sY: -1,
-      }, // Inf. Derecha
+      },
     ];
 
-    // Seleccionamos una esquina de inicio al azar
     const selectedCorner = corners[Math.floor(Math.random() * corners.length)];
 
     const startX = selectedCorner.x;
     const startY = selectedCorner.y;
-    const dX = selectedCorner.dirX; // Dirección horizontal dinámica
-    const dY = selectedCorner.dirY; // Dirección vertical dinámica
-    const sX = selectedCorner.sX; // Multiplicador matemático (+1 o -1)
-    const sY = selectedCorner.sY; // Multiplicador matemático (+1 o -1)
+    const dX = selectedCorner.dirX;
+    const dY = selectedCorner.dirY;
+    const sX = selectedCorner.sX;
+    const sY = selectedCorner.sY;
 
     this.startPosition = { x: startX, y: startY };
     this.playerPosition = { ...this.startPosition };
@@ -167,7 +166,6 @@ export class RepeticionesComponent implements OnInit, OnChanges {
     const guaranteedPath = new Set<string>();
     this.solutionPattern = [];
 
-    // --- MODO FÁCIL (Esquinas Dinámicas) ---
     if (this.difficulty === 'easy') {
       const chosenDirCmd = Math.random() > 0.5 ? dX : dY;
       const chosenStepSign = chosenDirCmd === dX ? sX : sY;
@@ -189,10 +187,7 @@ export class RepeticionesComponent implements OnInit, OnChanges {
         guaranteedPath.add(`${cx},${cy}`);
       }
       this.grid[cy][cx].type = 'goal';
-    }
-
-    // --- MODO MEDIO (Esquinas Dinámicas) ---
-    else if (this.difficulty === 'medium') {
+    } else if (this.difficulty === 'medium') {
       const steps = 3;
       this.solutionPattern = [
         'LOOP_START',
@@ -218,17 +213,10 @@ export class RepeticionesComponent implements OnInit, OnChanges {
         guaranteedPath.add(`${cx},${cy}`);
       }
       this.grid[cy][cx].type = 'goal';
-    }
-
-    // --- MODO DIFÍCIL (Esquinas Dinámicas + Caminos Duales) ---
-    else if (this.difficulty === 'hard') {
-      // N determina cuántos pasos se aleja de la esquina origen (entre 5 y 7 casillas)
+    } else if (this.difficulty === 'hard') {
       const N = Math.floor(Math.random() * 3) + 5;
-
-      // Pista adaptada a las direcciones de la esquina actual
       this.solutionPattern = ['LOOP_START', dX, dY, 'LOOP_TIMES', 'LOOP_END'];
 
-      // Ruta Alternativa 1: Escalera / Zig-Zag partiendo desde la esquina elegida
       let zx = startX,
         zy = startY;
       for (let i = 0; i < N; i++) {
@@ -238,7 +226,6 @@ export class RepeticionesComponent implements OnInit, OnChanges {
         if (zy >= 0 && zy < this.gridSize) guaranteedPath.add(`${zx},${zy}`);
       }
 
-      // Ruta Alternativa 2: Estructura en "L" (por arriba o por abajo de su respectiva diagonal)
       let lx = startX,
         ly = startY;
       if (Math.random() > 0.5) {
@@ -261,7 +248,6 @@ export class RepeticionesComponent implements OnInit, OnChanges {
         }
       }
 
-      // Excavamos de manera segura en la matriz respetando los límites
       guaranteedPath.forEach((coord) => {
         const [x, y] = coord.split(',').map(Number);
         if ((x !== startX || y !== startY) && this.grid[y] && this.grid[y][x]) {
@@ -269,13 +255,11 @@ export class RepeticionesComponent implements OnInit, OnChanges {
         }
       });
 
-      // Colocamos la bandera en el punto exacto de convergencia remota
       const goalX = startX + N * sX;
       const goalY = startY + N * sY;
       this.grid[goalY][goalX].type = 'goal';
     }
 
-    // 3. Ruido controlado de ambientación (evitando pisar el inicio)
     const noiseLevel = this.difficulty === 'easy' ? 0 : 4;
     let noiseAdded = 0;
     while (noiseAdded < noiseLevel) {
@@ -291,18 +275,12 @@ export class RepeticionesComponent implements OnInit, OnChanges {
       }
     }
   }
-  // --- LÓGICA DE INTERACCIÓN RESTRINGIDA ---
-
-  get isMaxBlocksReached(): boolean {
-    return this.playerSequence.length >= this.maxBlocks && !this.isBuildingLoop;
-  }
 
   startLoop() {
     if (this.isMaxBlocksReached) return;
     this.isBuildingLoop = true;
     this.currentLoopCommands = [];
 
-    // Auto-ajustar el combo box numérico para dar una pista indirecta
     if (this.difficulty === 'easy') this.currentLoopTimes = 4;
     else if (this.difficulty === 'medium') this.currentLoopTimes = 5;
     else if (this.difficulty === 'hard') this.currentLoopTimes = 6;
@@ -316,7 +294,7 @@ export class RepeticionesComponent implements OnInit, OnChanges {
 
     this.playerSequence.push({
       type: 'loop',
-      times: Number(this.currentLoopTimes), // Asegurar que sea número
+      times: Number(this.currentLoopTimes),
       commands: [...this.currentLoopCommands],
     });
 
@@ -337,7 +315,7 @@ export class RepeticionesComponent implements OnInit, OnChanges {
       this.currentLoopCommands.push(cmd);
     } else {
       if (this.isMaxBlocksReached) {
-        this.audioService.playSound('fail'); // Feedback sonoro de restricción
+        this.audioService.playSound('fail');
         alert(
           `Has alcanzado el límite de ${this.maxBlocks} bloque(s). ¡Piensa en usar un bucle!`,
         );
@@ -349,18 +327,15 @@ export class RepeticionesComponent implements OnInit, OnChanges {
 
   removeBlock(index: number) {
     if (this.gameStatus === 'running') return;
-    if (this.isBuildingLoop) return; // No permitir borrar si el bucle está abierto
+    if (this.isBuildingLoop) return;
     this.playerSequence.splice(index, 1);
   }
-
-  // --- EL MOTOR COMPILADOR ---
 
   async runSequence() {
     if (this.playerSequence.length === 0) return;
     this.gameStatus = 'running';
     this.isPlaying = true;
 
-    // "Compilar" el código: Desenrollar los bucles a una lista plana
     let flattenedCommands: Command[] = [];
 
     for (const block of this.playerSequence) {
@@ -373,8 +348,8 @@ export class RepeticionesComponent implements OnInit, OnChanges {
       }
     }
 
-    let currentX = this.startPosition.x; 
-  let currentY = this.startPosition.y;
+    let currentX = this.startPosition.x;
+    let currentY = this.startPosition.y;
 
     for (let i = 0; i < flattenedCommands.length; i++) {
       const cmd = flattenedCommands[i];
@@ -425,16 +400,6 @@ export class RepeticionesComponent implements OnInit, OnChanges {
     this.gameResult.emit({ status: 'failed', message: msg });
   }
 
-  isOutOfBounds(x: number, y: number): boolean {
-    return x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize;
-  }
-  isWall(x: number, y: number): boolean {
-    return this.grid[y][x].type === 'wall';
-  }
-  delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   async mostrarPista() {
     if (this.gameStatus !== 'idle' || this.isHintPlaying) return;
 
@@ -443,16 +408,25 @@ export class RepeticionesComponent implements OnInit, OnChanges {
 
     for (let i = 0; i < this.solutionPattern.length; i++) {
       const btnToPress = this.solutionPattern[i];
-
       this.activeHintBtn = btnToPress;
       this.audioService.playSound('switch');
-
       await this.delay(1100);
-
       this.activeHintBtn = null;
       await this.delay(200);
     }
 
     this.isHintPlaying = false;
+  }
+
+  isOutOfBounds(x: number, y: number): boolean {
+    return x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize;
+  }
+
+  isWall(x: number, y: number): boolean {
+    return this.grid[y][x].type === 'wall';
+  }
+
+  delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

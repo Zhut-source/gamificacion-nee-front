@@ -192,7 +192,7 @@
 
 .card {
   background-color: var(--bg-surface);
-  border: 2px solid var(--card-border-color, #ffffff);
+  border: 2px solid var(--color-white);
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -263,7 +263,7 @@
 
         .selector-label {
           font-weight: 700;
-          color: var(--label-text-color, #2b2b2a);
+          color: var(--title-1-color);
           font-size: 0.95rem;
         }
       }
@@ -337,8 +337,8 @@
   }
 
   .metric-card {
-    background-color: var(--card-bg-color, #ffffff);
-    border: 2px solid var(--card-border-color, #ffffff);
+    background-color: var(--bg-surface);
+    border: 2px solid var(--spinner-color);
     border-radius: 16px;
     padding: 1.5rem 2rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -355,7 +355,7 @@
 
     .metric-title {
       font-weight: 600;
-      color: var(--text-primary, #2b2b2a);
+      color: var(--text-main);
       font-size: 1.05rem;
       margin: 0;
       overflow-wrap: anywhere;
@@ -364,7 +364,7 @@
     .metric-value {
       font-weight: 800;
       font-size: 2.5rem;
-      color: var(--accent, #0eb9de);
+      color: var(--title-1-color);
       margin: 0;
     }
 
@@ -401,7 +401,7 @@
 
     .management-card-title {
       margin: 0;
-      color: var(--text-primary, #2b2b2a);
+      color: var(--text-main);
     }
   }
 
@@ -442,7 +442,7 @@
   max-height: 400px;          // Previene estiramientos bajo flexbox
   overflow-y: auto;           // Activa el scroll vertical interno
   overflow-x: auto;           // Permite scroll horizontal responsivo
-  background-color: var(--card-bg-color, #ffffff);
+  background-color: var(--bg-surface);
   border: 2px solid var(--card-border-color, #ffffff);
   border-radius: 16px;
   padding: 1.5rem;
@@ -477,9 +477,9 @@
       position: sticky;       // <--- Cabeceras fijas durante el scroll vertical
       top: 0;
       z-index: 10;
-      background-color: #f8fafc; // Fondo opaco para evitar transparencias de filas
+      background-color: var(--bg-surface); // Fondo opaco para evitar transparencias de filas
       font-weight: 700;
-      color: var(--text-primary, #2b2b2a);
+      color: var(--text-main);
       white-space: nowrap;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); // Sombra sutil para delimitar la cabecera fijeza
     }
@@ -500,11 +500,11 @@
     }
 
     .student-name {
-      color: var(--text-primary, #2b2b2a);
+      color: var(--text-main);
       display: block;
     }
     .student-email {
-      color: #7a7a7a;
+      color: var(--text-main);
     }
     .table-progress-wrapper {
       display: flex;
@@ -512,19 +512,20 @@
       gap: 0.5rem;
       .progress-percentage {
         font-weight: 700;
+        color: var(--text-main);
       }
     }
     .activity-date {
-      color: var(--container-dashboard-text-color);
+      color: var(--text-main);
     }
 
     .action-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background-color: transparent;
-      border: 2px solid var(--button-bg, #2b2b2a);
-      color: var(--button-bg, #2b2b2a);
+      background-color: var(--btn-3-action-bg);
+      border: 2px solid var(--btn-3-action-border);
+      color: var(--btn-3-action-text);
       padding: 0.5rem 1rem;
       border-radius: 8px;
       cursor: pointer;
@@ -534,8 +535,8 @@
 
       &:hover,
       &:focus {
-        background-color: var(--button-bg, #2b2b2a);
-        color: var(--button-text, #f9f6f0);
+        background-color: var(--btn-3-action-hover-bg);
+        color: var(--btn-3-action-hover-text);
         outline: none;
       }
       &:focus-visible {

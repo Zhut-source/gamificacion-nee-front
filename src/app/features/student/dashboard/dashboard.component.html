@@ -1,14 +1,19 @@
-<main class="dashboard-wrapper">
-  @if (showBadgeNotification) {
-    <div class="badge-notification-banner">
-      <div style="display: flex; align-items: center; gap: 10px">
-        <span style="font-size: 1.5rem">🏆</span>
-        <strong>¡Felicidades! Has desbloqueado nuevas insignias de rendimiento.</strong>
-      </div>
-      <button (click)="scrollToSection('badges-section')" class="btn-banner">Ver mis insignias</button>
+@if (showBadgeNotification) {
+  <div class="badge-notification-banner" role="alert">
+    <div class="banner-content">
+      <span class="banner-icon" aria-hidden="true">🏆</span>
+      <strong class="banner-text">¡Felicidades! Has desbloqueado nuevas insignias.</strong>
     </div>
-  }
+    <button type="button" class="btn-banner" (click)="scrollToBadges()">
+      <span>Ver</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m6 9 6 6 6-6"/>
+      </svg>
+    </button>
+  </div>
+}
 
+<main class="dashboard-wrapper">
   @if (isLoading) {
     <div class="loading-overlay" [class.fade-out]="isFadingOut" role="status" aria-live="polite">
       <div class="spinner-container">
@@ -17,7 +22,6 @@
       </div>
     </div>
   } @else {
-    
     @if (!currentClass) {
       <section class="no-class-section" aria-labelledby="no-class-title">
         <div class="card info">
@@ -28,9 +32,7 @@
         </div>
       </section>
     } @else {
-      
       <main class="dashboard snap-container">
-        
         <nav class="quick-nav" aria-label="Navegación rápida">
           <div class="nav-item" (click)="scrollToSection('progress-section')">
             <span class="nav-label" [class.show]="activeSectionId === 'progress-section'">Progreso</span>
@@ -84,12 +86,10 @@
         </section>
 
         <div class="challenges-wrapper">
-          <!-- TÍTULO CAMBIADO A H3 -->
           <h3 id="challenges-title" class="section-title sticky-title">Tus Desafíos</h3>
 
           @for (challenge of challenges; track challenge.id; let i = $index) {
             <section [id]="'challenge-' + challenge.id" class="snap-section challenge-fullscreen" tabindex="-1">
-              
               @if (i > 0) {
                 <button class="scroll-arrow up" (click)="scrollToSection('challenge-' + challenges[i - 1].id)" aria-label="Nivel anterior">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
@@ -101,18 +101,14 @@
               }
 
               <div class="card-challenges horizontal-card" (click)="goToChallenge(challenge)" [class.locked]="challenge.status === 'locked'" [style.--dynamic-color]="challenge.status !== 'locked' ? 'var(--saturated-color-' + (i % 5) + ')' : ''">
-                
-                <!-- ÁREA 1: IZQUIERDA (Ahora incluye la descripción) -->
                 <div class="area-left">
                   <div class="titles-card">
                     <span class="level-tag">Nivel {{ challenge.nivel }}</span>
-                    <!-- Cambiado a H4 -->
                     <h4 class="challenge-title">{{ challenge.nombre }}</h4>
                     <p class="challenge-description">{{ challenge.descripcion_nivel }}</p>
                   </div>
                 </div>
 
-                <!-- ÁREA 2: CENTRO (Imagen más grande y estado) -->
                 <div class="area-center">
                   <div class="challenge-image-container">
                     <img [src]="getChallengeImagePath(challenge.nombre)" [alt]="challenge.nombre" class="challenge-illustration" (error)="onImageError($event)"/>
@@ -128,7 +124,6 @@
                   </div>
                 </div>
 
-                <!-- ÁREA 3: DERECHA (Botones apilados y centrados) -->
                 <div class="area-right">
                   <button type="button" class="speaker-button" [class.active]="tts.isPlaying && activeChallengeId === challenge.id" (click)="leerNivel(challenge); $event.stopPropagation()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
@@ -163,8 +158,8 @@
               <div class="carousel-panel">
                 <div class="carousel-track">
                   @for (badge of unlockedBadges; track badge.id) {
-                    <div class="badge-item">
-                      <img [src]="badge.imagen_url" [alt]="badge.nombre" class="badge-image"/>
+                    <div class="badge-item cursor-pointer" [class.new-badge-glow]="isNewBadge(badge.codigo)" (click)="openBadgeModal(badge)" tabindex="0">
+                      <img #img [src]="badge.imagen_url" (error)="img.src = 'assets/pictures/insigneas/defauld.png'" [alt]="badge.nombre" class="badge-image"/>
                       <span class="badge-name">{{ badge.nombre }}</span>
                     </div>
                   }
@@ -180,21 +175,76 @@
               <div class="carousel-panel">
                 <div class="carousel-track">
                   @for (badge of lockedBadges; track badge.id) {
-                    <div class="badge-item badge-disabled">
-                      <img [src]="badge.imagen_url" [alt]="badge.nombre" class="badge-image"/>
+                    <div class="badge-item badge-disabled cursor-pointer" (click)="openBadgeModal(badge)" tabindex="0">
+                      <img #img [src]="badge.imagen_url" (error)="img.src = 'assets/pictures/insigneas/defauld.png'" [alt]="badge.nombre" class="badge-image"/>
                       <span class="badge-name">{{ badge.nombre }}</span>
                     </div>
                   }
                   @if (lockedBadges.length === 0) {
-                    <p class="statusBadges-text" style="color: #7a7a7a;">No hay insignias por desbloquear.</p>
+                    <p class="statusBadges-text locked-empty">No hay insignias por desbloquear.</p>
                   }
                 </div>
               </div>
             </div>
           </div>
         </section>
-
       </main>
     }
+  }
+
+  @if (selectedBadge) {
+    <div class="badge-modal-backdrop" (click)="closeBadgeModal()">
+      <div class="badge-modal-card" (click)="$event.stopPropagation()">
+        <button class="close-modal-btn" (click)="closeBadgeModal()" aria-label="Cerrar modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+
+        <div class="badge-modal-layout">
+          <div class="badge-modal-left" (mousemove)="onBadgeMouseMove($event)" (mouseleave)="onBadgeMouseLeave()">
+            <div class="badge-img-wrapper" [style.transform]="badgeTiltStyle">
+              <img
+                #img
+                [src]="selectedBadge.imagen_url"
+                (error)="img.src = 'assets/pictures/insigneas/defauld.png'"
+                [alt]="selectedBadge.nombre"
+                class="badge-modal-img"
+                [class.locked-filter]="!selectedBadge.unlocked"
+              />
+              <div class="shine-effect"></div>
+            </div>
+          </div>
+
+          <div class="badge-modal-right">
+            @if (selectedBadge.unlocked) {
+              <span class="badge-status status-unlocked">✅ Desbloqueada</span>
+            } @else {
+              <div class="locked-status-wrapper">
+                <span class="badge-status status-locked">
+                  <span class="default-text">🔒 Bloqueada</span>
+                  <span class="hover-text">🔓 Desbloquear</span>
+                </span>
+                <div class="unlock-hint">
+                  <p>Para desbloquear necesitas activar el modo carrera en el juego y completarlo cumpliendo la condición que esta en la descripción de cada insignia.</p>
+                  <button type="button" class="btn-intentar" (click)="intentarDesbloquear(selectedBadge)">Intentar</button>
+                </div>
+              </div>
+            }
+            
+            <h2 class="badge-modal-title">{{ selectedBadge.nombre }}</h2>
+            <p class="badge-modal-desc">{{ selectedBadge.descripcion }}</p>
+
+            <button
+              class="speaker-button tts-modal-btn"
+              title="Escuchar descripción"
+              [class.active]="tts.isPlaying"
+              (click)="leerInsigniaModal()"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
+              <span>Escuchar Descripción</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   }
 </main>

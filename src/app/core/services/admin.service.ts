@@ -64,4 +64,12 @@ export class AdminService {
   toggleUserStatus(userId: number, isActive: boolean): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/admin/users/${userId}/toggle-status`, { isActive });
   }
+
+  updateUserDetails(userId: number, data: {name: string, email: string}): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/admin/users/${userId}/update`, data);
+  }
+
+  forceUserPassword(userId: number, newPassword: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/admin/users/${userId}/force-password`, { newPassword });
+  }
 }

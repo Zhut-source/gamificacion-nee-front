@@ -1,37 +1,225 @@
-// Reutiliza tus clases base: .dashboard-container, .card, .btn-back-workspace, .input-df, .students-table
+.dashboard-container {
+  padding: 40px;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  max-width: 100%;
+  min-height: calc(100vh - 80px);
+  @media (max-width: 700px) {
+    padding: 20px;
+  }
+}
 
+.admin-header {
+  margin-bottom: 2rem;
+  .main-title {
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+  }
+  .subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+  }
+}
+
+.card {
+  background-color: var(--bg-surface);
+  border: 2px solid var(--card-border-color, #ffffff);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-panel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  .input-df,
+  .select-control {
+    padding: 0.6rem 1rem;
+    border: 2px solid var(--input-border-color, #2b2b2a);
+    border-radius: 10px;
+    background-color: transparent;
+    color: var(--input-text-color, #2b2b2a);
+    outline: none;
+    transition: border-color 0.2s;
+    &:focus {
+      border-color: var(--accent, #0eb9de);
+    }
+  }
+  .select-control option {
+    background-color: var(--bg-body);
+  }
+}
+
+// TABLA DE ESTUDIANTES
+.table-responsive-wrapper {
+  width: 100%;
+  max-height: 500px;
+  overflow-x: auto;
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  
+  &:focus-visible {
+    outline: 3px solid var(--accent, #0eb9de);
+    outline-offset: 2px;
+  }
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+  min-width: 800px;
+  
+  th,
+  td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    th {
+      position: sticky;
+      top: 0;
+      background-color: #f8fafc;
+      font-weight: 700;
+      color: var(--text-primary, #2b2b2a);
+      white-space: nowrap;
+      z-index: 10;
+    }
+  }
+  
+  tbody {
+    tr {
+      transition: background-color 0.15s ease;
+      &:hover {
+        background-color: rgba(#0eb9de, 0.04);
+      }
+    }
+    .student-name {
+      color: var(--text-primary, #2b2b2a);
+      display: block;
+    }
+    .student-email,
+    .activity-date {
+      color: #7a7a7a;
+    }
+  }
+}
+
+// BADGES DE ESTADO Y ROL
 .role-badge {
   padding: 4px 10px;
   border-radius: 6px;
   font-weight: bold;
   text-transform: uppercase;
   font-size: 0.8rem;
-  
-  &.estudiante { background-color: #E0F2FE; color: #0369A1; border: 1px solid #38BDF8; }
-  &.maestro { background-color: #F3E8FF; color: #A16207; border: 1px solid #FDE047; }
+  &.estudiante {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #38bdf8;
+  }
+  &.maestro {
+    background-color: #f3e8ff;
+    color: #a16207;
+    border: 1px solid #fde047;
+  }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  &.status-completed {
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #15803d;
+  }
+  &.status-alert {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #b91c1c;
+  }
+}
+
+// BOTONES DE ACCIÓN
+.action-buttons-wrapper {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 2px solid var(--button-bg, #2b2b2a);
+  color: var(--button-bg, #2b2b2a);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  &:hover:not(:disabled) {
+    background-color: var(--button-bg, #2b2b2a);
+    color: var(--button-text, #f9f6f0);
+  }
+
+  &.icon-only {
+    padding: 0.5rem;
+    border-radius: 8px;
+    &.active-edit {
+      border-color: var(--accent);
+      box-shadow: 0 0 5px var(--accent);
+    }
+  }
 }
 
 .action-btn-danger {
-  all: unset; padding: 6px 12px;
-  background: #FEE2E2; color: #DC2626;
-  border: 1px solid #DC2626; border-radius: 6px;
-  font-weight: bold; cursor: pointer; transition: 0.2s;
-  &:hover { background: #DC2626; color: white; }
+  all: unset;
+  padding: 6px 12px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+  &:hover {
+    background: #dc2626;
+    color: white;
+  }
 }
 
 .action-btn-success {
-  all: unset; padding: 6px 12px;
-  background: #DCFCE7; color: #15803D;
-  border: 1px solid #15803D; border-radius: 6px;
-  font-weight: bold; cursor: pointer; transition: 0.2s;
-  &:hover { background: #15803D; color: white; }
-}
-
-// Estilos dinámicos para filas suspendidas
-.row-attention {
-  background-color: rgba(#DC2626, 0.05);
-  opacity: 0.8;
-  td { border-color: rgba(#DC2626, 0.1); }
+  all: unset;
+  padding: 6px 12px;
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #15803d;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+  &:hover {
+    background: #15803d;
+    color: white;
+  }
 }
 
 .btn-back-workspace {
@@ -56,14 +244,162 @@
     background: var(--btn-3-action-hover-bg);
     border: 2px solid var(--btn-3-action-hover-border);
   }
-  &:focus {
-    outline: 2px solid var(--btn-3-action-active-outline);
-    outline-offset: 3px !important;
+}
+
+// INLINE EDIT (Inputs dentro de la tabla)
+.inline-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  .mini-input {
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 
-// Adaptación Alto Contraste
+.row-attention {
+  background-color: rgba(#dc2626, 0.05);
+  opacity: 0.8;
+  td {
+    border-color: rgba(#dc2626, 0.1);
+  }
+}
+
+// MODAL
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
+  .modal-card {
+    width: 100%;
+    max-width: 400px;
+    margin: 20px;
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+// SPINNER
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  width: 100%;
+}
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.fulfilling-square-spinner {
+  height: 50px;
+  width: 50px;
+  position: relative;
+  border: 4px solid var(--spinner-color);
+  animation: fulfilling-square-spinner-animation 2.5s infinite ease;
+}
+.fulfilling-square-spinner .spinner-inner {
+  vertical-align: top;
+  display: inline-block;
+  background-color: var(--spinner-color);
+  width: 100%;
+  opacity: 1;
+  animation: fulfilling-square-spinner-inner-animation 2.5s infinite ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fulfilling-square-spinner-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  25%,
+  50% {
+    transform: rotate(180deg);
+  }
+  75%,
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes fulfilling-square-spinner-inner-animation {
+  0%,
+  25%,
+  100% {
+    height: 0%;
+  }
+  50%,
+  75% {
+    height: 100%;
+  }
+}
+
+// ALTO CONTRASTE DUA
 body.high-contrast {
-  .role-badge { background: #000; border: 2px solid #FFF; }
-  .row-attention { background-color: #330000 !important; }
+  .card {
+    background-color: #000 !important;
+    border: 2px solid #fff !important;
+  }
+  .students-table {
+    thead {
+      background-color: #121212;
+      th {
+        border-bottom: 2px solid #fff;
+      }
+    }
+    td {
+      border-bottom: 1px solid #fff;
+    }
+    tbody tr:hover {
+      background-color: #121212 !important;
+    }
+  }
+  .role-badge {
+    background: #000;
+    border: 2px solid #fff;
+    color: #fff;
+  }
+  .row-attention {
+    background-color: #330000 !important;
+  }
+  .status-badge {
+    background-color: transparent !important;
+  }
+  .action-btn {
+    border-color: #fff !important;
+    color: #fff !important;
+    &:hover {
+      background-color: #fff !important;
+      color: #000 !important;
+    }
+  }
 }

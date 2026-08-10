@@ -244,7 +244,6 @@ export class ProfileComponent implements OnInit {
           this.notificationService.showAlert(res.message, 'success');
           this.classForm.reset();
           this.loadMyClass();
-
           this.clearSpotlight();
           this.router.navigate(['/student/dashboard']);
         },

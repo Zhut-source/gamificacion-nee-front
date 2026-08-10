@@ -22,7 +22,6 @@
   gap: 20px;
 }
 
-// MEJORA DE ACCESIBILIDAD POR TECLADO (FOCUS INDICATORS DE ALTO CONTRASTE)
 button:focus-visible,
 select:focus-visible {
   outline: 3px solid #2563eb !important;
@@ -52,7 +51,9 @@ select:focus-visible {
     font-size: clamp(1.2rem, 4vw - 0.5rem, 2rem);
     position: relative;
     overflow: hidden;
-    transition: background-color 0.3s, border 0.3s;
+    transition:
+      background-color 0.3s,
+      border 0.3s;
 
     &.cell-empty,
     &.cell-start {
@@ -80,10 +81,13 @@ select:focus-visible {
     .player-character {
       position: absolute;
       z-index: 10;
-      animation: bounce 0.5s ease, wcag-idle-bounce 7s ease-in-out infinite;
+      animation:
+        bounce 0.5s ease,
+        wcag-idle-bounce 7s ease-in-out infinite;
 
       &.robot-exploded {
-        animation: robotExplosion 0.4s forwards cubic-bezier(0.6, -0.28, 0.735, 0.045);
+        animation: robotExplosion 0.4s forwards
+          cubic-bezier(0.6, -0.28, 0.735, 0.045);
         display: inline-block;
       }
     }
@@ -91,20 +95,44 @@ select:focus-visible {
 }
 
 @keyframes robotExplosion {
-  0% { transform: scale(1); opacity: 1; filter: hue-rotate(0deg) saturate(2); }
-  30% { transform: scale(1.4); filter: hue-rotate(180deg) saturate(5); opacity: 0.9; }
-  100% { transform: scale(0); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    filter: hue-rotate(0deg) saturate(2);
+  }
+  30% {
+    transform: scale(1.4);
+    filter: hue-rotate(180deg) saturate(5);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes wcag-idle-bounce {
-  0%, 7%, 100% { transform: translateY(0); }
-  2% { transform: translateY(-6px); }
-  4% { transform: translateY(1px); }
+  0%,
+  7%,
+  100% {
+    transform: translateY(0);
+  }
+  2% {
+    transform: translateY(-6px);
+  }
+  4% {
+    transform: translateY(1px);
+  }
 }
 
 .sequence-timeline {
@@ -138,7 +166,6 @@ select:focus-visible {
     }
   }
 
-  // NUEVOS ESTILOS ACCESIBLES DEL SELECTOR DE REPETICIONES
   .loop-counter-box {
     display: flex;
     align-items: center;
@@ -167,7 +194,9 @@ select:focus-visible {
       color: #334155;
       cursor: pointer;
       outline: none;
-      transition: border-color 0.2s, background-color 0.2s;
+      transition:
+        border-color 0.2s,
+        background-color 0.2s;
 
       &:disabled {
         background-color: #e2e8f0;
@@ -192,6 +221,10 @@ select:focus-visible {
       color: #94a3b8;
       font-style: italic;
       font-size: 0.9rem;
+      &.ghost-text {
+        font-size: 0.75rem;
+        color: #856404;
+      }
     }
 
     .command-block {
@@ -216,7 +249,10 @@ select:focus-visible {
         font-size: 1.2rem;
         border-color: #cbd5e1;
         cursor: default;
-        &:hover { background-color: #f1f5f9; border-color: #cbd5e1; }
+        &:hover {
+          background-color: #f1f5f9;
+          border-color: #cbd5e1;
+        }
       }
     }
 
@@ -244,7 +280,9 @@ select:focus-visible {
           all: unset;
           cursor: pointer;
           font-size: 0.9rem;
-          &:hover { color: #fca5a5; }
+          &:hover {
+            color: #fca5a5;
+          }
         }
       }
 
@@ -259,7 +297,10 @@ select:focus-visible {
         background-color: #fef9c3;
         border-color: #eab308;
         border-style: dashed;
-        .loop-header { background-color: #eab308; color: black; }
+        .loop-header {
+          background-color: #eab308;
+          color: black;
+        }
       }
     }
   }
@@ -278,16 +319,19 @@ select:focus-visible {
     gap: 8px;
 
     .loop-btn {
-      padding: 10px 15px;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
       font-weight: bold;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       color: white;
-
       &.start-loop {
-        background-color: #8b5cf6;
-        border-bottom: 4px solid #6d28d9;
+        background-color: #3b82f6;
+        border-bottom: 4px solid #2563eb;
       }
       &.end-loop {
         background-color: #ec4899;
@@ -295,7 +339,10 @@ select:focus-visible {
         animation: pulseEnd 1s infinite alternate;
       }
 
-      &:disabled { opacity: 0.5; cursor: not-allowed; }
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -305,7 +352,10 @@ select:focus-visible {
     align-items: center;
     gap: 5px;
 
-    .horizontal-btns { display: flex; gap: 5px; }
+    .horizontal-btns {
+      display: flex;
+      gap: 5px;
+    }
 
     .dir-btn {
       display: flex;
@@ -321,7 +371,10 @@ select:focus-visible {
       cursor: pointer;
       border-bottom: 4px solid #2563eb;
 
-      &:disabled { background-color: #93c5fd; cursor: not-allowed; }
+      &:disabled {
+        background-color: #93c5fd;
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -331,21 +384,36 @@ select:focus-visible {
 
     button {
       padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
       font-weight: bold;
       border: none;
       border-radius: 10px;
       cursor: pointer;
       color: white;
 
-      &.hint-btn { background-color: #8b5cf6; border-bottom: 4px solid #6d28d9; }
-      &.run-btn { background-color: #10b981; border-bottom: 4px solid #059669; }
-      &.reset-btn { background-color: #f59e0b; border-bottom: 4px solid #d97706; }
-      &:disabled { opacity: 0.6; cursor: not-allowed; }
+      &.hint-btn {
+        background-color: #8b5cf6;
+        border-bottom: 4px solid #6d28d9;
+      }
+      &.run-btn {
+        background-color: #10b981;
+        border-bottom: 4px solid #059669;
+      }
+      &.reset-btn {
+        background-color: #f59e0b;
+        border-bottom: 4px solid #d97706;
+      }
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
     }
   }
 }
 
-// CLASE DE DESTELLO INTEGRADO (DIFERENCIADO PARA DUA)
 .hint-glow {
   position: relative;
   z-index: 100;
@@ -355,26 +423,49 @@ select:focus-visible {
 }
 
 @keyframes buttonPulseHint {
-  from { transform: scale(1); }
-  to { transform: scale(1.06); background-color: #fef08a !important; color: #000 !important; }
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+    background-color: #fef08a !important;
+    color: #000 !important;
+  }
 }
 
 body.high-contrast .hint-glow {
-  border: 4px dashed #FFD700 !important;
+  border: 4px dashed #ffd700 !important;
   animation: buttonPulseHintHC 0.8s ease-in-out infinite alternate !important;
 }
 
 @keyframes buttonPulseHintHC {
-  from { transform: scale(1); }
-  to { transform: scale(1.06); background-color: #000; color: #FFF; box-shadow: 0 0 20px #FFD700; }
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+    background-color: #000;
+    color: #fff;
+    box-shadow: 0 0 20px #ffd700;
+  }
 }
 
 @keyframes pulseEnd {
-  from { box-shadow: 0 0 0px #ec4899; }
-  to { box-shadow: 0 0 10px #ec4899; }
+  from {
+    box-shadow: 0 0 0px #ec4899;
+  }
+  to {
+    box-shadow: 0 0 10px #ec4899;
+  }
 }
 
 @keyframes flashFull {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); background-color: #fca5a5; }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+    background-color: #fca5a5;
+  }
 }

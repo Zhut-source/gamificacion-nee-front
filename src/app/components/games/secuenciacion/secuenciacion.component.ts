@@ -39,6 +39,8 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
   gridSize: number = 4;
   grid: Cell[][] = [];
   playerPosition = { x: 0, y: 0 };
+  startPosition = { x: 0, y: 0 };
+  correctPath: { x: number, y: number }[] = [];
   playerSequence: Command[] = [];
   isPlaying: boolean = false;
   gameStatus: 'idle' | 'running' | 'success' | 'failed' = 'idle';
@@ -76,7 +78,7 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
   }
 
   resetAfterFailure() {
-    this.playerPosition = { x: 0, y: 0 };
+    this.playerPosition = { ...this.startPosition };
     this.failureMessage = null;
     this.gameStatus = 'idle';
     this.isDestroying = false;
@@ -92,22 +94,36 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
       this.grid.push(row);
     }
 
-    this.playerPosition = { x: 0, y: 0 };
-    const goalPos = { x: this.gridSize - 1, y: this.gridSize - 1 };
+    const maxIdx = this.gridSize - 1;
+
+    const corners = [
+      { startX: 0, startY: 0, goalX: maxIdx, goalY: maxIdx, stepX: 1, stepY: 1 }, 
+      { startX: maxIdx, startY: 0, goalX: 0, goalY: maxIdx, stepX: -1, stepY: 1 }, 
+      { startX: 0, startY: maxIdx, goalX: maxIdx, goalY: 0, stepX: 1, stepY: -1 }, 
+      { startX: maxIdx, startY: maxIdx, goalX: 0, goalY: 0, stepX: -1, stepY: -1 }
+    ];
+
+    this.correctPath = [];
+
+    const selectedCorner = corners[Math.floor(Math.random() * corners.length)];
+
+    this.startPosition = { x: selectedCorner.startX, y: selectedCorner.startY };
+    this.playerPosition = { ...this.startPosition };
+    const goalPos = { x: selectedCorner.goalX, y: selectedCorner.goalY };
 
     const guaranteedPath = new Set<string>();
-    let cx = 0,
-      cy = 0;
-    guaranteedPath.add(`0,0`);
+    let cx = this.startPosition.x;
+    let cy = this.startPosition.y;
+    guaranteedPath.add(`${cx},${cy}`);
 
     while (cx !== goalPos.x || cy !== goalPos.y) {
       if (cx === goalPos.x) {
-        cy++;
+        cy += selectedCorner.stepY;
       } else if (cy === goalPos.y) {
-        cx++;
+        cx += selectedCorner.stepX;
       } else {
-        if (Math.random() > 0.5) cx++;
-        else cy++;
+        if (Math.random() > 0.5) cx += selectedCorner.stepX;
+        else cy += selectedCorner.stepY;
       }
       guaranteedPath.add(`${cx},${cy}`);
     }
@@ -132,59 +148,107 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
       attempts++;
     }
 
-    this.grid[0][0].type = 'start';
+    this.grid[this.startPosition.y][this.startPosition.x].type = 'start';
     this.grid[goalPos.y][goalPos.x].type = 'goal';
+    this.correctPath.push({ x: cx, y: cy });
   }
 
   mostrarPista() {
-    if (this.grid.some((row) => row.some((cell) => cell.isHint))) return;
+    // 1. Limpiar pistas anteriores que pudieran estar activas en el tablero
+    for (let y = 0; y < this.gridSize; y++) {
+      for (let x = 0; x < this.gridSize; x++) {
+        this.grid[y][x].isHint = false;
+      }
+    }
 
-    this.hintUsed.emit();
+    // 2. Encontrar la ubicación de la meta dinámicamente
+    let goalPos = { x: 0, y: 0 };
+    for (let y = 0; y < this.gridSize; y++) {
+      for (let x = 0; x < this.gridSize; x++) {
+        if (this.grid[y][x].type === 'goal') {
+          goalPos = { x, y };
+        }
+      }
+    }
 
-    const queue: { x: number; y: number; path: { x: number; y: number }[] }[] =
-      [];
+    // 3. Simular la posición del robot tras ejecutar la secuencia que el usuario ha armado hasta el momento
+    let currentX = this.startPosition.x;
+    let currentY = this.startPosition.y;
+
+    for (const cmd of this.playerSequence) {
+      if (cmd === 'UP') currentY--;
+      else if (cmd === 'DOWN') currentY++;
+      else if (cmd === 'LEFT') currentX--;
+      else if (cmd === 'RIGHT') currentX++;
+    }
+
+    // Si la secuencia actual ya sacó al robot del mapa o lo estrelló en un muro, no se genera pista
+    if (
+      currentX < 0 || currentX >= this.gridSize ||
+      currentY < 0 || currentY >= this.gridSize ||
+      this.grid[currentY][currentX].type === 'wall'
+    ) {
+      return;
+    }
+
+    // 4. Búsqueda en anchura (BFS) guardando coordenadas de las celdas
+    const queue: { x: number, y: number, path: { x: number, y: number }[] }[] = [];
+    queue.push({ x: currentX, y: currentY, path: [] });
+
     const visited = new Set<string>();
-
-    queue.push({
-      x: this.playerPosition.x,
-      y: this.playerPosition.y,
-      path: [],
-    });
-    visited.add(`${this.playerPosition.x},${this.playerPosition.y}`);
-
-    const goalX = this.gridSize - 1;
-    const goalY = this.gridSize - 1;
-    const dirs = [
-      [0, 1],
-      [0, -1],
-      [1, 0],
-      [-1, 0],
-    ];
+    visited.add(`${currentX},${currentY}`);
 
     while (queue.length > 0) {
-      const curr = queue.shift()!;
+      const current = queue.shift()!;
 
-      if (curr.x === goalX && curr.y === goalY) {
-        this.dibujarPistaEnTablero(curr.path);
-        return;
+      // Cuando se encuentra la meta, se encienden las celdas del camino resultante
+      if (current.x === goalPos.x && current.y === goalPos.y) {
+        for (const point of current.path) {
+          // No marcamos la celda de la meta para no alterar su 'type', solo su estado isHint
+          if (this.grid[point.y][point.x].type !== 'goal') {
+            this.grid[point.y][point.x].isHint = true;
+          }
+        }
+
+        // Temporizador para apagar la pista tras 3 segundos (opcional)
+        setTimeout(() => {
+          for (const point of current.path) {
+            if (this.grid[point.y] && this.grid[point.y][point.x]) {
+              this.grid[point.y][point.x].isHint = false;
+            }
+          }
+        }, 3000);
+
+        break;
       }
 
-      for (let [dx, dy] of dirs) {
-        const nx = curr.x + dx;
-        const ny = curr.y + dy;
-        const posKey = `${nx},${ny}`;
+      // Desplazamientos válidos (arriba, abajo, izquierda, derecha)
+      const directions = [
+        { dx: 0, dy: -1 },
+        { dx: 0, dy: 1 },
+        { dx: -1, dy: 0 },
+        { dx: 1, dy: 0 }
+      ];
 
-        if (
-          nx >= 0 &&
-          nx < this.gridSize &&
-          ny >= 0 &&
-          ny < this.gridSize &&
-          this.grid[ny][nx].type !== 'wall' &&
-          !visited.has(posKey)
-        ) {
-          visited.add(posKey);
-          const newPath = [...curr.path, { x: nx, y: ny }];
-          queue.push({ x: nx, y: ny, path: newPath });
+      for (const dir of directions) {
+        const nx = current.x + dir.dx;
+        const ny = current.y + dir.dy;
+
+        // Comprobar que esté dentro de los límites del tablero
+        if (nx >= 0 && nx < this.gridSize && ny >= 0 && ny < this.gridSize) {
+          // Evitar pasar por muros
+          if (this.grid[ny][nx].type !== 'wall') {
+            const posKey = `${nx},${ny}`;
+            
+            if (!visited.has(posKey)) {
+              visited.add(posKey);
+              queue.push({
+                x: nx,
+                y: ny,
+                path: [...current.path, { x: nx, y: ny }]
+              });
+            }
+          }
         }
       }
     }
@@ -218,8 +282,8 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
     this.currentCommandIndex = -1;
     this.failureMessage = null;
 
-    let currentX = 0;
-    let currentY = 0;
+    let currentX = this.startPosition.x;
+    let currentY = this.startPosition.y;
     for (let i = 0; i < this.playerSequence.length; i++) {
       this.currentCommandIndex = i;
       const cmd = this.playerSequence[i];
