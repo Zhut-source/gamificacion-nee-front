@@ -1,6 +1,6 @@
 <main class="register-container">
-  <section class="register-card">
-    <h1 class="register-title" fade-item>CREA TU CUENTA</h1>
+  <section class="register-card" aria-labelledby="register-title">
+    <h1 id="register-title" class="register-title fade-item">Crear cuenta</h1>
 
     <form
       class="register-form"
@@ -9,7 +9,6 @@
     >
       <div class="input-group fade-item">
         <label for="name">Nombre completo</label>
-
         <input
           type="text"
           id="name"
@@ -20,17 +19,16 @@
           [attr.aria-invalid]="nameInvalid ? 'true' : 'false'"
           aria-describedby="name-error"
         />
-
         <div id="name-error" aria-live="polite" class="error-container">
           <small class="error-text" *ngIf="nameInvalid">
-            ⚠ Nombre requerido (solo letras y espacios)
+            ⚠ Nombre requerido (solo letras)
           </small>
+          <small class="success-text" *ngIf="nameValid"> ✓ Correcto </small>
         </div>
       </div>
 
       <div class="input-group fade-item">
         <label for="email">Correo electrónico</label>
-
         <input
           type="email"
           id="email"
@@ -41,7 +39,6 @@
           [attr.aria-invalid]="emailInvalid ? 'true' : 'false'"
           aria-describedby="register-email-error"
         />
-
         <div
           id="register-email-error"
           aria-live="polite"
@@ -50,12 +47,12 @@
           <small class="error-text" *ngIf="emailInvalid">
             ⚠ Email inválido
           </small>
+          <small class="success-text" *ngIf="emailValid"> ✓ Correcto </small>
         </div>
       </div>
 
       <div class="input-group fade-item">
         <label for="password">Contraseña</label>
-
         <input
           type="password"
           id="password"
@@ -66,7 +63,6 @@
           [attr.aria-invalid]="passwordInvalid ? 'true' : 'false'"
           aria-describedby="register-password-error"
         />
-
         <div
           id="register-password-error"
           aria-live="polite"
@@ -75,10 +71,12 @@
           <small class="error-text" *ngIf="passwordInvalid">
             ⚠ Mínimo 6 caracteres
           </small>
+          <small class="success-text" *ngIf="passwordValid"> ✓ Correcto </small>
         </div>
       </div>
 
       <div class="input-group fade-item">
+        <label for="confirmPassword">Confirmar contraseña</label>
         <input
           type="password"
           id="confirmPassword"
@@ -89,10 +87,12 @@
           [attr.aria-invalid]="passwordMismatch ? 'true' : 'false'"
           aria-describedby="confirm-error"
         />
-
         <div id="confirm-error" aria-live="polite" class="error-container">
           <small class="error-text" *ngIf="passwordMismatch">
             ⚠ Las contraseñas no coinciden
+          </small>
+          <small class="success-text" *ngIf="confirmPasswordValid">
+            ✓ Correcto
           </small>
         </div>
       </div>
@@ -136,7 +136,7 @@
         >
           <ng-container *ngIf="!isLoading">Crear cuenta</ng-container>
           <ng-container *ngIf="isLoading">
-            <div class="looping-rhombuses-spinner">
+            <div class="looping-rhombuses-spinner" aria-label="Cargando">
               <div class="rhombus"></div>
               <div class="rhombus"></div>
               <div class="rhombus"></div>
@@ -150,4 +150,28 @@
       </div>
     </form>
   </section>
+
+  <button
+    *ngIf="showScrollButton"
+    type="button"
+    class="floating-scroll-btn"
+    [ngClass]="isScrolledToBottom ? 'subir-state' : 'bajar-state'"
+    (click)="toggleScroll()"
+    [attr.aria-label]="isScrolledToBottom ? 'Desplazar hacia arriba' : 'Desplazar hacia abajo'"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="30"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="m18 15-6-6-6 6" />
+    </svg>
+    <span>{{ isScrolledToBottom ? "Subir" : "Bajar" }}</span>
+  </button>
 </main>

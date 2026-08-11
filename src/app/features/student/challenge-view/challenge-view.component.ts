@@ -5,6 +5,7 @@ import {
   HostListener,
   OnInit,
   ViewChild,
+  OnDestroy
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -35,7 +36,7 @@ import { SecuenciacionComponent } from 'src/app/components/games/secuenciacion/s
   templateUrl: './challenge-view.component.html',
   styleUrl: './challenge-view.component.scss',
 })
-export class ChallengeViewComponent implements OnInit {
+export class ChallengeViewComponent implements OnInit, OnDestroy {
   @ViewChild(SecuenciacionComponent) gameComponent!: SecuenciacionComponent;
   @ViewChild(PatronesComponent) patGameComponent!: PatronesComponent;
   @ViewChild(RepeticionesComponent) repGameComponent!: RepeticionesComponent;
@@ -93,6 +94,7 @@ export class ChallengeViewComponent implements OnInit {
 
   ngOnDestroy() {
     if (this.timerInterval) clearInterval(this.timerInterval);
+    if (this.globalSpeedrunInterval) clearInterval(this.globalSpeedrunInterval);
     this.tts.stop();
   }
 
@@ -139,7 +141,6 @@ export class ChallengeViewComponent implements OnInit {
   }
 
   onVideoError() {
-    console.warn(`Video dinámico no encontrado en: ${this.videoUrl}. Cargando video de respaldo...`);
     this.videoUrl = 'assets/videos/videoplaybackweb.mp4';
   }
 
@@ -147,8 +148,7 @@ export class ChallengeViewComponent implements OnInit {
     if (this.currentView === 'game') {
       const confirmar = await this.confirmService.ask({
         title: '¿Pausar partida?',
-        message:
-          '¿Quieres pausar tu partida actual para volver a ver el video introductorio?',
+        message: '¿Quieres pausar tu partida actual para volver a ver el video introductorio?',
         confirmText: 'Ver video',
         cancelText: 'Seguir jugando',
       });
@@ -192,7 +192,6 @@ export class ChallengeViewComponent implements OnInit {
 
   onHintUsed() {
     this.pistasUsadas++;
-    console.log(`Pista utilizada. Total pistas en este intento: ${this.pistasUsadas}`);
   }
 
   startSilentTimer() {
@@ -208,9 +207,6 @@ export class ChallengeViewComponent implements OnInit {
   onGameResult(result: any) {
     if (this.isSpeedrunMode) {
       this.globalAttemptsCount++;
-      console.log(
-        `[Modo Carrera] Intento registrado. Totales: ${this.globalAttemptsCount}`,
-      );
     }
 
     const attemptData = {
@@ -223,9 +219,8 @@ export class ChallengeViewComponent implements OnInit {
     };
 
     this.progressService.saveAttempt(attemptData).subscribe({
-      next: () => console.log('✅ Intento registrado en la BD con éxito.'),
-      error: (err) =>
-        console.error('❌ Error registrando intento en la BD:', err),
+      next: () => {},
+      error: () => {}
     });
 
     this.feedback.status = result.status;
@@ -233,7 +228,6 @@ export class ChallengeViewComponent implements OnInit {
     this.feedback.message = result.message;
     this.feedback.show = true;
     
-
     if (result.status === 'success') {
       this.audioService.playSound('congratulations');
 
@@ -249,12 +243,10 @@ export class ChallengeViewComponent implements OnInit {
           } else if (this.currentDifficulty === 'medium') {
             this.setDifficulty('hard');
           } else if (this.currentDifficulty === 'hard') {
-            // ¡FIN DEL MODO CARRERA!
             if (this.globalSpeedrunInterval) clearInterval(this.globalSpeedrunInterval);
             this.evaluarFuturasInsignias(); 
           }
         } else {
-          // FLUJO NORMAL (Primera vez)
           if (!this.isLevelFullyCompleted) {
             if (this.currentDifficulty === 'easy') {
               this.setDifficulty('medium');
@@ -350,10 +342,7 @@ export class ChallengeViewComponent implements OnInit {
   toggleSpeedrunMode() {
     if (this.isSpeedrunMode) {
       this.resetSpeedrunMetrics();
-      this.notificationService.showAlert(
-        'Modo Carrera cancelado. Se han restaurado los controles normales.',
-        'info',
-      );
+      this.notificationService.showAlert('Modo Carrera cancelado. Se han restaurado los controles normales.', 'info');
     } else {
       this.isSpeedrunMode = true;
       this.globalSpeedrunTimer = 0;
@@ -365,10 +354,7 @@ export class ChallengeViewComponent implements OnInit {
       this.startGlobalSpeedrunTimer();
       this.reiniciarJuegoActivo();
 
-      this.notificationService.showAlert(
-        '¡Modo Carrera Iniciado! Completa Fácil, Medio y Difícil de seguido. ¡El tiempo global está corriendo!',
-        'success',
-      );
+      this.notificationService.showAlert('¡Modo Carrera Iniciado! Completa Fácil, Medio y Difícil de seguido. ¡El tiempo global está corriendo!', 'success');
     }
   }
 
@@ -391,9 +377,6 @@ export class ChallengeViewComponent implements OnInit {
 
     this.globalSpeedrunInterval = setInterval(() => {
       this.globalSpeedrunTimer++;
-      console.log(
-        `[Speedrun] Tiempo acumulado: ${this.globalSpeedrunTimer}s | Intentos totales: ${this.globalAttemptsCount}`,
-      );
     }, 1000);
   }
 
@@ -435,5 +418,4 @@ export class ChallengeViewComponent implements OnInit {
     this.globalSpeedrunTimer = 0;
     this.globalAttemptsCount = 0;
   }
-
 }

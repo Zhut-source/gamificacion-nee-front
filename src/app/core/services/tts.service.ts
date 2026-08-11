@@ -9,13 +9,16 @@ export class TtsService {
 
   private currentUtterance: SpeechSynthesisUtterance | null = null;
   private monitorInterval: any = null;
+  private volume = 1;
 
-  constructor(private ngZone: NgZone) {}
+  constructor(private ngZone: NgZone) {
+    const savedVolume = localStorage.getItem('ttsVolume');
 
-  /**
-   * Método principal para reproducir texto
-   * @param text El texto que se va a leer
-   */
+    if (savedVolume !== null) {
+      this.volume = Number(savedVolume) / 100;
+    }
+  }
+
   speak(text: string) {
     this.stop();
 
@@ -23,6 +26,7 @@ export class TtsService {
 
     this.currentUtterance = new SpeechSynthesisUtterance(text);
     this.currentUtterance.lang = 'es-ES';
+    this.currentUtterance.volume = this.volume;
 
     const speedSetting = localStorage.getItem('ttsSpeed') || 'normal';
     if (speedSetting === 'lento') this.currentUtterance.rate = 0.7;
@@ -63,5 +67,11 @@ export class TtsService {
     if (this.isPlaying) {
       this.ngZone.run(() => (this.isPlaying = false));
     }
+  }
+
+  setVolume(volume: number): void {
+    this.volume = Math.max(0, Math.min(1, volume));
+
+    localStorage.setItem('ttsVolume', String(Math.round(this.volume * 100)));
   }
 }

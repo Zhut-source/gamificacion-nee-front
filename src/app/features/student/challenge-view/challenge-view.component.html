@@ -1,28 +1,28 @@
 <div class="challenge-workspace-wrapper">
   <main class="challenge-main-container">
     <button
-    type="button"
-    class="btn-back-workspace"
-    (click)="volverAlDashboard()"
-    aria-label="Volver al panel principal de desafíos"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="lucide lucide-move-left-icon lucide-move-left"
+      type="button"
+      class="btn-back-workspace"
+      (click)="volverAlDashboard()"
+      aria-label="Volver al panel principal de desafíos"
     >
-      <path d="M6 8L2 12L6 16" />
-      <path d="M2 12H22" />
-    </svg>
-    <span>Volver</span>
-  </button>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="30"
+        height="30"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M6 8L2 12L6 16" />
+        <path d="M2 12H22" />
+      </svg>
+      <span>Volver</span>
+    </button>
+    
     <div class="challenge-body-layout">
       <section class="panel-left-controls" aria-labelledby="level-title">
         <div class="panel-card-content">
@@ -45,9 +45,7 @@
                 {{ challengeData?.nombre || "Cargando Nivel..." }}
               </h2>
               <p class="level-description">
-                {{
-                  challengeData?.descripcion_juego || "Cargando descripción..."
-                }}
+                {{ challengeData?.descripcion_juego || "Cargando descripción..." }}
               </p>
             </header>
 
@@ -93,7 +91,7 @@
               </div>
 
               @if (!isLevelFullyCompleted) {
-                <small style="color: #7a7a7a; margin-top: 8px; display: block">
+                <small class="unlock-warning-text">
                   Supera la dificultad actual para desbloquear la siguiente.
                 </small>
               }
@@ -118,11 +116,8 @@
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    class="lucide lucide-volume2-icon lucide-volume-2"
                   >
-                    <path
-                      d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"
-                    />
+                    <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
                     <path d="M16 9a5 5 0 0 1 0 6" />
                     <path d="M19.364 18.364a9 9 0 0 0 0-12.728" />
                   </svg>
@@ -145,11 +140,8 @@
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    class="lucide lucide-monitor-play-icon lucide-monitor-play"
                   >
-                    <path
-                      d="M15.033 9.44a.647.647 0 0 1 0 1.12l-4.065 2.352a.645.645 0 0 1-.968-.56V7.648a.645.645 0 0 1 .967-.56z"
-                    />
+                    <path d="M15.033 9.44a.647.647 0 0 1 0 1.12l-4.065 2.352a.645.645 0 0 1-.968-.56V7.648a.645.645 0 0 1 .967-.56z" />
                     <path d="M12 17v4" />
                     <path d="M8 21h8" />
                     <rect x="2" y="3" width="20" height="14" rx="2" />
@@ -184,12 +176,10 @@
                   <path d="M12 22V2" />
                   <path d="m17 12-5-5-5 5" />
                 </svg>
-                <span>{{
-                  isSpeedrunMode ? "Carrera Activa ⏱️" : "Modo Carrera"
-                }}</span>
+                <span>{{ isSpeedrunMode ? "Carrera Activa ⏱️" : "Modo Carrera" }}</span>
               </button>
               @if (!isLevelFullyCompleted) {
-                <small style="color: #7a7a7a; margin-top: 8px; display: block; text-align: center;">
+                <small class="unlock-warning-text">
                   Completa el nivel primero para desbloquear.
                 </small>
               }
@@ -257,7 +247,6 @@
                   ></app-secuenciacion>
                 }
 
-                <!-- NIVEL 2: PATRONES -->
                 @if (challengeId === 2) {
                   <app-juego-patrones
                     [difficultyLevel]="currentDifficulty"

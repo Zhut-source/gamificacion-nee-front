@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccessibilityService } from '@core/services/accessibility.service';
+import { AudiosettingsService } from '@core/services/audiosettings.service';
 import { AuthService } from '@core/services/auth.service';
 import {
   ClassroomService,
@@ -25,7 +26,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
   user: any;
   isEditingName: boolean = false;
   infoForm!: FormGroup;
@@ -33,14 +34,19 @@ export class ProfileComponent implements OnInit {
   classForm!: FormGroup;
   currentClass: StudentClassStatus | null = null;
   isLoadingClass: boolean = true;
-  isJoining: boolean = false;
   currentSpeed: string = 'normal';
+  currentVolume: number = 45;
   isDyslexiaActive = false;
   currentTheme = 'claro';
+  currentTtsSection: string | null = null;
   private accessibilitySub = new Subscription();
-  mensajito: any;
-
   isSpotlightActive: boolean = false;
+
+  showScrollButton = false;
+  isScrolledToBottom = false;
+
+  private mainElement: HTMLElement | null = null;
+  private scrollListener = () => this.checkScroll();
 
   constructor(
     private authService: AuthService,
@@ -51,15 +57,14 @@ export class ProfileComponent implements OnInit {
     private accessibilityService: AccessibilityService,
     public tts: TtsService,
     private notificationService: NotificationService,
+    private audioSettingsService: AudiosettingsService,
   ) {}
 
   ngOnInit() {
-    //this.loadMyClass();
     this.user = this.authService.getCurrentUser();
-
     this.currentSpeed = localStorage.getItem('ttsSpeed') || 'normal';
+    this.currentVolume = Number(localStorage.getItem('ttsVolume') ?? 100);
 
-    // 2. Inicializar formulario de información
     this.infoForm = new FormGroup({
       name: new FormControl(
         { value: this.user?.name || '', disabled: true },
@@ -68,8 +73,6 @@ export class ProfileComponent implements OnInit {
       email: new FormControl({ value: this.user?.email || '', disabled: true }),
     });
 
-    //this.infoForm.get('email')?.disable();
-    // 3. Inicializar formulario de contraseña
     this.passwordForm = new FormGroup({
       currentPassword: new FormControl('', Validators.required),
       newPassword: new FormControl('', [
@@ -78,7 +81,7 @@ export class ProfileComponent implements OnInit {
       ]),
       confirmPassword: new FormControl('', Validators.required),
     });
-    
+
     this.classForm = new FormGroup({
       code: new FormControl('', Validators.required),
     });
@@ -89,23 +92,23 @@ export class ProfileComponent implements OnInit {
           const targetElement = document.getElementById('class-code');
           if (targetElement) {
             this.isSpotlightActive = true;
-
             targetElement.scrollIntoView({
               behavior: 'smooth',
               block: 'center',
             });
+
             const inputElement = targetElement.querySelector(
-              'input#class-code',
+              'input#class-code-input',
             ) as HTMLInputElement;
-            if (inputElement) {
-              inputElement.focus();
-            }
+            if (inputElement) inputElement.focus();
+
             const cardElement = targetElement.querySelector('.card.join-class');
             if (cardElement) {
               cardElement.classList.add('highlight-pulse');
-              setTimeout(() => {
-                cardElement.classList.remove('highlight-pulse');
-              }, 2000);
+              setTimeout(
+                () => cardElement.classList.remove('highlight-pulse'),
+                2000,
+              );
             }
           }
         }, 300);
@@ -127,6 +130,41 @@ export class ProfileComponent implements OnInit {
     this.loadMyClass();
   }
 
+  ngAfterViewInit(): void {
+    this.mainElement = document.querySelector('main');
+
+    if (this.mainElement) {
+      this.mainElement.addEventListener('scroll', this.scrollListener);
+    }
+
+    setTimeout(() => this.checkScroll(), 100);
+  }
+
+  toggleScroll(): void {
+    if (!this.mainElement) return;
+
+    if (this.isScrolledToBottom) {
+      this.mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      this.mainElement.scrollTo({
+        top: this.mainElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }
+
+  checkScroll(): void {
+    if (!this.mainElement) return;
+
+    const scrollHeight = this.mainElement.scrollHeight;
+    const clientHeight = this.mainElement.clientHeight;
+    const scrollTop = this.mainElement.scrollTop;
+
+    this.showScrollButton = scrollHeight > clientHeight;
+    this.isScrolledToBottom =
+      Math.ceil(scrollTop + clientHeight) >= scrollHeight - 10;
+  }
+
   clearSpotlight() {
     this.isSpotlightActive = false;
     this.router.navigate(['/student/profile'], { fragment: '' });
@@ -136,13 +174,10 @@ export class ProfileComponent implements OnInit {
     this.isLoadingClass = true;
     this.classroomService.getStudentClass(this.user.id).subscribe({
       next: (aula) => {
-        // Si el backend envía datos, se guardan. Si envía null (200 OK), currentClass pasa a ser null de forma nativa.
         this.currentClass = aula;
         this.isLoadingClass = false;
       },
-      error: (err) => {
-        // Aquí solo entrará si verdaderamente el servidor se cayó (500) o no hay internet.
-        console.error('Error real de red o servidor:', err);
+      error: () => {
         this.isLoadingClass = false;
       },
     });
@@ -150,14 +185,9 @@ export class ProfileComponent implements OnInit {
 
   toggleEditName() {
     const nameControl = this.infoForm.get('name');
-
     if (!this.isEditingName) {
-      // 1. PASAR A MODO EDICIÓN
       this.isEditingName = true;
       nameControl?.enable();
-
-      // Hacemos el focus automático usando JavaScript nativo tras un leve delay
-      // para asegurar que Angular ya procesó el cambio de estado
       setTimeout(() => {
         const inputElement = document.querySelector(
           'input[formControlName="name"]',
@@ -165,18 +195,14 @@ export class ProfileComponent implements OnInit {
         inputElement?.focus();
       }, 50);
     } else {
-      // 2. CANCELAR MODO EDICIÓN (Se arrepintió y volvió a presionar el lápiz)
       this.isEditingName = false;
       nameControl?.disable();
-
-      // Restauramos el valor original que venía del objeto del usuario
       nameControl?.setValue(this.user?.name || '');
     }
   }
 
   onUpdateName() {
     if (this.infoForm.invalid) return;
-
     this.userService
       .updateProfile(this.user.id, this.infoForm.value.name)
       .subscribe({
@@ -188,7 +214,6 @@ export class ProfileComponent implements OnInit {
           const updatedUser = { ...this.user, name: res.user.name };
           localStorage.setItem('user', JSON.stringify(updatedUser));
           this.user = updatedUser;
-
           this.isEditingName = false;
           this.infoForm.get('name')?.disable();
         },
@@ -203,7 +228,6 @@ export class ProfileComponent implements OnInit {
 
   onChangePassword() {
     if (this.passwordForm.invalid) return;
-
     const { currentPassword, newPassword, confirmPassword } =
       this.passwordForm.value;
 
@@ -216,7 +240,6 @@ export class ProfileComponent implements OnInit {
     }
 
     const data = { id: this.user.id, currentPassword, newPassword };
-
     this.userService.changePassword(data).subscribe({
       next: () => {
         this.notificationService.showAlert(
@@ -236,7 +259,6 @@ export class ProfileComponent implements OnInit {
 
   onJoinClass() {
     if (this.classForm.invalid) return;
-
     this.classroomService
       .joinClass(this.user.id, this.classForm.value.code)
       .subscribe({
@@ -256,8 +278,6 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  // --- MÉTODOS DE ACCESIBILIDAD (Lógica local) ---
-
   onToggleDyslexia(event: any) {
     const isEnabled = event.target.checked;
     this.accessibilityService.setDyslexiaFont(isEnabled);
@@ -270,18 +290,32 @@ export class ProfileComponent implements OnInit {
 
   onChangeTtsSpeed(event: any) {
     const selectedSpeed = event.target.value;
-
     localStorage.setItem('ttsSpeed', selectedSpeed);
     this.currentSpeed = selectedSpeed;
 
     let fraseConfirmacion = 'Activaste el modo normal';
-    if (selectedSpeed === 'lento') {
+    if (selectedSpeed === 'lento')
       fraseConfirmacion = 'Activaste el modo lento';
-    } else if (selectedSpeed === 'rapido') {
+    else if (selectedSpeed === 'rapido')
       fraseConfirmacion = 'Activaste el modo rápido';
-    }
-
     this.tts.speak(fraseConfirmacion);
+  }
+
+  onChangeVolume(event: any) {
+    const selectedVolume = Number((event.target as HTMLInputElement).value);
+    this.currentVolume = selectedVolume;
+    this.audioSettingsService.setVolume(selectedVolume);
+  }
+
+  leerSeccion(seccionId: string, texto: string) {
+    if (this.tts.isPlaying && this.currentTtsSection === seccionId) {
+      this.tts.stop();
+      this.currentTtsSection = null;
+    } else {
+      this.tts.stop();
+      this.currentTtsSection = seccionId;
+      this.tts.speak(texto);
+    }
   }
 
   volverAlDashboard() {

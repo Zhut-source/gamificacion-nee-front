@@ -1,7 +1,3 @@
-// ==========================================================================
-// CONFIGURACIÓN DE ANIMACIONES (Respetando límites WCAG 2.2 < 0.5s)
-// ==========================================================================
-
 @keyframes fadeInUpProfile {
   from {
     opacity: 0;
@@ -25,21 +21,18 @@
 @keyframes pulse-highlight {
   0% {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-color: var(--card-profile-border-color);
+    border-color: var(--border-carrucel);
   }
   50% {
-    box-shadow: 0 0 15px var(--status-border-color);
-    border-color: var(--status-border-color);
+    box-shadow: 0 0 15px var(--color-accent-4);
+    border-color: var(--color-accent-4);
   }
   100% {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-color: var(--card-profile-border-color);
+    border-color: var(--border-carrucel);
   }
 }
 
-// ==========================================================================
-// CONTENEDOR RAÍZ Y ESTILOS BASE
-// ==========================================================================
 .profile-container {
   width: 100%;
   padding: 20px;
@@ -53,24 +46,26 @@
     scroll-snap-align: center;
     scroll-snap-stop: normal;
   }
+}
 
-  .input-df {
-    all: unset;
-    padding: 12px 16px;
-    background-color: transparent;
-    border: 2px solid var(--input-1-border);
-    border-radius: 10px;
-    outline: none;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
+.input-df {
+  all: unset;
+  background-color: transparent;
+  color: var(--input-1-text);
+  border: 2px solid var(--input-1-border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
 
-    &::placeholder {
-      color: var(--input-1-placeholder);
-    }
+  &::placeholder {
+    color: var(--input-1-placeholder);
+  }
 
-    &:focus {
-      border-color: var(--input-1-focus);
-    }
+  &:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px !important;
+    border-color: var(--input-1-focus);
   }
 }
 
@@ -80,16 +75,14 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4); /* Oscurece sutilmente */
-  backdrop-filter: blur(5px); /* Aplica el blur tapando el perfil */
-  z-index: 50; /* Se pone sobre todo el contenido normal */
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 50;
 }
 
-/* La clase que rescata elementos del blur (sin escalas ni bordes) */
 .elevated {
   position: relative;
-  z-index: 51 !important; /* Pasa por encima del overlay (50) */
-  pointer-events: auto; /* Asegura que puedas dar clic al botón y llenar los inputs */
+  z-index: 51 !important;
+  pointer-events: auto;
 }
 
 .btn-back-workspace {
@@ -109,18 +102,20 @@
   color: var(--btn-3-action-text);
   cursor: pointer;
   transition: background 0.2s ease;
+
   &:hover {
     color: var(--btn-3-action-hover-text);
     background: var(--btn-3-action-hover-bg);
     border: 2px solid var(--btn-3-action-hover-border);
   }
-  &:focus {
-    outline: 2px solid var(--btn-3-action-active-outline);
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
     outline-offset: 3px !important;
   }
+
   &.elevated {
     background-color: var(--bg-body);
-
     &:hover {
       color: var(--btn-3-action-hover-text);
       background: var(--btn-3-action-hover-bg);
@@ -129,9 +124,6 @@
   }
 }
 
-// ==========================================================================
-// COMPONENTE CARD Y SUS ESTADOS DE CARGA (SKELETONS)
-// ==========================================================================
 .card {
   width: 100%;
   padding: 20px;
@@ -153,7 +145,6 @@
     animation: fadeInUpProfile 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
 
-  // Escalonamiento de retrasos para un renderizado orgánico
   &.info .fade-item:nth-child(1) {
     animation-delay: 0.05s;
   }
@@ -167,46 +158,83 @@
     animation-delay: 0.2s;
   }
 
-  // Estructura genérica del esqueleto de carga
   .skeleton-block {
     width: 100%;
     height: 45px;
     border-radius: 10px;
     background: linear-gradient(
       90deg,
-      rgba(#7a7a7a, 0.1) 25%,
-      rgba(#7a7a7a, 0.25) 50%,
-      rgba(#7a7a7a, 0.1) 75%
+      rgba(122, 122, 122, 0.1) 25%,
+      rgba(122, 122, 122, 0.25) 50%,
+      rgba(122, 122, 122, 0.1) 75%
     );
     background-size: 200% 100%;
     animation: skeletonShimmer 1.4s infinite ease-in-out;
     margin-bottom: 0.5rem;
 
-    &.skeleton-text {
+    &.skeleton-short {
       width: 30%;
       height: 20px;
+    }
+    &.skeleton-mid {
+      width: 80%;
     }
     &.skeleton-title {
       width: 45%;
       height: 32px;
       margin-bottom: 1.5rem;
     }
-    &.skeleton-btn {
-      width: 150px;
-      height: 50px;
-    }
   }
 }
 
-// ==========================================================================
-// DISEÑO DE GRIDS E INTERFACES DE INPUT
-// ==========================================================================
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
 
-// 1. Información Personal
+  .title {
+    margin: 0;
+  }
+}
+
+.speaker-button {
+  padding: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  background: var(--btn-2-action-bg);
+  color: var(--btn-2-action-text);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+  width: 44px;
+  height: 44px;
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 3px !important;
+  }
+
+  &:hover {
+    background: var(--btn-2-action-hover-bg);
+    color: var(--btn-2-action-hover-text);
+  }
+
+  &.active {
+    background-color: var(--btn-2-action-active-bg);
+    color: var(--btn-2-action-active-text);
+  }
+}
+
 .input-area.grid-profile {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 1rem 1rem;
+  gap: 1rem;
   align-items: center;
 
   .disabled-input {
@@ -222,32 +250,48 @@
   }
 
   .edit-btn {
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     min-height: 50px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 8px;
     border: none;
     border-radius: 10px;
     background: var(--btn-2-action-bg);
     color: var(--btn-2-action-text);
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
 
-    &:focus {
-      outline: 2px solid var(--btn-2-action-active-outline);
+    svg {
+      transition: transform 0.5s ease;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--focus-outline-color);
+      outline-offset: 3px !important;
     }
 
     &:hover {
       background: var(--btn-2-action-hover-bg);
       color: var(--btn-2-action-hover-text);
     }
-    &.active {
-      background: var(--btn-2-action-active-bg);
-      color: var(--btn-2-action-active-text);
+
+    &.cancel-mode {
+      background: var(--color-error);
+      color: #ffffff;
+
+      svg {
+        transform: rotate(180deg);
+      }
+
+      &:hover {
+        opacity: 0.9;
+      }
     }
   }
 
@@ -271,19 +315,28 @@
       cursor: pointer;
       transition: background 0.2s ease;
 
-      &:hover {
+      &:focus-visible {
+        outline: 2px solid var(--focus-outline-color);
+        outline-offset: 3px !important;
+      }
+
+      &:hover:not(:disabled) {
         background: var(--btn-2-action-hover-bg);
         color: var(--btn-2-action-hover-text);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
     }
   }
 }
 
-// 2. Unirse a una Clase
 .input-area.grid-join {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 1rem 1rem;
+  gap: 1rem;
   align-items: center;
 
   .status-value {
@@ -292,59 +345,63 @@
     align-items: center;
     gap: 10px;
 
-    &.class-none {
-      color: var(--text-muted);
-      font-style: italic;
-    }
-
     .status-tag {
-      background-color: var(--btn-3-action-bg);
-      color: var(--btn-3-action-hover-border);
+      background-color: var(--bg-surface);
+      color: var(--text-main);
       padding: 0.25rem 0.6rem;
       border-radius: 10px;
       text-transform: uppercase;
-      border: 2px solid var(--btn-3-action-hover-border);
+      border: 2px solid var(--text-main);
 
       &.field-disabled {
         color: var(--text-muted);
         border-color: var(--text-muted);
       }
     }
+
+    .status-help-text {
+      display: inline-block;
+      margin-left: 10px;
+      font-weight: bold;
+      margin: 0;
+    }
   }
 
-  .join-btn{
-      background-color: var(--button-bg, #2b2b2a);
-      color: var(--button-text, #f9f6f0);
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      height: 48px;
-      cursor: pointer;
-      font-weight: 600;
-      white-space: nowrap;
-      transition:
-        background-color 0.2s,
-        opacity 0.2s;
+  .join-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    height: 48px;
+    background: var(--btn-2-action-bg);
+    color: var(--btn-2-action-text);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    white-space: nowrap;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
 
-      &:hover {
-        background-color: var(--accent, #0eb9de);
-        color: #2b2b2a;
-      }
-      &:disabled {
-        background-color: #a0aab5;
-        color: #ffffff;
-        cursor: not-allowed;
-        opacity: 0.7;
-        border: none;
-      }
+    &:focus-visible {
+      outline: 2px solid var(--focus-outline-color);
+      outline-offset: 3px !important;
     }
+
+    &:hover:not(:disabled) {
+      background: var(--btn-2-action-hover-bg);
+      color: var(--btn-2-action-hover-text);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
 }
 
-// 3. Cambiar Contraseña
 .input-area.grid6 {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 1rem 1rem;
+  gap: 1rem;
   align-items: center;
 
   label {
@@ -371,19 +428,30 @@
       cursor: pointer;
       transition: background 0.2s ease;
 
+      &:focus-visible {
+        outline: 2px solid var(--focus-outline-color);
+        outline-offset: 3px !important;
+      }
+
       &:hover {
         background: var(--btn-2-action-hover-bg);
         color: var(--btn-2-action-hover-text);
       }
     }
+
+    .password-help-text {
+      color: var(--text-muted);
+      opacity: 0.9;
+      margin: 0;
+      text-align: center;
+    }
   }
 }
 
-// 4. Ajustes de Accesibilidad
 .input-area.grid-accessibility {
   display: grid;
   grid-template-columns: 1fr minmax(150px, auto);
-  gap: 1rem 1rem;
+  gap: 1rem;
   align-items: center;
   max-width: 650px;
   margin: 0;
@@ -415,8 +483,11 @@
     option {
       background-color: var(--bg-body);
     }
-    &:focus {
-      border-color: var(--btn-3-action-active-outline);
+
+    &:focus-visible {
+      outline: 2px solid var(--focus-outline-color);
+      outline-offset: 2px !important;
+      border-color: var(--input-1-focus);
     }
   }
 
@@ -456,6 +527,11 @@
       }
     }
 
+    input:focus-visible + .slider {
+      outline: 2px solid var(--focus-outline-color);
+      outline-offset: 3px !important;
+    }
+
     input:checked + .slider {
       background-color: var(--btn-3-action-active-bg);
       &:before {
@@ -467,24 +543,88 @@
     }
   }
 
-  .checkbox-control {
+  .volume-control-wrapper {
     display: flex;
-    align-items: center;
-    cursor: pointer;
+    gap: 15px;
 
-    input {
-      width: 20px;
-      height: 20px;
+    .range-control {
+      flex: 1;
+      accent-color: var(--btn-3-action-active-bg);
       cursor: pointer;
-      color: var(--input-1-box-active-bg);
-      accent-color: var(--input-1-box-active-bg);
+
+      &:focus-visible {
+        outline: 2px solid var(--focus-outline-color);
+        outline-offset: 2px !important;
+      }
+    }
+
+    .volume-percentage {
+      min-width: 45px;
+      font-weight: bold;
     }
   }
 }
 
-// ==========================================================================
-// SECCIÓN DE RESPONSIVIDAD (Agrupada al final de forma estricta)
-// ==========================================================================
+.floating-scroll-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--btn-2-action-bg);
+  padding: 1rem;
+  margin: 0;
+  position: fixed;
+  top: 6rem;
+  right: 6rem;
+  transform: translateY(0);
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--btn-2-action-text);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.3s ease;
+  z-index: 9999;
+
+  span {
+    font-weight: bold;
+  }
+
+  svg {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    flex-shrink: 0;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &.bajar-state svg {
+    transform: rotate(180deg);
+  }
+
+  &.subir-state svg {
+    transform: rotate(0deg);
+  }
+
+  &:hover {
+    transform: translateY(0) scale(1.05);
+    color: var(--btn-3-action-hover-text);
+    background: var(--btn-3-action-hover-bg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px;
+  }
+}
 
 @media (max-width: 768px) {
   .profile-container {
@@ -501,9 +641,11 @@
     label {
       margin-bottom: -0.8rem;
     }
+
     .disabled-input {
       grid-column: auto;
     }
+
     .edit-btn {
       align-self: flex-start;
       margin-top: 0;
@@ -513,10 +655,9 @@
       height: 45px;
       order: 0;
     }
-    .action-container {
-      .save-changes-btn {
-        width: 100%;
-      }
+
+    .action-container .save-changes-btn {
+      width: 100%;
     }
   }
 
@@ -531,16 +672,18 @@
       margin-bottom: -0.6rem;
       white-space: normal;
     }
+
     .status-value {
       grid-column: auto;
       flex-direction: column;
       align-items: flex-start;
       gap: 6px;
-      background-color: var(--status-container-bg-color);
+      background-color: var(--bg-body);
       padding: 0.75rem;
       border-radius: 8px;
       width: 100%;
     }
+
     .join-btn {
       width: 100%;
     }
@@ -555,10 +698,9 @@
     label {
       margin-bottom: -0.5rem;
     }
-    .action-container {
-      .save-changes-pass-btn {
-        width: 100%;
-      }
+
+    .action-container .save-changes-pass-btn {
+      width: 100%;
     }
   }
 
@@ -572,6 +714,7 @@
       margin-bottom: -0.7rem;
       white-space: normal;
     }
+
     .select-control {
       max-width: 100%;
     }
@@ -579,6 +722,26 @@
 }
 
 @media (max-width: 480px) {
+  .floating-scroll-btn {
+    span {
+      display: none;
+    }
+    width: 50px;
+    height: 50px;
+    top: 6rem;
+    right: 6rem;
+  }
+
+  .btn-back-workspace span {
+    display: none;
+  }
+
+  .edit-btn {
+    span {
+      display: none;
+    }
+  }
+
   .profile-container {
     padding: 1rem;
     gap: 12px;

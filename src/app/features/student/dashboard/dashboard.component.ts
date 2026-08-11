@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { AudioService } from '@core/services/audio.service';
 import { AuthService } from '@core/services/auth.service';
 import { ClassroomService, StudentClassStatus } from '@core/services/classroom.service';
 import { NotificationService } from '@core/services/notification.service';
@@ -33,6 +34,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   badgeTiltStyle: string = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
   
   private observer: IntersectionObserver | null = null;
+  private badgeAudioInterval: any = null;
 
   constructor(
     private authService: AuthService,
@@ -41,24 +43,14 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     public tts: TtsService,
     private router: Router,
     private notificationService: NotificationService,
-    private el: ElementRef
+    private el: ElementRef,
+    private audioService: AudioService
   ) {}
 
   ngOnInit(): void {
     this.user = this.authService.getCurrentUser();
     this.checkStudentClass();
-    
-    if (localStorage.getItem('newBadgeAlert') === 'true') {
-      this.showBadgeNotification = true;
-      localStorage.removeItem('newBadgeAlert');
-    }
-    
-    const newB = localStorage.getItem('newBadges');
-    if (newB) {
-      this.newBadgesList = JSON.parse(newB);
-      this.showBadgeNotification = true;
-      localStorage.removeItem('newBadges');
-    }
+    this.checkNewBadges();
   }
 
   ngAfterViewInit(): void {
@@ -70,6 +62,42 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.observer.disconnect();
     }
     this.tts.stop();
+    this.stopBadgeAudio();
+  }
+
+  checkNewBadges(): void {
+    let hasNewBadges = false;
+    
+    if (localStorage.getItem('newBadgeAlert') === 'true') {
+      hasNewBadges = true;
+      localStorage.removeItem('newBadgeAlert');
+    }
+    
+    const newB = localStorage.getItem('newBadges');
+    if (newB) {
+      this.newBadgesList = JSON.parse(newB);
+      hasNewBadges = true;
+      localStorage.removeItem('newBadges');
+    }
+
+    if (hasNewBadges) {
+      this.showBadgeNotification = true;
+      this.playBadgeAudioLoop();
+    }
+  }
+
+  playBadgeAudioLoop(): void {
+    this.audioService.playSound('badge-notification');
+    this.badgeAudioInterval = setInterval(() => {
+      this.audioService.playSound('badge-notification');
+    }, 3000); 
+  }
+
+  stopBadgeAudio(): void {
+    if (this.badgeAudioInterval) {
+      clearInterval(this.badgeAudioInterval);
+      this.badgeAudioInterval = null;
+    }
   }
 
   checkStudentClass(): void {
@@ -93,7 +121,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       },
       error: (err) => {
-        console.error('Error al verificar el aula:', err);
         this.currentClass = null;
         this.isLoading = false;
       },
@@ -176,6 +203,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       this.showBadgeNotification = false;
+      this.stopBadgeAudio();
       setTimeout(() => {
         this.newBadgesList = [];
       }, 10000);

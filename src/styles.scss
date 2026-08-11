@@ -27,9 +27,10 @@
   --color-success: #10b981;
 
   //VARIABLES
+  --focus-outline-color:var(--color-accent-4);
   --logo-color:var(--color-accent-4);
-  
   --spinner-color: var(--color-accent-4);
+  --hover-link: var(--color-accent-4);
 
   --lines-color-header: var(--color-accent-4);
   --lines-color:var(--color-dark);
@@ -194,8 +195,10 @@ body.accessible-font {
 
 body.high-contrast {
   //VARIABLES
+  --focus-outline-color:var(--color-accent-1);
   --logo-color:var(--color-accent-1);
   --spinner-color: var(--color-accent-1);
+  --hover-link: var(--color-accent-1);
 
   --lines-color-header: var(--color-white);
   --lines-color:var(--color-white);

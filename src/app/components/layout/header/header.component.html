@@ -1,70 +1,36 @@
 <header class="main-header">
   <ng-container *ngIf="isLoggedIn$ | async; else publicHeader">
     <div class="header-content private-view">
-      <a class="logo-text" routerLink="/student/dashboard">
+      <a
+        class="logo-text"
+        routerLink="/student/dashboard"
+        aria-label="Ir al inicio"
+      >
         <svg
           version="1.0"
           xmlns="http://www.w3.org/2000/svg"
-          width="500.000000pt"
-          height="500.000000pt"
-          viewBox="0 0 500.000000 500.000000"
+          width="500"
+          height="500"
+          viewBox="0 0 500 500"
           preserveAspectRatio="xMidYMid meet"
           class="logo"
+          aria-hidden="true"
         >
-          <g
-            transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
-            fill="currentColor"
-            stroke="none"
-          >
-            <path
-              d="M2033 4275 c-113 -31 -192 -86 -252 -176 -63 -95 -73 -137 -80 -364
-l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
-1 -1305 18 -1337 9 -19 30 -44 45 -55 28 -20 41 -21 475 -24 499 -3 492 -3
-539 67 22 32 23 43 23 226 0 186 1 193 26 243 33 66 84 108 154 129 127 37
-262 -41 299 -173 6 -21 11 -117 11 -212 0 -206 8 -233 76 -264 41 -17 70 -18
-488 -16 432 3 445 4 473 24 63 46 63 42 63 550 l0 461 193 5 c164 5 200 9 247
-27 122 47 218 142 257 254 26 76 24 224 -5 297 -45 112 -130 197 -242 242 -48
-19 -80 23 -250 28 l-195 5 -5 420 c-5 391 -6 422 -24 448 -39 57 -39 57 -479
-57 -360 0 -406 2 -411 16 -3 9 -6 98 -6 199 0 155 -3 193 -20 249 -33 106
--107 192 -210 245 -97 50 -198 62 -297 36z m175 -285 c18 -11 41 -34 52 -52
-19 -31 20 -51 20 -303 0 -303 3 -320 71 -360 32 -19 57 -20 439 -25 l405 -5 5
--420 c4 -302 8 -426 17 -441 7 -12 25 -30 40 -40 25 -17 55 -19 298 -24 239
--4 274 -7 298 -23 95 -62 86 -201 -16 -247 -38 -18 -67 -20 -300 -20 l-257 0
--38 -34 -37 -34 -5 -484 -5 -483 -265 0 -265 0 -7 120 c-7 144 -31 228 -89
-314 -182 272 -566 311 -800 81 -111 -109 -150 -204 -158 -385 l-6 -130 -265 0
--265 0 0 1125 0 1125 405 5 c459 6 455 5 491 83 17 38 19 68 19 314 l0 272 32
-37 c18 20 41 40 52 44 38 15 100 11 134 -10z"
-            />
-            <path
-              d="M1831 2820 c-13 -6 -100 -72 -195 -148 -94 -76 -204 -165 -244 -197
--40 -32 -80 -71 -88 -86 -19 -38 -18 -87 4 -127 23 -43 485 -418 534 -434 51
--15 122 11 149 56 26 43 25 115 -2 150 -11 14 -89 82 -174 151 -85 69 -157
-130 -161 137 -4 6 1 17 12 25 71 52 317 259 330 278 33 51 11 147 -41 181 -30
-20 -93 27 -124 14z"
-            />
-            <path
-              d="M2331 2812 c-19 -9 -44 -29 -54 -44 -27 -37 -27 -109 0 -146 11 -15
-91 -85 178 -157 87 -71 160 -134 161 -140 2 -5 -54 -55 -123 -110 -236 -187
--255 -212 -233 -294 20 -74 100 -115 173 -89 20 7 142 99 271 203 240 194 276
-232 276 296 0 51 -40 92 -282 287 -280 227 -292 233 -367 194z"
-            />
+          <g transform="translate(0,500) scale(0.1,-0.1)" fill="currentColor" stroke="none">
+            <path d="M2033 4275 c-113 -31 -192 -86 -252 -176 -63 -95 -73 -137 -80 -364 l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221 1 -1305 18 -1337 9 -19 30 -44 45 -55 28 -20 41 -21 475 -24 499 -3 492 -3 539 67 22 32 23 43 23 226 0 186 1 193 26 243 33 66 84 108 154 129 127 37 262 -41 299 -173 6 -21 11 -117 11 -212 0 -206 8 -233 76 -264 41 -17 70 -18 488 -16 432 3 445 4 473 24 63 46 63 42 63 550 l0 461 193 5 c164 5 200 9 247 27 122 47 218 142 257 254 26 76 24 224 -5 297 -45 112 -130 197 -242 242 -48 19 -80 23 -250 28 l-195 5 -5 420 c-5 391 -6 422 -24 448 -39 57 -39 57 -479 57 -360 0 -406 2 -411 16 -3 9 -6 98 -6 199 0 155 -3 193 -20 249 -33 106 -107 192 -210 245 -97 50 -198 62 -297 36z m175 -285 c18 -11 41 -34 52 -52 19 -31 20 -51 20 -303 0 -303 3 -320 71 -360 32 -19 57 -20 439 -25 l405 -5 5 -420 c4 -302 8 -426 17 -441 7 -12 25 -30 40 -40 25 -17 55 -19 298 -24 239 -4 274 -7 298 -23 95 -62 86 -201 -16 -247 -38 -18 -67 -20 -300 -20 l-257 0 -38 -34 -37 -34 -5 -484 -5 -483 -265 0 -265 0 -7 120 c-7 144 -31 228 -89 314 -182 272 -566 311 -800 81 -111 -109 -150 -204 -158 -385 l-6 -130 -265 0 -265 0 0 1125 0 1125 405 5 c459 6 455 5 491 83 17 38 19 68 19 314 l0 272 32 37 c18 20 41 40 52 44 38 15 100 11 134 -10z" />
+            <path d="M1831 2820 c-13 -6 -100 -72 -195 -148 -94 -76 -204 -165 -244 -197 -40 -32 -80 -71 -88 -86 -19 -38 -18 -87 4 -127 23 -43 485 -418 534 -434 51 -15 122 11 149 56 26 43 25 115 -2 150 -11 14 -89 82 -174 151 -85 69 -157 130 -161 137 -4 6 1 17 12 25 71 52 317 259 330 278 33 51 11 147 -41 181 -30 20 -93 27 -124 14z" />
+            <path d="M2331 2812 c-19 -9 -44 -29 -54 -44 -27 -37 -27 -109 0 -146 11 -15 91 -85 178 -157 87 -71 160 -134 161 -140 2 -5 -54 -55 -123 -110 -236 -187 -255 -212 -233 -294 20 -74 100 -115 173 -89 20 7 142 99 271 203 240 194 276 232 276 296 0 51 -40 92 -282 287 -280 227 -292 233 -367 194z" />
           </g>
         </svg>
       </a>
 
-      <nav class="user-nav">
+      <nav class="user-nav" aria-label="Menú de usuario y accesibilidad">
         <a
           class="profile-link"
-          [routerLink]="
-            currentUser?.role === 'maestro'
-              ? '/teacher/profile'
-              : '/student/profile'
-          "
-          [attr.aria-label]="
-            'Ir al perfil de ' + (currentUser?.name || 'Usuario')
-          "
+          [routerLink]="currentUser?.role === 'maestro' ? '/teacher/profile' : '/student/profile'"
+          [attr.aria-label]="'Ir al perfil de ' + (currentUser?.name || 'Usuario')"
         >
-          <button class="profile-icon">
+          <div class="profile-icon" aria-hidden="true">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
@@ -75,7 +41,6 @@ l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="lucide lucide-user-cog-icon lucide-user-cog"
             >
               <path d="M10 15H6a4 4 0 0 0-4 4v2" />
               <path d="m14.305 16.53.923-.382" />
@@ -89,15 +54,16 @@ l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
               <circle cx="18" cy="15" r="3" />
               <circle cx="9" cy="7" r="4" />
             </svg>
-          </button>
-          <span class="welcome-text"
-            >Hola, {{ currentUser?.name || "Usuario" }}</span
-          >
+          </div>
+          <span class="welcome-text">Hola, {{ currentUser?.name || "Usuario" }}</span>
         </a>
+
         <button
-          class="icon-button"
-          title="Activar fuente accesible"
+          type="button"
+          class="icon-button btn-dyslexia"
           [class.active]="isDyslexiaFont"
+          aria-label="Cambiar fuente dislexia"
+          [attr.aria-pressed]="isDyslexiaFont"
           (click)="toggleFont()"
         >
           <svg
@@ -110,7 +76,7 @@ l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-case-sensitive-icon lucide-case-sensitive"
+            aria-hidden="true"
           >
             <path d="m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16" />
             <path d="M22 9v7" />
@@ -119,10 +85,13 @@ l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
           </svg>
           <span>Fuente Dislexia</span>
         </button>
+
         <button
-          class="icon-button"
-          title="Activar modo alto-contraste"
+          type="button"
+          class="icon-button btn-contrast"
+          aria-label="Cambiar modo alto contraste"
           [class.active]="isHighContrast"
+          [attr.aria-pressed]="isHighContrast"
           (click)="toggleHighContrast()"
         >
           <svg
@@ -135,15 +104,22 @@ l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-contrast-icon lucide-contrast"
+            aria-hidden="true"
           >
             <circle cx="12" cy="12" r="10" />
             <path d="M12 18a6 6 0 0 0 0-12v12z" />
           </svg>
           <span>Alto contraste</span>
         </button>
-        <div class="line-divisor"></div>
-        <button class="icon-button" title="Cerrar Sesión" (click)="onLogout()">
+
+        <div class="line-divisor" aria-hidden="true"></div>
+
+        <button
+          type="button"
+          class="icon-button"
+          aria-label="Cerrar Sesión"
+          (click)="onLogout()"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -154,7 +130,7 @@ l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-x-icon lucide-x"
+            aria-hidden="true"
           >
             <path d="M18 6 6 18" />
             <path d="m6 6 12 12" />
@@ -168,58 +144,29 @@ l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
   <ng-template #publicHeader>
     <div class="header-content public-view">
       <svg
-          version="1.0"
-          xmlns="http://www.w3.org/2000/svg"
-          width="500.000000pt"
-          height="500.000000pt"
-          viewBox="0 0 500.000000 500.000000"
-          preserveAspectRatio="xMidYMid meet"
-          class="logo"
-        >
-          <g
-            transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
-            stroke="none"
-          >
-            <path
-              d="M2033 4275 c-113 -31 -192 -86 -252 -176 -63 -95 -73 -137 -80 -364
-l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
-1 -1305 18 -1337 9 -19 30 -44 45 -55 28 -20 41 -21 475 -24 499 -3 492 -3
-539 67 22 32 23 43 23 226 0 186 1 193 26 243 33 66 84 108 154 129 127 37
-262 -41 299 -173 6 -21 11 -117 11 -212 0 -206 8 -233 76 -264 41 -17 70 -18
-488 -16 432 3 445 4 473 24 63 46 63 42 63 550 l0 461 193 5 c164 5 200 9 247
-27 122 47 218 142 257 254 26 76 24 224 -5 297 -45 112 -130 197 -242 242 -48
-19 -80 23 -250 28 l-195 5 -5 420 c-5 391 -6 422 -24 448 -39 57 -39 57 -479
-57 -360 0 -406 2 -411 16 -3 9 -6 98 -6 199 0 155 -3 193 -20 249 -33 106
--107 192 -210 245 -97 50 -198 62 -297 36z m175 -285 c18 -11 41 -34 52 -52
-19 -31 20 -51 20 -303 0 -303 3 -320 71 -360 32 -19 57 -20 439 -25 l405 -5 5
--420 c4 -302 8 -426 17 -441 7 -12 25 -30 40 -40 25 -17 55 -19 298 -24 239
--4 274 -7 298 -23 95 -62 86 -201 -16 -247 -38 -18 -67 -20 -300 -20 l-257 0
--38 -34 -37 -34 -5 -484 -5 -483 -265 0 -265 0 -7 120 c-7 144 -31 228 -89
-314 -182 272 -566 311 -800 81 -111 -109 -150 -204 -158 -385 l-6 -130 -265 0
--265 0 0 1125 0 1125 405 5 c459 6 455 5 491 83 17 38 19 68 19 314 l0 272 32
-37 c18 20 41 40 52 44 38 15 100 11 134 -10z"
-            />
-            <path
-              d="M1831 2820 c-13 -6 -100 -72 -195 -148 -94 -76 -204 -165 -244 -197
--40 -32 -80 -71 -88 -86 -19 -38 -18 -87 4 -127 23 -43 485 -418 534 -434 51
--15 122 11 149 56 26 43 25 115 -2 150 -11 14 -89 82 -174 151 -85 69 -157
-130 -161 137 -4 6 1 17 12 25 71 52 317 259 330 278 33 51 11 147 -41 181 -30
-20 -93 27 -124 14z"
-            />
-            <path
-              d="M2331 2812 c-19 -9 -44 -29 -54 -44 -27 -37 -27 -109 0 -146 11 -15
-91 -85 178 -157 87 -71 160 -134 161 -140 2 -5 -54 -55 -123 -110 -236 -187
--255 -212 -233 -294 20 -74 100 -115 173 -89 20 7 142 99 271 203 240 194 276
-232 276 296 0 51 -40 92 -282 287 -280 227 -292 233 -367 194z"
-            />
-            <path fill="currentColor"/>
-          </g>
-        </svg>
-      <nav class="accessibility-nav">
+        version="1.0"
+        xmlns="http://www.w3.org/2000/svg"
+        width="500"
+        height="500"
+        viewBox="0 0 500 500"
+        preserveAspectRatio="xMidYMid meet"
+        class="logo"
+        aria-hidden="true"
+      >
+        <g transform="translate(0,500) scale(0.1,-0.1)" stroke="none">
+          <path d="M2033 4275 c-113 -31 -192 -86 -252 -176 -63 -95 -73 -137 -80 -364 l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221 1 -1305 18 -1337 9 -19 30 -44 45 -55 28 -20 41 -21 475 -24 499 -3 492 -3 539 67 22 32 23 43 23 226 0 186 1 193 26 243 33 66 84 108 154 129 127 37 262 -41 299 -173 6 -21 11 -117 11 -212 0 -206 8 -233 76 -264 41 -17 70 -18 488 -16 432 3 445 4 473 24 63 46 63 42 63 550 l0 461 193 5 c164 5 200 9 247 27 122 47 218 142 257 254 26 76 24 224 -5 297 -45 112 -130 197 -242 242 -48 19 -80 23 -250 28 l-195 5 -5 420 c-5 391 -6 422 -24 448 -39 57 -39 57 -479 57 -360 0 -406 2 -411 16 -3 9 -6 98 -6 199 0 155 -3 193 -20 249 -33 106 -107 192 -210 245 -97 50 -198 62 -297 36z m175 -285 c18 -11 41 -34 52 -52 19 -31 20 -51 20 -303 0 -303 3 -320 71 -360 32 -19 57 -20 439 -25 l405 -5 5 -420 c4 -302 8 -426 17 -441 7 -12 25 -30 40 -40 25 -17 55 -19 298 -24 239 -4 274 -7 298 -23 95 -62 86 -201 -16 -247 -38 -18 -67 -20 -300 -20 l-257 0 -38 -34 -37 -34 -5 -484 -5 -483 -265 0 -265 0 -7 120 c-7 144 -31 228 -89 314 -182 272 -566 311 -800 81 -111 -109 -150 -204 -158 -385 l-6 -130 -265 0 -265 0 0 1125 0 1125 405 5 c459 6 455 5 491 83 17 38 19 68 19 314 l0 272 32 37 c18 20 41 40 52 44 38 15 100 11 134 -10z" />
+          <path d="M1831 2820 c-13 -6 -100 -72 -195 -148 -94 -76 -204 -165 -244 -197 -40 -32 -80 -71 -88 -86 -19 -38 -18 -87 4 -127 23 -43 485 -418 534 -434 51 -15 122 11 149 56 26 43 25 115 -2 150 -11 14 -89 82 -174 151 -85 69 -157 130 -161 137 -4 6 1 17 12 25 71 52 317 259 330 278 33 51 11 147 -41 181 -30 20 -93 27 -124 14z" />
+          <path d="M2331 2812 c-19 -9 -44 -29 -54 -44 -27 -37 -27 -109 0 -146 11 -15 91 -85 178 -157 87 -71 160 -134 161 -140 2 -5 -54 -55 -123 -110 -236 -187 -255 -212 -233 -294 20 -74 100 -115 173 -89 20 7 142 99 271 203 240 194 276 232 276 296 0 51 -40 92 -282 287 -280 227 -292 233 -367 194z" />
+          <path fill="currentColor" />
+        </g>
+      </svg>
+      <nav class="accessibility-nav" aria-label="Opciones de accesibilidad">
         <button
-          class="icon-button"
-          title="Activar fuente accesible"
+          type="button"
+          class="icon-button btn-dyslexia"
           [class.active]="isDyslexiaFont"
+          aria-label="Cambiar fuente dislexia"
+          [attr.aria-pressed]="isDyslexiaFont"
           (click)="toggleFont()"
         >
           <svg
@@ -232,7 +179,7 @@ l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-case-sensitive-icon lucide-case-sensitive"
+            aria-hidden="true"
           >
             <path d="m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16" />
             <path d="M22 9v7" />
@@ -241,10 +188,13 @@ l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
           </svg>
           <span>Fuente Dislexia</span>
         </button>
+
         <button
-          class="icon-button"
-          title="Activar modo alto-contraste"
+          type="button"
+          class="icon-button btn-contrast"
           [class.active]="isHighContrast"
+          aria-label="Cambiar modo alto contraste"
+          [attr.aria-pressed]="isHighContrast"
           (click)="toggleHighContrast()"
         >
           <svg
@@ -257,7 +207,7 @@ l-6 -200 -416 -5 c-399 -5 -418 -6 -439 -25 -53 -48 -50 24 -50 -1377 0 -1221
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-contrast-icon lucide-contrast"
+            aria-hidden="true"
           >
             <circle cx="12" cy="12" r="10" />
             <path d="M12 18a6 6 0 0 0 0-12v12z" />

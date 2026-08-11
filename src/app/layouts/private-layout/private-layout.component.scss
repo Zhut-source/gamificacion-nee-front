@@ -1,21 +1,19 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: 100vh;     // Obliga a todo el layout a medir EXACTAMENTE la pantalla
+  height: 100vh;
   width: 100vw;
-  overflow: hidden;  // Prohíbe terminantemente que la página completa cree un scroll externo
+  overflow: hidden;
 }
 
 app-header {
-  flex-shrink: 0;    // Evita que el header se encoja o colapse, mantiene sus 100px intactos
+  flex-shrink: 0;
 }
 
 main {
-  flex-grow: 1;      // Hace que el <main> ocupe todo el espacio restante de la pantalla (100vh - 100px)
+  flex-grow: 1;
   width: 100%;
-  overflow-y: auto;  // ¡AQUÍ ESTÁ EL TRUCO! El <main> será el ÚNICO scroll de la aplicación
-  
-  // Activamos el Scroll Snapping directamente aquí para que afecte a las secciones del profile
+  overflow-y: auto;
   scroll-behavior: smooth;
   scroll-snap-stop: normal; 
 }

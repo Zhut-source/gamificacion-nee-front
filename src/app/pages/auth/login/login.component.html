@@ -1,32 +1,32 @@
 <main class="login-container">
-  <section class="login-card">
-    <h1 class="login-title fade-item" >LOGIN</h1>
+  <section class="login-card" aria-labelledby="login-title">
+    <h1 id="login-title" class="login-title fade-item">Iniciar sesión</h1>
 
     <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
-
       <div class="input-group fade-item">
-        <label for="email">Usuario</label>
-        <input 
+        <label for="email">Correo electrónico</label>
+        <input
           type="email"
           id="email"
           name="email"
-          placeholder="Ingrese su email"
+          placeholder="Ingrese su correo electrónico"
           formControlName="email"
           [class.error]="emailInvalid"
           [class.success]="emailValid"
           [attr.aria-invalid]="emailInvalid ? 'true' : 'false'"
           aria-describedby="email-error"
-        >
+        />
         <div id="email-error" aria-live="polite" class="error-container">
           <small class="error-text" *ngIf="emailInvalid">
             ⚠ Email inválido
           </small>
+          <small class="success-text" *ngIf="emailValid"> ✓ Correcto </small>
         </div>
       </div>
 
       <div class="input-group fade-item">
         <label for="password">Contraseña</label>
-        <input 
+        <input
           type="password"
           id="password"
           name="password"
@@ -36,43 +36,74 @@
           [class.success]="passwordValid"
           [attr.aria-invalid]="passwordInvalid ? 'true' : 'false'"
           aria-describedby="password-error"
-         
-        >
+        />
         <div id="password-error" aria-live="polite" class="error-container">
           <small class="error-text" *ngIf="passwordInvalid">
             ⚠ Mínimo 6 caracteres
           </small>
+          <small class="success-text" *ngIf="passwordValid"> ✓ Correcto </small>
         </div>
       </div>
 
       <div class="remember-container fade-item">
-        <input 
+        <input
           type="checkbox"
           id="rememberPassword"
           formControlName="remember"
-        >
-        <label for="rememberPassword">
-          Guardar contraseña
-        </label>
+        />
+        <label for="rememberPassword"> Recordar correo electrónico </label>
       </div>
 
       <div class="action-area fade-item">
-            <button type="submit" class="login-button" [disabled]="loginForm.invalid || isLoading">
-              <ng-container *ngIf="!isLoading">Iniciar Sesión</ng-container>
-              <ng-container *ngIf="isLoading">
-                <div class="looping-rhombuses-spinner">
-                  <div class="rhombus"></div>
-                  <div class="rhombus"></div>
-                  <div class="rhombus"></div>
-                </div>
-              </ng-container>
-            </button>
+        <button
+          type="submit"
+          class="login-button"
+          [disabled]="loginForm.invalid || isLoading"
+        >
+          <ng-container *ngIf="!isLoading">Iniciar Sesión</ng-container>
+          <ng-container *ngIf="isLoading">
+            <div class="looping-rhombuses-spinner" aria-label="Cargando">
+              <div class="rhombus"></div>
+              <div class="rhombus"></div>
+              <div class="rhombus"></div>
+            </div>
+          </ng-container>
+        </button>
 
-            <button type="button" class="register-button" (click)="goToRegister()" [disabled]="isLoading">
-                Registrarse
-            </button>
+        <button
+          type="button"
+          class="register-button"
+          (click)="goToRegister()"
+          [disabled]="isLoading"
+        >
+          Registrarse
+        </button>
       </div>
-      
     </form>
   </section>
+
+  <button
+    *ngIf="showScrollButton"
+    type="button"
+    class="floating-scroll-btn"
+    [ngClass]="isScrolledToBottom ? 'subir-state' : 'bajar-state'"
+    (click)="toggleScroll()"
+    [attr.aria-label]="isScrolledToBottom ? 'Desplazar hacia arriba' : 'Desplazar hacia abajo'"
+  >
+    <svg
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="30"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="m18 15-6-6-6 6" />
+    </svg>
+    <span>{{ isScrolledToBottom ? "Subir" : "Bajar" }}</span>
+  </button>
 </main>

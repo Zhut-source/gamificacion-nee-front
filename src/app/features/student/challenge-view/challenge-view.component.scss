@@ -1,15 +1,16 @@
 .challenge-workspace-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  height: calc(100vh - 100px);
   width: 100%;
   background-color: transparent;
   color: var(--text-main);
   padding: 20px;
   gap: 6px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-// Contenedor tipo Tarjeta Principal que encapsula Header y Cuerpo
 .challenge-main-container {
   background-color: var(--bg-surface);
   border-radius: 16px;
@@ -19,7 +20,9 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  flex-grow: 1;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .btn-back-workspace {
@@ -39,14 +42,16 @@
   color: var(--btn-3-action-text);
   cursor: pointer;
   transition: background 0.2s ease;
+  flex-shrink: 0;
+
   &:hover {
     color: var(--btn-3-action-hover-text);
     background: var(--btn-3-action-hover-bg);
     border: 2px solid var(--btn-3-action-hover-border);
   }
-  &:focus {
-    outline: 2px solid var(--btn-3-action-active-outline);
-    outline-offset: 3px !important;
+  &:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px !important;
   }
 }
 
@@ -54,26 +59,38 @@
   display: grid;
   grid-template-columns: 450px 1fr;
   gap: 20px;
-  align-items: stretch;
+  flex: 1;
+  min-height: 0;
   width: 100%;
-  flex-grow: 1;
 }
 
-// --------------------------------------------------------------------------
-// 2.1 PANEL IZQUIERDO: INFORMACIÓN Y CONTROL
-// --------------------------------------------------------------------------
 .panel-left-controls {
-  min-width: 0;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
 
   .panel-card-content {
     background-color: var(--bg-body);
     border: 2px solid var(--lines-color-header);
     border-radius: 12px;
     padding: 20px;
-    height: auto;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    flex: 1;
+    min-height: max-content;
   }
 
   .level-header {
@@ -126,98 +143,34 @@
       font-weight: 700;
       color: var(--text-main);
     }
+    
+    .unlock-warning-text {
+      color: var(--text-muted);
+      margin-top: 8px;
+      display: block;
+      font-size: 0.85rem;
+    }
   }
 
   .controls-utility-footer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
     border-top: 1px solid var(--lines-color-header);
     padding-top: 1rem;
-    gap: 1rem;
-    flex-wrap: wrap;
+    gap: 10px;
 
     .accessibility-action-group {
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
       gap: 8px;
       width: 100%;
-      flex-wrap: wrap;
     }
 
-    .btn-utility-item {
-      display: flex;
-      flex-direction: row;
-    }
-
-    .speaker-button {
-      padding: 0.5rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      border: none;
-      border-radius: 10px;
-      background: var(--btn-2-action-bg);
-      color: var(--btn-2-action-text);
-      cursor: pointer;
-      transition:
-        transform 0.2s ease,
-        background 0.2s ease;
-      flex-shrink: 0;
-
-      &:focus {
-        outline: 2px solid var(--btn-2-action-active-outline);
-      }
-
-      &:hover {
-        background: var(--btn-2-action-hover-bg);
-        color: var(--btn-2-action-hover-text);
-      }
-
-      &.active {
-        background-color: var(--btn-2-action-active-bg);
-        color: var(--btn-2-action-active-text);
-      }
-    }
-
-    .btn-help {
-      padding: 0.5rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      min-height: 50px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      border: none;
-      border-radius: 10px;
-      background: var(--btn-2-action-bg);
-      color: var(--btn-2-action-text);
-      cursor: pointer;
-      transition:
-        transform 0.2s ease,
-        background 0.2s ease;
-      flex-shrink: 0;
-
-      &:focus {
-        outline: 2px solid var(--btn-2-action-active-outline);
-      }
-
-      &:hover {
-        background: var(--btn-2-action-hover-bg);
-        color: var(--btn-2-action-hover-text);
-      }
-
-      &.active {
-        background-color: var(--btn-2-action-active-bg);
-        color: var(--btn-2-action-active-text);
-      }
-    }
-
+    .speaker-button,
     .btn-video {
+      flex: 1;
       padding: 0.5rem;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
@@ -230,13 +183,11 @@
       background: var(--btn-2-action-bg);
       color: var(--btn-2-action-text);
       cursor: pointer;
-      transition:
-        transform 0.2s ease,
-        background 0.2s ease;
-      flex-shrink: 0;
+      transition: transform 0.2s ease, background 0.2s ease;
 
-      &:focus {
-        outline: 2px solid var(--btn-2-action-active-outline);
+      &:focus-visible {
+        outline: 2px solid var(--focus-outline-color);
+        outline-offset: 2px !important;
       }
 
       &:hover {
@@ -248,22 +199,39 @@
         background-color: var(--btn-2-action-active-bg);
         color: var(--btn-2-action-active-text);
       }
+    }
+
+    .unlock-warning-text {
+      color: var(--text-muted);
+      margin-top: 0;
+      display: block;
+      text-align: center;
+      font-size: 0.85rem;
     }
   }
 }
 
-// --------------------------------------------------------------------------
-// 2.2 PANEL DERECHO: LIENZO DE JUEGO (ÁREA EXPANSIVA)
-// --------------------------------------------------------------------------
 .panel-right-game {
   display: flex;
   justify-content: center;
-  align-content: center;
+  align-content: flex-start;
   padding: 0;
   margin: 0;
-  border: none;
   background-color: transparent;
   width: 100%;
+  height: 100%;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
 
   .game-runtime-container {
     display: flex;
@@ -287,7 +255,7 @@
 
     .start-challenge-btn {
       all: unset;
-      padding: 0.5rem;
+      padding: 0.5rem 1.5rem;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       min-height: 50px;
       display: flex;
@@ -300,29 +268,28 @@
       color: var(--btn-2-action-text);
       cursor: pointer;
       transition: background 0.2s ease;
+      
       &:hover:not(:disabled) {
         background: var(--btn-2-action-hover-bg);
         color: var(--btn-2-action-hover-text);
       }
-      &:focus:not(:disabled) {
-        outline: 2px solid var(--btn-2-action-active-outline);
-        outline-offset: 3px !important;
+      
+      &:focus-visible:not(:disabled) {
+        outline: 2px solid var(--focus-outline-color);
+        outline-offset: 2px !important;
       }
-    }
-
-    .game-placeholder-canvas {
-      width: 100%;
     }
   }
 
-  // Pantalla del Video (Estado 2)
   .video-player-screen {
-    position: relative; // Necesario para el botón flotante
+    position: relative;
     display: flex;
     flex-grow: 1;
     background-color: #000000;
     align-items: center;
     justify-content: center;
+    border-radius: 12px;
+    overflow: hidden;
 
     .challenge-intro-video {
       width: 100%;
@@ -331,53 +298,37 @@
       object-fit: contain;
     }
 
-    // Estilos del botón flotante
     .skip-btn {
       position: absolute;
       top: 20px;
       right: 20px;
       z-index: 10;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.8);
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       padding: 10px 18px;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
-      backdrop-filter: blur(4px);
-
-      // Estado inactivo (transparente)
-      opacity: 0.4;
+      opacity: 0.6;
       transition: all 0.3s ease;
 
-      // Estado activo al acercar el mouse
       &:hover {
         opacity: 1;
-        background: rgba(0, 0, 0, 0.8);
-        border-color: rgba(255, 255, 255, 0.8);
+        background: rgba(0, 0, 0, 0.9);
+        border-color: rgba(255, 255, 255, 0.9);
         transform: scale(1.05);
+      }
+      
+      &:focus-visible {
+        outline: 2px solid var(--focus-outline-color);
+        outline-offset: 2px !important;
+        opacity: 1;
       }
     }
   }
 }
 
-// Adaptación automática para Alto Contraste
-/*body.high-contrast {
-  .panel-right-game .intro-start-screen .start-challenge-btn {
-    border: 2px solid #ffffff !important;
-    background-color: #000000 !important;
-    color: #ffffff !important;
-
-    &:hover {
-      background-color: #ffffff !important;
-      color: #000000 !important;
-    }
-  }
-}*/
-
-// ==========================================================================
-// 3. FOOTER DE FEEDBACK (SISTEMA STICKY FIJO AL PIE DE PÁGINA)
-// ==========================================================================
 .system-feedback-banner {
   position: fixed;
   bottom: 0;
@@ -385,8 +336,8 @@
   right: 0;
   z-index: 1000;
   padding: 1rem 2rem;
-  background-color: var(--bg-header, #f9f6f0);
-  border-top: 3px solid var(--line-divisor-color, #2b2b2a);
+  background-color: var(--bg-header);
+  border-top: 3px solid var(--lines-color-header);
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 
   .feedback-banner-content {
@@ -426,7 +377,6 @@
     }
   }
 
-  // Esquemas cromáticos adaptables de retroalimentación
   .status-success-layout {
     background-color: #dcfce7;
     border: 1px solid #15803d;
@@ -434,51 +384,17 @@
   }
 
   .status-error-layout {
-    background-color: #fee2e2;
-    border: 1px solid #b91c1c;
-    color: #7f1d1d;
+    background-color: #fef2f2 !important;
+    border: 1px solid #dc2626 !important;
+    color: #991b1b !important;
   }
 }
 
-// Animación de entrada fluida para evitar rupturas de atención visual
 @keyframes slideUp {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
-.highlight-anim {
-  animation: flashHighlight 1.5s ease-in-out;
-}
-
-@keyframes flashHighlight {
-  0% {
-    background-color: transparent;
-  }
-  20% {
-    background-color: rgba(14, 185, 222, 0.3);
-    border-radius: 8px;
-    padding: 5px;
-  } // Usa tu color --accent
-  100% {
-    background-color: transparent;
-    padding: 0;
-  }
-}
-
-// Estilos dinámicos extra para el footer de error
-.status-error-layout {
-  background-color: #fef2f2 !important;
-  border: 1px solid #dc2626 !important;
-  color: #991b1b !important;
-}
-
-// Estilos para los nuevos botones de dificultad
 .diff-buttons-group {
   display: flex;
   gap: 8px;
@@ -503,9 +419,9 @@
     &:not(:disabled):hover {
       border-color: var(--btn-3-action-hover-border);
     }
-    &:focus:not(:disabled) {
-      outline: 2px solid var(--btn-3-action-active-outline);
-      outline-offset: 3px !important;
+    &:focus-visible:not(:disabled) {
+      outline: 2px solid var(--focus-outline-color);
+      outline-offset: 2px !important;
     }
 
     &.active {
@@ -519,12 +435,8 @@
 }
 
 @keyframes skeleton-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 .skeleton-panel-wrapper {
@@ -535,51 +447,26 @@
   height: 100%;
 
   .skeleton-line {
-    background: linear-gradient(
-      90deg,
-      rgba(122, 122, 122, 0.1) 25%,
-      rgba(122, 122, 122, 0.2) 50%,
-      rgba(122, 122, 122, 0.1) 75%
-    );
+    background: linear-gradient(90deg, rgba(122, 122, 122, 0.1) 25%, rgba(122, 122, 122, 0.2) 50%, rgba(122, 122, 122, 0.1) 75%);
     background-size: 200% 100%;
     animation: skeleton-shimmer 1.4s infinite linear;
     border-radius: 6px;
   }
 
-  .title-sk {
-    height: 28px;
-    width: 85%;
-    margin-bottom: 0.5rem;
-  }
-  .text-sk {
-    height: 14px;
-    width: 100%;
-  }
-  .sub-sk {
-    width: 55%;
-    margin-bottom: 1rem;
-  }
+  .title-sk { height: 28px; width: 85%; margin-bottom: 0.5rem; }
+  .text-sk { height: 14px; width: 100%; }
+  .sub-sk { width: 55%; margin-bottom: 1rem; }
 
   .skeleton-box {
-    background: linear-gradient(
-      90deg,
-      rgba(122, 122, 122, 0.1) 25%,
-      rgba(122, 122, 122, 0.2) 50%,
-      rgba(122, 122, 122, 0.1) 75%
-    );
+    background: linear-gradient(90deg, rgba(122, 122, 122, 0.1) 25%, rgba(122, 122, 122, 0.2) 50%, rgba(122, 122, 122, 0.1) 75%);
     background-size: 200% 100%;
     animation: skeleton-shimmer 1.4s infinite linear;
     border-radius: 10px;
     width: 100%;
   }
 
-  .objectives-sk {
-    height: 90px;
-  }
-  .difficulty-sk {
-    height: 80px;
-    margin-top: auto;
-  } // Imita el empuje inferior
+  .objectives-sk { height: 90px; }
+  .difficulty-sk { height: 80px; margin-top: auto; }
 
   .skeleton-footer-sk {
     display: flex;
@@ -596,7 +483,6 @@
   }
 }
 
-//Spinner
 .loading-overlay {
   display: flex;
   justify-content: center;
@@ -648,41 +534,20 @@
 }
 
 @keyframes fulfilling-square-spinner-animation {
-  0% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(180deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  75% {
-    transform: rotate(360deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(180deg); }
+  50% { transform: rotate(180deg); }
+  75% { transform: rotate(360deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes fulfilling-square-spinner-inner-animation {
-  0% {
-    height: 0%;
-  }
-  25% {
-    height: 0%;
-  }
-  50% {
-    height: 100%;
-  }
-  75% {
-    height: 100%;
-  }
-  100% {
-    height: 0%;
-  }
+  0% { height: 0%; }
+  25% { height: 0%; }
+  50% { height: 100%; }
+  75% { height: 100%; }
+  100% { height: 0%; }
 }
-//
 
 .career-speedrun-btn {
   display: flex;
@@ -704,6 +569,11 @@
     border-color: var(--btn-3-action-hover-border);
   }
 
+  &:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px !important;
+  }
+
   &.active-career {
     background-color: #ef4444 !important;
     border-color: #b91c1c !important;
@@ -713,20 +583,11 @@
 }
 
 @keyframes pulseActiveCareer {
-  0% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
 
-// ==========================================================================
-// MEDIA QUERIES (RESPONSIVIDAD SIN DESTRUCCIÓN EN DISPOSITIVOS MÓVILES)
-// ==========================================================================
 @media (max-width: 1400px) {
   .challenge-body-layout {
     grid-template-columns: 350px 1fr;
@@ -734,64 +595,56 @@
 }
 
 @media (max-width: 768px) {
-  // 1. Transformar el Layout Horizontal a Vertical[cite: 16]
-  .challenge-body-layout {
-    grid-template-columns: 1fr; // Forzamos 1 sola columna[cite: 16]
-    gap: 1.5rem;
+  .challenge-workspace-wrapper {
+    height: auto;
+    overflow: visible;
   }
 
   .challenge-main-container {
-    margin: 1rem;
-    padding: 1.25rem;
-  }
-
-  .panel-left-controls .panel-card-content {
     height: auto;
+    overflow: visible;
   }
 
-  .panel-right-game .game-runtime-container {
-    min-height: 350px;
+  .challenge-body-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+
+  .panel-left-controls {
+    height: auto;
+    overflow: visible;
+  }
+
+  .panel-right-game {
+    height: auto;
+    overflow: visible;
+    
+    .game-runtime-container {
+      min-height: 350px;
+    }
   }
 }
 
 @media (max-width: 480px) {
   .challenge-workspace-wrapper {
-    padding: 10px; //[cite: 16]
+    padding: 20px;
   }
 
   .challenge-main-container {
     margin: 0;
-    padding: 10px;
+    padding: 20px;
   }
 
-  .challenge-header .challenge-dynamic-title {
-    font-size: 1.5rem;
-  }
-
-  // 2. Evitar desborde en controles izquierdos[cite: 16]
   .panel-left-controls {
     .controls-utility-footer {
-      flex-direction: column; // Distribución vertical de los grupos de botones
+      flex-direction: column;
       align-items: stretch;
-      gap: 1rem;
+      gap: 8px;
     }
 
     .accessibility-action-group {
-      display: flex;
-      justify-content: center; // Centramos los botones en móviles
-      gap: 16px;
-      width: 100%;
-    }
-
-    .btn-utility-item {
-      width: 48px;
-      height: 48px;
-      padding: 0;
-      justify-content: center;
-
-      span {
-        display: none !important;
-      }
+      flex-direction: column;
     }
   }
 

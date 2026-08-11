@@ -16,6 +16,10 @@
   justify-content: space-between;
   width: 100%;
   padding: 0 40px;
+
+  &.private-view .logo-text {
+    margin-right: 8px;
+  }
 }
 
 a {
@@ -25,19 +29,19 @@ a {
 }
 
 .logo {
-    width: 70px;
-    height: 70px;
-    g {
-    fill: var(--color-white); 
+  width: 70px;
+  height: 70px;
+
+  g {
+    fill: var(--color-white);
   }
-  }
+}
 
 .logo-text {
-  
-
   &:focus-visible {
-    outline: 2px solid var(--btn-1-action-active-outline);
+    outline: 2px solid var(--focus-outline-color);
     outline-offset: 3px !important;
+    border-radius: 6px;
   }
 
   &:focus:not(:focus-visible) {
@@ -52,7 +56,6 @@ a {
   gap: 0.2rem;
 
   .profile-icon {
-    all: unset;
     width: 40px;
     height: 40px;
     display: flex;
@@ -66,7 +69,8 @@ a {
   }
 
   &:hover {
-    opacity: 0.85;
+    color: var(--hover-link);
+
     .welcome-text {
       text-decoration: underline;
     }
@@ -75,22 +79,17 @@ a {
       transform: scale(1.05);
       background: var(--btn-2-action-hover-bg);
       color: var(--btn-2-action-hover-text);
-      border-color: var(--btn-2-action-hover-bg);
     }
   }
+
   &:focus-visible {
-    outline: 2px solid var(--btn-1-action-active-outline);
+    outline: 2px solid var(--focus-outline-color);
     outline-offset: 3px !important;
+    border-radius: 6px;
   }
 
   &:focus:not(:focus-visible) {
     outline: none;
-  }
-}
-
-.header-content.private-view {
-  .logo-text {
-    margin-right: 8px;
   }
 }
 
@@ -117,6 +116,7 @@ a {
   padding: 0.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-height: 50px;
+  min-width: 50px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -130,34 +130,63 @@ a {
   transition:
     transform 0.2s ease,
     background 0.2s ease;
+
+  svg {
+    transition: transform 0.25s ease-in-out;
+  }
+
   &:focus-visible {
-    outline: 2px solid var(--btn-1-action-active-outline);
+    outline: 2px solid var(--focus-outline-color);
     outline-offset: 3px !important;
   }
+
   &:focus:not(:focus-visible) {
     outline: none;
   }
+
   &:hover {
     transform: scale(1.05);
     color: var(--btn-1-action-hover-text);
     background: var(--btn-1-action-hover-bg);
   }
+
   &.active {
     background-color: var(--btn-1-action-active-bg);
     color: var(--btn-1-action-active-text);
   }
+
   span {
     width: 110px;
     font-size: 16px;
+  }
+
+  &.btn-contrast {
+    svg {
+      transform: rotate(0deg);
+    }
+
+    &.active svg {
+      transform: rotate(180deg);
+    }
+  }
+
+  &.btn-dyslexia {
+    svg {
+      transform: rotate(0deg);
+    }
+
+    &.active svg {
+      transform: rotate(360deg);
+    }
   }
 }
 
 @media (max-width: 850px) {
   .main-header {
-    height: 80px; /* Reducimos altura para optimizar espacio */
+    height: 80px;
   }
 
-  .logo{
+  .logo {
     min-width: 50px;
     min-height: 50px;
   }
@@ -166,7 +195,6 @@ a {
     padding: 0 20px;
   }
 
-  /* Gestión de textos y saludos ocultos */
   .welcome-text {
     display: none !important;
   }
@@ -178,7 +206,7 @@ a {
   }
 
   .icon-button {
-    width: 50px; /* Cambiado de 44px a 48px */
+    width: 50px;
     height: 50px;
     min-height: 50px;
     padding: 0;
@@ -198,11 +226,11 @@ a {
 }
 
 @media (max-width: 480px) {
-
-  .logo{
+  .logo {
     width: 50px;
     height: 50px;
   }
+
   .main-header {
     height: 70px;
   }

@@ -90,17 +90,21 @@
 
           @for (challenge of challenges; track challenge.id; let i = $index) {
             <section [id]="'challenge-' + challenge.id" class="snap-section challenge-fullscreen" tabindex="-1">
+
               @if (i > 0) {
-                <button class="scroll-arrow up" (click)="scrollToSection('challenge-' + challenges[i - 1].id)" aria-label="Nivel anterior">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
-                </button>
-              } @else {
-                 <button class="scroll-arrow up" (click)="scrollToSection('progress-section')" aria-label="Ir a Progreso">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
-                </button>
-              }
+                  <button class="scroll-arrow up" (click)="scrollToSection('challenge-' + challenges[i - 1].id); $event.stopPropagation()" aria-label="Nivel anterior">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up-icon lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg>
+                  </button>
+                } @else {
+                  <button class="scroll-arrow up" (click)="scrollToSection('progress-section'); $event.stopPropagation()" aria-label="Ir a Progreso">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up-icon lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg>
+                  </button>
+                }
 
               <div class="card-challenges horizontal-card" (click)="goToChallenge(challenge)" [class.locked]="challenge.status === 'locked'" [style.--dynamic-color]="challenge.status !== 'locked' ? 'var(--saturated-color-' + (i % 5) + ')' : ''">
+                
+                
+
                 <div class="area-left">
                   <div class="titles-card">
                     <span class="level-tag">Nivel {{ challenge.nivel }}</span>
@@ -142,11 +146,12 @@
                     </button>
                   }
                 </div>
-              </div>
 
+                
+              </div>
               <button class="scroll-arrow down" (click)="scrollToSection(challenges[i + 1] ? 'challenge-' + challenges[i + 1].id : 'badges-section'); $event.stopPropagation()" aria-label="Siguiente sección">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-              </button>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
             </section>
           }
         </div>
@@ -216,12 +221,21 @@
 
           <div class="badge-modal-right">
             @if (selectedBadge.unlocked) {
-              <span class="badge-status status-unlocked">✅ Desbloqueada</span>
+              <span class="badge-status status-unlocked">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                Desbloqueada
+              </span>
             } @else {
               <div class="locked-status-wrapper">
                 <span class="badge-status status-locked">
-                  <span class="default-text">🔒 Bloqueada</span>
-                  <span class="hover-text">🔓 Desbloquear</span>
+                  <span class="default-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    Bloqueada
+                  </span>
+                  <span class="hover-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-unlock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+                    Desbloquear
+                  </span>
                 </span>
                 <div class="unlock-hint">
                   <p>Para desbloquear necesitas activar el modo carrera en el juego y completarlo cumpliendo la condición que esta en la descripción de cada insignia.</p>
@@ -239,7 +253,7 @@
               [class.active]="tts.isPlaying"
               (click)="leerInsigniaModal()"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
               <span>Escuchar Descripción</span>
             </button>
           </div>

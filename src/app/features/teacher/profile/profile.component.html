@@ -1,187 +1,276 @@
 <main class="profile-container">
-    @if (isSpotlightActive) {
+  @if (isSpotlightActive) {
     <div class="spotlight-overlay" (click)="clearSpotlight()"></div>
   }
-    <button 
+  
+  <button 
     type="button" 
     class="btn-back-workspace"
     [class.elevated]="isSpotlightActive"
     (click)="volverAlDashboard()"
     aria-label="Volver al panel principal de desafíos"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-left-icon lucide-move-left"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
     <span>Volver</span>
   </button>
-    <section class="area-info" [formGroup]="infoForm">
-        <div class="card info">
-            <h1 class="title info">Información personal</h1>
-            <div class="input-area grid-profile">
-                
-                <label for="profile-name">Nombre</label>
-                <input class="input-df" type="text" formControlName="name" id="profile-name">
-                <button type="button" class="edit-btn" title="Modificar nombre" [class.active]="isEditingName" (click)="toggleEditName()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
-                </button>
+  
+  <section class="area-info" [formGroup]="infoForm" aria-labelledby="title-info">
+    <div class="card info">
+      <div class="section-header">
+        <h1 id="title-info" class="title info">Información personal</h1>
+        <button 
+          type="button" 
+          class="speaker-button" 
+          [class.active]="tts.isPlaying && currentTtsSection === 'info'"
+          (click)="leerSeccion('info', 'Información personal. Aquí puedes ver y editar tu nombre, y visualizar tu correo electrónico.')"
+          aria-label="Escuchar descripción de Información personal"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
+        </button>
+      </div>
 
-                <label for="profile-email">Correo</label>
-                <input type="email" id="profile-email" formControlName="email" class="disabled-input">
+      <div class="input-area grid-profile">
+        <label for="profile-name">Nombre</label>
+        <input class="input-df" type="text" formControlName="name" id="profile-name">
+        <button 
+          type="button" 
+          class="edit-btn" 
+          [class.cancel-mode]="isEditingName"
+          [attr.aria-pressed]="isEditingName" 
+          (click)="toggleEditName()"
+        >
+          @if (!isEditingName) {
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+            <span>Editar</span>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <span>Cancelar</span>
+          }
+        </button>
 
-                <div class="action-container" *ngIf="isEditingName">
-                    <button class="save-changes-btn" [disabled]="infoForm.invalid || infoForm.pristine" (click)="onUpdateName()">
-                        Guardar cambios
-                    </button>
-                </div>
-            </div>
+        <label for="profile-email">Correo</label>
+        <input type="email" id="profile-email" formControlName="email" class="disabled-input" readonly>
+
+        @if (isEditingName) {
+          <div class="action-container">
+            <button type="button" class="save-changes-btn" [disabled]="infoForm.invalid || infoForm.pristine" (click)="onUpdateName()">
+              Guardar cambios
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section id="create-class" class="area-create-class" [class.elevated]="isSpotlightActive" aria-labelledby="title-create">
+    <div class="card create-class">
+      <div class="section-header">
+        <h1 id="title-create" class="title create-class-title">Crear clase</h1>
+        <button 
+          type="button" 
+          class="speaker-button" 
+          [class.active]="tts.isPlaying && currentTtsSection === 'create'"
+          (click)="leerSeccion('create', 'Crear clase. Configura los parámetros como periodo, horario, carrera y nivel para generar una nueva aula.')"
+          aria-label="Escuchar descripción de Crear clase"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
+        </button>
+      </div>
+
+      <form class="input-area grid-create" [formGroup]="createClassForm" (ngSubmit)="onCreateClass()">
+        <div class="field-group">
+          <label for="select-periodo" class="control-label">Periodo Académico:</label>
+          <select id="select-periodo" class="input-df" formControlName="periodoId">
+            <option value="" disabled selected>Seleccione un periodo</option>
+            @for (p of periodos; track p.id) { <option [value]="p.id">{{ p.nombre }}</option> }
+          </select>
         </div>
-    </section>
 
-    <section id="create-class" class="area-create-class" [class.elevated]="isSpotlightActive">
-        <div class="card create-class">
-            <h1 class="title create-class-title">
-                Crear clase
-            </h1>
-            <form class="input-area grid-create" [formGroup]="createClassForm" (ngSubmit)="onCreateClass()">
-                
-                <div class="field-group">
-                    <label class="control-label">Periodo Académico:</label>
-                    <select class="input-df" formControlName="periodoId">
-                        <option value="" disabled selected>Seleccione un periodo</option>
-                        @for (p of periodos; track p.id) { <option [value]="p.id">{{ p.nombre }}</option> }
-                    </select>
-                </div>
-
-                <div class="field-group">
-                    <label class="control-label">Horario:</label>
-                    <select class="input-df" formControlName="horarioId">
-                        <option value="" disabled selected>Seleccione un horario</option>
-                        @for (h of horarios; track h.id) { <option [value]="h.id">{{ h.nombre }}</option> }
-                    </select>
-                </div>
-
-                <div class="field-group">
-                    <label class="control-label">Carrera Tecnológica:</label>
-                    <select class="input-df" formControlName="carreraId" (change)="onCarreraChange($event)">
-                        <option value="" disabled selected>Seleccione la carrera</option>
-                        @for (c of carreras; track c.id) { <option [value]="c.id">{{ c.nombre }}</option> }
-                    </select>
-                </div>
-
-                <div class="field-group">
-                    <label class="control-label">Asignatura / Materia:</label>
-                    <select class="input-df" formControlName="materiaId">
-                        <option value="" disabled selected>Primero seleccione una carrera</option>
-                        @for (m of materiasFiltradas; track m.id) { <option [value]="m.id">{{ m.nombre }}</option> }
-                    </select>
-                </div>
-                <div class="field-group">
-                    <label class="control-label">Nivel / Semestre:</label>
-                    <select class="input-df" formControlName="nivel">
-                        <option value="" disabled selected>Seleccione</option>
-                        @for (n of niveles; track n) { <option [value]="n">{{ n }}</option> }
-                    </select>
-                </div>
-
-                <div class="field-group">
-                    <label class="control-label">Paralelo:</label>
-                    <select class="input-df" formControlName="aulaNum">
-                        <option value="" disabled selected>Seleccione</option>
-                        @for (a of aulasFisicas; track a) { <option [value]="a">Paralelo {{ a }}</option> }
-                    </select>
-                </div>
-                
-                <button type="submit" class="generate-btn" [disabled]="createClassForm.invalid" style="grid-column: 1 / -1; margin-top: 15px;">
-                    Crear clase
-                </button>
-            </form>
-
-            <div class="created-classrooms-section" *ngIf="classrooms.length > 0">
-                <div class="classrooms-list">
-                    <article class="classroom-item" *ngFor="let aula of classrooms">
-                    <div class="classroom-info">
-                        <strong class="classroom-name">{{ aula.name }}</strong>
-                        <div class="code-badge-container">
-                        <span class="code-label">Código:</span>
-                        <code class="class-code-text"> {{ aula.code }} </code>
-                        </div>
-                    </div>
-                    
-                    <button type="button" class="copy-btn" title="Copiar código" (click)="copyCode(aula.code)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy icon-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-                        <span>Copiar código</span>
-                    </button>
-                    </article>
-
-                    
-
-                </div>
-            </div>
+        <div class="field-group">
+          <label for="select-horario" class="control-label">Horario:</label>
+          <select id="select-horario" class="input-df" formControlName="horarioId">
+            <option value="" disabled selected>Seleccione un horario</option>
+            @for (h of horarios; track h.id) { <option [value]="h.id">{{ h.nombre }}</option> }
+          </select>
         </div>
-    </section>
 
-    <section class="area-change-pass" [formGroup]="passwordForm"> 
-        <div class="card change-pass">
-            <h1 class=" title change-pass">
-                Cambiar contraseña
-            </h1>
-            <div class="input-area grid6" >
-                <label for="current-pass">Contraseña actual</label>
-                <input class="input-df" type="password" id="current-pass" placeholder="Ingresa tu contraseña actual" formControlName="currentPassword">
-
-                <label for="new-pass">Nueva contraseña</label>
-                <input class="input-df" type="password" id="new-pass" placeholder="Mínimo 6 caracteres" formControlName="newPassword">
-
-                <label for="confirm-pass">Confirmar contraseña</label>
-                <input class="input-df" type="password" id="confirm-pass" placeholder="Repite tu nueva contraseña" formControlName="confirmPassword">
-
-
-                <div class="action-container">
-                    @if (passwordForm.valid){
-                        <button class="save-changes-pass-btn" (click)="onChangePassword()">
-                            Guardar cambios
-                        </button>
-                    }@else {
-                    <p class="help-text" style=" color: var(--container-dashboard-text-color); opacity: 0.7; margin: 0;">
-                        * Por favor, completa todos los campos para poder cambiar tu contraseña.
-                    </p>
-                    }    
-                </div>
-                </div>
-            </div>
-    </section>
-
-    <section class="area-settings-acces">
-        <div class="card settings-acces">
-            <h1 class="title settings-acces">
-                Ajustes de accesibilidad
-            </h1>
-            <div class="input-area grid-accessibility">
-                <label for="toggle-dyslexia">Activar fuente OpenDyslexic</label>
-                <div class="control-container">
-                    <label class="switch-control">
-                    <input  type="checkbox" id="toggle-dyslexia" (change)="onToggleDyslexia($event)">
-                    <span class="slider"></span>
-                    </label>
-                </div>
-
-                <label for="select-contrast">Modo de Contraste</label>
-                <div class="control-container">
-                    <select id="select-contrast" class="select-control" (change)="onContrastChange($event)">
-                    <option value="claro" selected>Claro</option>
-                    <option value="oscuro">Oscuro</option>
-                    </select>
-                </div>
-
-                <label for="select-speed">Velocidad del Lector de Voz</label>
-                <div class="control-container">
-                    <select id="select-speed" class="select-control">
-                    <option value="rapido">Rápido</option>
-                    <option value="normal" selected>Normal</option>
-                    <option value="lento">Lento</option>
-                    </select>
-                </div>
-
-            </div>
+        <div class="field-group">
+          <label for="select-carrera" class="control-label">Carrera Tecnológica:</label>
+          <select id="select-carrera" class="input-df" formControlName="carreraId" (change)="onCarreraChange($event)">
+            <option value="" disabled selected>Seleccione la carrera</option>
+            @for (c of carreras; track c.id) { <option [value]="c.id">{{ c.nombre }}</option> }
+          </select>
         </div>
-    </section>
 
+        <div class="field-group">
+          <label for="select-materia" class="control-label">Asignatura / Materia:</label>
+          <select id="select-materia" class="input-df" formControlName="materiaId">
+            <option value="" disabled selected>Primero seleccione una carrera</option>
+            @for (m of materiasFiltradas; track m.id) { <option [value]="m.id">{{ m.nombre }}</option> }
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label for="select-nivel" class="control-label">Nivel / Semestre:</label>
+          <select id="select-nivel" class="input-df" formControlName="nivel">
+            <option value="" disabled selected>Seleccione</option>
+            @for (n of niveles; track n) { <option [value]="n">{{ n }}</option> }
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label for="select-paralelo" class="control-label">Paralelo:</label>
+          <select id="select-paralelo" class="input-df" formControlName="aulaNum">
+            <option value="" disabled selected>Seleccione</option>
+            @for (a of aulasFisicas; track a) { <option [value]="a">Paralelo {{ a }}</option> }
+          </select>
+        </div>
+        
+        <button type="submit" class="generate-btn full-width-btn" [disabled]="createClassForm.invalid">
+          Crear clase
+        </button>
+      </form>
+
+      @if (classrooms.length > 0) {
+        <div class="created-classrooms-section">
+          <div class="classrooms-list">
+            <article class="classroom-item" *ngFor="let aula of classrooms">
+              <div class="classroom-info">
+                <strong class="classroom-name">{{ aula.name }}</strong>
+                <div class="code-badge-container">
+                  <span class="code-label">Código:</span>
+                  <code class="class-code-text"> {{ aula.code }} </code>
+                </div>
+              </div>
+              <button type="button" class="copy-btn" title="Copiar código" (click)="copyCode(aula.code)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy icon-copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>Copiar código</span>
+              </button>
+            </article>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="area-change-pass" [formGroup]="passwordForm" aria-labelledby="title-pass"> 
+    <div class="card change-pass">
+      <div class="section-header">
+        <h1 id="title-pass" class="title change-pass">Cambiar contraseña</h1>
+        <button 
+          type="button" 
+          class="speaker-button" 
+          [class.active]="tts.isPlaying && currentTtsSection === 'pass'"
+          (click)="leerSeccion('pass', 'Cambiar contraseña. Ingresa tu contraseña actual y luego la nueva contraseña para actualizarla.')"
+          aria-label="Escuchar descripción de Cambiar contraseña"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
+        </button>
+      </div>
+
+      <div class="input-area grid6">
+        <label for="current-pass">Contraseña actual</label>
+        <input class="input-df" type="password" id="current-pass" placeholder="Ingresa tu contraseña actual" formControlName="currentPassword">
+
+        <label for="new-pass">Nueva contraseña</label>
+        <input class="input-df" type="password" id="new-pass" placeholder="Mínimo 6 caracteres" formControlName="newPassword">
+
+        <label for="confirm-pass">Confirmar contraseña</label>
+        <input class="input-df" type="password" id="confirm-pass" placeholder="Repite tu nueva contraseña" formControlName="confirmPassword">
+
+        <div class="action-container">
+          @if (passwordForm.valid) {
+            <button type="button" class="save-changes-pass-btn" (click)="onChangePassword()">
+              Guardar cambios
+            </button>
+          } @else {
+            <p class="password-help-text">
+              * Por favor, completa todos los campos para poder cambiar tu contraseña.
+            </p>
+          }    
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="area-settings-acces" aria-labelledby="title-access">
+    <div class="card settings-acces">
+      <div class="section-header">
+        <h1 id="title-access" class="title settings-acces">Ajustes de accesibilidad</h1>
+        <button 
+          type="button" 
+          class="speaker-button" 
+          [class.active]="tts.isPlaying && currentTtsSection === 'access'"
+          (click)="leerSeccion('access', 'Ajustes de accesibilidad. Personaliza la fuente, el contraste, la velocidad de lectura y el volumen general.')"
+          aria-label="Escuchar descripción de Ajustes de accesibilidad"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
+        </button>
+      </div>
+
+      <div class="input-area grid-accessibility">
+        <label for="toggle-dyslexia">Activar fuente OpenDyslexic</label>
+        <div class="control-container">
+          <label class="switch-control">
+            <input type="checkbox" id="toggle-dyslexia" [checked]="isDyslexiaActive" (change)="onToggleDyslexia($event)">
+            <span class="slider" aria-hidden="true"></span>
+          </label>
+        </div>
+
+        <label for="select-contrast">Modo de Contraste</label>
+        <div class="control-container">
+          <select id="select-contrast" class="select-control" [value]="currentTheme" (change)="onContrastChange($event)">
+            <option value="claro">Claro</option>
+            <option value="oscuro">Oscuro</option>
+          </select>
+        </div>
+
+        <label for="select-speed">Velocidad de Lector de Voz</label>
+        <div class="control-container">
+          <select id="select-speed" class="select-control" [value]="currentSpeed" (change)="onChangeTtsSpeed($event)">
+            <option value="rapido">Rápido</option>
+            <option value="normal">Normal</option>
+            <option value="lento">Lento</option>
+          </select>
+        </div>
+        
+        <label for="select-volume">Volumen General</label>
+        <div class="control-container volume-control-wrapper">
+          <input 
+            type="range" 
+            id="select-volume" 
+            class="range-control" 
+            min="0" 
+            max="100" 
+            [value]="currentVolume" 
+            (input)="onChangeVolume($event)"
+          >
+          <span class="volume-percentage">{{ currentVolume }}%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <button
+    *ngIf="showScrollButton"
+    type="button"
+    class="floating-scroll-btn"
+    [ngClass]="isScrolledToBottom ? 'subir-state' : 'bajar-state'"
+    (click)="toggleScroll()"
+    [attr.aria-label]="isScrolledToBottom ? 'Desplazar hacia arriba' : 'Desplazar hacia abajo'"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="30"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="m18 15-6-6-6 6" />
+    </svg>
+    <span>{{ isScrolledToBottom ? "Subir" : "Bajar" }}</span>
+  </button>
 </main>

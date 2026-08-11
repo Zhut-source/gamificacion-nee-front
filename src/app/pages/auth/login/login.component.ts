@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -22,8 +22,13 @@ interface LoginPayload {
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = false;
+  showScrollButton = false;
+  isScrolledToBottom = false;
+
+  private mainElement: HTMLElement | null = null;
+  private scrollListener = () => this.checkScroll();
 
   loginForm = new FormGroup({
     email: new FormControl('', [
@@ -45,12 +50,52 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Al cargar, verificamos si existe un correo guardado previamente
     const savedEmail = localStorage.getItem('remembered_email');
     if (savedEmail) {
       this.loginForm.patchValue({
         email: savedEmail,
         remember: true,
+      });
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.mainElement = document.querySelector('main');
+
+    if (this.mainElement) {
+      this.mainElement.addEventListener('scroll', this.scrollListener);
+    }
+
+    setTimeout(() => this.checkScroll(), 100);
+  }
+
+  ngOnDestroy(): void {
+    if (this.mainElement) {
+      this.mainElement.removeEventListener('scroll', this.scrollListener);
+    }
+  }
+
+  checkScroll(): void {
+    if (!this.mainElement) return;
+
+    const scrollHeight = this.mainElement.scrollHeight;
+    const clientHeight = this.mainElement.clientHeight;
+    const scrollTop = this.mainElement.scrollTop;
+
+    this.showScrollButton = scrollHeight > clientHeight;
+    this.isScrolledToBottom =
+      Math.ceil(scrollTop + clientHeight) >= scrollHeight - 10;
+  }
+
+  toggleScroll(): void {
+    if (!this.mainElement) return;
+
+    if (this.isScrolledToBottom) {
+      this.mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      this.mainElement.scrollTo({
+        top: this.mainElement.scrollHeight,
+        behavior: 'smooth',
       });
     }
   }

@@ -48,7 +48,6 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
   currentCommandIndex: number = -1;
 
   failureMessage: string | null = null;
-  
 
   constructor(private audioService: AudioService) {}
 
@@ -62,13 +61,12 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
     }
   }
 
-  // --- LÓGICA DE INICIALIZACIÓN ---
-
   initGame(difficulty: 'easy' | 'medium' | 'hard') {
     this.difficulty = difficulty;
     this.playerSequence = [];
     this.gameStatus = 'idle';
     this.isPlaying = false;
+    this.failureMessage = null;
 
     if (difficulty === 'easy') this.gridSize = 4;
     if (difficulty === 'medium') this.gridSize = 6;
@@ -82,6 +80,7 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
     this.failureMessage = null;
     this.gameStatus = 'idle';
     this.isDestroying = false;
+    this.isPlaying = false;
   }
 
   generateGuaranteedBoard() {
@@ -104,9 +103,7 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
     ];
 
     this.correctPath = [];
-
     const selectedCorner = corners[Math.floor(Math.random() * corners.length)];
-
     this.startPosition = { x: selectedCorner.startX, y: selectedCorner.startY };
     this.playerPosition = { ...this.startPosition };
     const goalPos = { x: selectedCorner.goalX, y: selectedCorner.goalY };
@@ -154,14 +151,14 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
   }
 
   mostrarPista() {
-    // 1. Limpiar pistas anteriores que pudieran estar activas en el tablero
+    this.hintUsed.emit();
+
     for (let y = 0; y < this.gridSize; y++) {
       for (let x = 0; x < this.gridSize; x++) {
         this.grid[y][x].isHint = false;
       }
     }
 
-    // 2. Encontrar la ubicación de la meta dinámicamente
     let goalPos = { x: 0, y: 0 };
     for (let y = 0; y < this.gridSize; y++) {
       for (let x = 0; x < this.gridSize; x++) {
@@ -171,7 +168,6 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
       }
     }
 
-    // 3. Simular la posición del robot tras ejecutar la secuencia que el usuario ha armado hasta el momento
     let currentX = this.startPosition.x;
     let currentY = this.startPosition.y;
 
@@ -182,7 +178,6 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
       else if (cmd === 'RIGHT') currentX++;
     }
 
-    // Si la secuencia actual ya sacó al robot del mapa o lo estrelló en un muro, no se genera pista
     if (
       currentX < 0 || currentX >= this.gridSize ||
       currentY < 0 || currentY >= this.gridSize ||
@@ -191,7 +186,6 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
       return;
     }
 
-    // 4. Búsqueda en anchura (BFS) guardando coordenadas de las celdas
     const queue: { x: number, y: number, path: { x: number, y: number }[] }[] = [];
     queue.push({ x: currentX, y: currentY, path: [] });
 
@@ -201,16 +195,13 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
     while (queue.length > 0) {
       const current = queue.shift()!;
 
-      // Cuando se encuentra la meta, se encienden las celdas del camino resultante
       if (current.x === goalPos.x && current.y === goalPos.y) {
         for (const point of current.path) {
-          // No marcamos la celda de la meta para no alterar su 'type', solo su estado isHint
           if (this.grid[point.y][point.x].type !== 'goal') {
             this.grid[point.y][point.x].isHint = true;
           }
         }
 
-        // Temporizador para apagar la pista tras 3 segundos (opcional)
         setTimeout(() => {
           for (const point of current.path) {
             if (this.grid[point.y] && this.grid[point.y][point.x]) {
@@ -222,7 +213,6 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
         break;
       }
 
-      // Desplazamientos válidos (arriba, abajo, izquierda, derecha)
       const directions = [
         { dx: 0, dy: -1 },
         { dx: 0, dy: 1 },
@@ -234,9 +224,7 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
         const nx = current.x + dir.dx;
         const ny = current.y + dir.dy;
 
-        // Comprobar que esté dentro de los límites del tablero
         if (nx >= 0 && nx < this.gridSize && ny >= 0 && ny < this.gridSize) {
-          // Evitar pasar por muros
           if (this.grid[ny][nx].type !== 'wall') {
             const posKey = `${nx},${ny}`;
             
@@ -266,12 +254,12 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
   }
 
   addCommand(cmd: Command) {
-    if (this.gameStatus === 'running') return;
+    if (this.gameStatus === 'running' || this.isPlaying) return;
     this.playerSequence.push(cmd);
   }
 
   removeCommand(index: number) {
-    if (this.gameStatus === 'running') return;
+    if (this.gameStatus === 'running' || this.isPlaying) return;
     this.playerSequence.splice(index, 1);
   }
 
@@ -284,6 +272,7 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
 
     let currentX = this.startPosition.x;
     let currentY = this.startPosition.y;
+    
     for (let i = 0; i < this.playerSequence.length; i++) {
       this.currentCommandIndex = i;
       const cmd = this.playerSequence[i];
@@ -300,15 +289,11 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
         this.gameStatus = 'failed';
         this.isPlaying = false;
         this.currentCommandIndex = -1;
-
         this.audioService.playSound('robot-off');
         this.isDestroying = true;
-
         await this.delay(400);
-        
         this.isDestroying = false;
         this.failureMessage = 'La secuencia que usaste hizo que te salieras del mapa. ¡Haz clic aquí para reiniciar!';
-
         this.gameResult.emit({
           status: 'failed',
           message: '¡Cuidado! Te saliste del tablero.',
@@ -320,15 +305,11 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
         this.gameStatus = 'failed';
         this.isPlaying = false;
         this.currentCommandIndex = -1;
-
         this.isDestroying = true;
         this.audioService.playSound('robot-off');
-
         await this.delay(400);
-
         this.isDestroying = false;
         this.failureMessage = '¡Ups! Chocaste con un obstáculo. ¡Haz clic aquí para reiniciar!';
-        
         this.gameResult.emit({
           status: 'failed',
           message: '¡Ups! Chocaste. Revisa tu secuencia.',
@@ -337,6 +318,7 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
       }
       await this.delay(500);
     }
+    
     this.currentCommandIndex = -1;
 
     if (this.grid[currentY][currentX].type === 'goal') {
@@ -357,16 +339,18 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
   isOutOfBounds(x: number, y: number): boolean {
     return x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize;
   }
+
   isWall(x: number, y: number): boolean {
     return this.grid[y][x].type === 'wall';
   }
+
   delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (this.isPlaying) return;
+    if (this.isPlaying || this.failureMessage) return;
 
     switch (event.key) {
       case 'ArrowUp':
@@ -374,25 +358,21 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
         event.preventDefault();
         this.addCommand('UP');
         break;
-
       case 'ArrowDown':
       case 's':
         event.preventDefault();
         this.addCommand('DOWN');
         break;
-
       case 'ArrowLeft':
       case 'a':
         event.preventDefault();
         this.addCommand('LEFT');
         break;
-
       case 'ArrowRight':
       case 'd':
         event.preventDefault();
         this.addCommand('RIGHT');
         break;
-
       case 'Escape':
       case 'Backspace':
         if (this.playerSequence.length > 0) {
@@ -400,7 +380,6 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
           this.removeCommand(this.playerSequence.length - 1);
         }
         break;
-
       case ' ':
         event.preventDefault();
         this.runSequence();
