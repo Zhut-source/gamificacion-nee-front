@@ -507,8 +507,8 @@ body.high-contrast {
     .status-badge {
       &.status-completed {
         background-color: transparent !important;
-        color: var(--badge-status-completed-text) !important;
-        border: 2px solid var(--badge-status-completed-border) !important;
+        color: var(--badge-status-completed-text);
+        border: 2px solid var(--badge-status-completed-border);
       }
       &.status-pending {
         background-color: transparent !important;

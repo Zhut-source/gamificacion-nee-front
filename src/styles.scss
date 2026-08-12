@@ -119,8 +119,8 @@
   --badge-hard-border: #dc2626;
 
   --badge-status-completed-bg: transparent;
-  --badge-status-completed-text: #ffffff;
-  --badge-status-completed-border: #ffffff;
+  --badge-status-completed-text: var(--color-dark);
+  --badge-status-completed-border: var(--color-dark);
 
   --badge-status-pending-bg: transparent;
   --badge-status-pending-text: #0369a1;
