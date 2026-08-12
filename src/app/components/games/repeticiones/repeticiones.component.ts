@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AudioService } from '@core/services/audio.service';
+import { NotificationService } from '@core/services/notification.service';
 
 export type Command = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 
@@ -63,7 +64,10 @@ export class RepeticionesComponent implements OnInit, OnChanges {
   isHintPlaying: boolean = false;
   solutionPattern: string[] = [];
 
-  constructor(private audioService: AudioService) {}
+  constructor(
+    private audioService: AudioService,
+    private notificationService: NotificationService,
+  ) {}
 
   ngOnInit() {
     this.initGame(this.difficultyLevel);
@@ -288,7 +292,7 @@ export class RepeticionesComponent implements OnInit, OnChanges {
 
   closeLoop() {
     if (this.currentLoopCommands.length === 0) {
-      alert('El bucle está vacío. Añade flechas antes de cerrarlo.');
+      this.notificationService.showAlert('El bucle está vacío. Añade flechas antes de cerrarlo.', 'error');
       return;
     }
 
@@ -409,7 +413,6 @@ export class RepeticionesComponent implements OnInit, OnChanges {
     for (let i = 0; i < this.solutionPattern.length; i++) {
       const btnToPress = this.solutionPattern[i];
       this.activeHintBtn = btnToPress;
-      this.audioService.playSound('switch');
       await this.delay(1100);
       this.activeHintBtn = null;
       await this.delay(200);

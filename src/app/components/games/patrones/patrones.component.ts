@@ -25,11 +25,12 @@ export class PatronesComponent implements OnInit, OnChanges {
   difficulty: 'easy' | 'medium' | 'hard' = 'easy';
   gridSize: number = 3; 
   grid: LightCell[][] = [];
-  
   solutionMask: boolean[][] = []; 
   
   movesCount: number = 0;
-  maxMoves: number = 10;
+  intentosCount: number = 0;
+  maxIntentos: number = 3;
+  maxMoves: number = 30;
 
   timeRemaining: number = 30;
   maxTime: number = 30;
@@ -43,7 +44,10 @@ export class PatronesComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.initGame(this.difficultyLevel);
   }
-  ngOnDestroy() { this.clearInternalTimer(); }
+
+  ngOnDestroy() { 
+    this.clearInternalTimer(); 
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['difficultyLevel'] && !changes['difficultyLevel'].firstChange) {
@@ -51,13 +55,13 @@ export class PatronesComponent implements OnInit, OnChanges {
     }
   }
 
-  // --- INICIALIZACIÓN ---
-
   initGame(difficulty: 'easy' | 'medium' | 'hard') {
     this.difficulty = difficulty;
     this.movesCount = 0;
+    this.intentosCount = 0;
     this.gameStatus = 'idle';
     this.isPlaying = false;
+    
     if (difficulty === 'easy') this.gridSize = 3;
     if (difficulty === 'medium') this.gridSize = 4;
     if (difficulty === 'hard') this.gridSize = 5;
@@ -109,18 +113,15 @@ export class PatronesComponent implements OnInit, OnChanges {
     }
   }
 
-  // --- LÓGICA CORE DEL JUEGO (LUCES) ---
-
   onLightClick(r: number, c: number) {
     if (this.gameStatus === 'success' || this.isPlaying) return;
 
     this.audioService.playSound('switch');
     this.movesCount++;
+    this.intentosCount = Math.floor(this.movesCount / 10);
     
     this.clearHints();
-
     this.toggleLogic(r, c);
-
     this.solutionMask[r][c] = !this.solutionMask[r][c];
 
     if (this.checkWinCondition()) {
@@ -130,9 +131,18 @@ export class PatronesComponent implements OnInit, OnChanges {
       setTimeout(() => {
         this.gameResult.emit({ 
           status: 'success', 
-          message: `¡Patrón descifrado en ${this.movesCount} movimientos!` 
+          message: `¡Patrón descifrado en ${this.movesCount} movimientos y ${this.intentosCount} intentos!` 
         });
       }, 1000);
+      return;
+    }
+
+    if (this.intentosCount >= this.maxIntentos) {
+      this.isPlaying = true;
+      this.triggerFailure('Superaste el límite de 3 intentos permitidos. Reiniciando juego...');
+      setTimeout(() => {
+        this.initGame(this.difficulty);
+      }, 2000);
     }
   }
 
@@ -162,16 +172,12 @@ export class PatronesComponent implements OnInit, OnChanges {
     return this.grid.every(row => row.every(cell => !cell.isOn));
   }
 
-  // --- SISTEMA INTELIGENTE DE PISTAS ---
-
   mostrarPista() {
     if (this.gameStatus !== 'idle') return;
 
     this.hintUsed.emit();
-
     this.clearHints();
 
-    
     const pendingHints: {r: number, c: number}[] = [];
     for (let r = 0; r < this.gridSize; r++) {
       for (let c = 0; c < this.gridSize; c++) {

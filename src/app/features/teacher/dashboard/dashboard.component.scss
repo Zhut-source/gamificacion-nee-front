@@ -34,7 +34,7 @@
     text-align: center;
 
     .lucide-presentation {
-      color: var(--color-accent-3);
+      color: var(--spinner-color);
     }
 
     .main-title {
@@ -73,7 +73,7 @@
       }
       &:focus:not(:disabled) {
         outline: 2px solid var(--btn-2-action-active-outline);
-        outline-offset: 3px !important;
+        outline-offset: 2px !important;
       }
     }
   }

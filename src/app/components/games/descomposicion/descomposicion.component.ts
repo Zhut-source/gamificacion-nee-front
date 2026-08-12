@@ -393,7 +393,7 @@ export class DescomposicionComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.audioService.playSound('jump');
+    this.audioService.playSound('water-fill');
     this.areaCounter++;
     const areaColor = this.colors[this.areaCounter % this.colors.length];
 
@@ -408,7 +408,7 @@ export class DescomposicionComponent implements OnInit, OnChanges {
 
   private destroyAreas(areaIds: Set<number>) {
     this.destroyedCount++;
-    this.audioService.playSound('robot-off');
+    this.audioService.playSound('water-destroy');
 
     this.grid.forEach((row) =>
       row.forEach((cell) => {
@@ -432,7 +432,7 @@ export class DescomposicionComponent implements OnInit, OnChanges {
   }
 
   private showError(cells: ShikakuCell[]) {
-    this.audioService.playSound('fail');
+    this.audioService.playSound('water-error');
     cells.forEach((c) => (c.isError = true));
     setTimeout(() => {
       cells.forEach((c) => (c.isError = false));
@@ -446,7 +446,7 @@ export class DescomposicionComponent implements OnInit, OnChanges {
     if (isComplete) {
       this.gameStatus = 'success';
       this.isPlaying = true;
-      this.audioService.playSound('robot-cargando');
+      this.audioService.playSound('level-win');
       setTimeout(() => {
         this.gameResult.emit({
           status: 'success',
@@ -477,7 +477,7 @@ export class DescomposicionComponent implements OnInit, OnChanges {
     }
 
     if (targetSolutionId !== null) {
-      this.audioService.playSound('switch');
+      this.audioService.playSound('water-fill');
       this.grid.forEach((row) =>
         row.forEach((cell) => {
           if (cell.solutionId === targetSolutionId) cell.isHint = true;

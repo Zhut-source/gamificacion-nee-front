@@ -1,54 +1,73 @@
-<ng-template #arrowIcon let-dir="dir">
-  @switch (dir) {
-    @case ('UP') {
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg>
-    }
-    @case ('LEFT') {
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
-    }
-    @case ('DOWN') {
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
-    }
-    @case ('RIGHT') {
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-    }
-  }
-</ng-template>
-
 <div class="game-environment">
-  <div class="side-panels">
+  <div class="board-container">
     <div
-      class="sequence-timeline"
-      role="region"
-      aria-label="Línea de tiempo de comandos"
+      class="game-grid"
+      [style.grid-template-columns]="'repeat(' + gridSize + ', 1fr)'"
+      [style.grid-template-rows]="'repeat(' + gridSize + ', 1fr)'"
     >
-      <h3 class="timeline-title">Tu código secuencial</h3>
+      @for (row of grid; track $index) {
+        @for (cell of row; track $index) {
+          <div
+            class="grid-cell"
+            [class]="'cell-' + cell.type"
+            [class.cell-hint]="cell.isHint"
+          >
+            @if (playerPosition.x === cell.x && playerPosition.y === cell.y) {
+              <div
+                class="player-character"
+                [class.robot-exploded]="isDestroying"
+                role="img"
+                aria-label="Robot jugador"
+              >
+                🤖
+              </div>
+            }
 
-      <span class="capacity-indicator" [class.is-full]="isMaxBlocksReached">
-        Bloques: {{ playerSequence.length }} / {{ maxBlocks }}
-      </span>
+            @if (cell.type === "goal") {
+              <div
+                class="goal-indicator"
+                role="img"
+                aria-label="Bandera de meta"
+              >
+                🚩
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="side-panels">
+    <div class="sequence-timeline" aria-label="Tu secuencia con repeticiones">
+      <div class="timeline-header">
+        <p class="timeline-title">Tu Código:</p>
+        <span class="capacity-indicator" [class.is-full]="isMaxBlocksReached">
+          Bloques: {{ playerSequence.length }} / {{ maxBlocks }}
+        </span>
+      </div>
 
       <div class="loop-counter-box" [class.active]="isBuildingLoop">
         <label for="loop-times-select">Repetir bucle:</label>
         <select
           id="loop-times-select"
           [(ngModel)]="currentLoopTimes"
-          [disabled]="!isBuildingLoop || isPlaying"
-          [class.hint-glow]="activeHintBtn === 'LOOP_TIMES'"
-          aria-label="Seleccionar cantidad de repeticiones para el bucle"
+          [disabled]="!isBuildingLoop"
         >
           <option [value]="2">2 veces</option>
           <option [value]="3">3 veces</option>
           <option [value]="4">4 veces</option>
           <option [value]="5">5 veces</option>
           <option [value]="6">6 veces</option>
-          <option [value]="7">7 veces</option>
         </select>
       </div>
 
-      <div class="sequence-track" aria-live="polite">
+      <div class="sequence-track">
         @if (playerSequence.length === 0 && !isBuildingLoop) {
-          <span class="empty-text">Arrastra o añade comandos desde el panel inferior...</span>
+          <span class="empty-text">
+            Construye tu código aquí... <br />
+            • Usa <strong>[Iniciar Bucle]</strong> para agrupar pasos repetidos.
+          </span>
         }
 
         @for (block of playerSequence; track $index) {
@@ -57,29 +76,51 @@
               type="button"
               class="command-block"
               (click)="removeBlock($index)"
-              [disabled]="isPlaying"
-              aria-label="Eliminar comando"
+              [attr.aria-label]="'Paso ' + ($index + 1) + ': ' + block.value + '. Clic para eliminar'"
             >
-              <ng-container *ngTemplateOutlet="arrowIcon; context: { dir: block.value }"></ng-container>
+              @if (block.value === "UP") {
+                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg>
+              }
+              @if (block.value === "DOWN") {
+                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
+              }
+              @if (block.value === "LEFT") {
+                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+              }
+              @if (block.value === "RIGHT") {
+                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+              }
             </button>
-          } @else if (block.type === "loop") {
+          }
+
+          @if (block.type === "loop") {
             <div class="loop-container">
               <div class="loop-header">
-                <span>Repetir ({{ block.times }}x)</span>
+                <span>REPETIR {{ block.times }}x</span>
                 <button
                   type="button"
                   class="remove-loop-btn"
                   (click)="removeBlock($index)"
-                  [disabled]="isPlaying"
                   aria-label="Eliminar bucle completo"
                 >
-                  ✖
+                  ✕
                 </button>
               </div>
               <div class="loop-body">
                 @for (subCmd of block.commands; track $index) {
                   <span class="command-block mini-block">
-                    <ng-container *ngTemplateOutlet="arrowIcon; context: { dir: subCmd }"></ng-container>
+                    @if (subCmd === "UP") {
+                      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg>
+                    }
+                    @if (subCmd === "DOWN") {
+                      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
+                    }
+                    @if (subCmd === "LEFT") {
+                      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+                    }
+                    @if (subCmd === "RIGHT") {
+                      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                    }
                   </span>
                 }
               </div>
@@ -90,16 +131,27 @@
         @if (isBuildingLoop) {
           <div class="loop-container building-mode">
             <div class="loop-header">
-              <span>Construyendo Bucle...</span>
+              <span>REPETIR {{ currentLoopTimes }}x (EDITANDO)</span>
             </div>
             <div class="loop-body">
               @for (subCmd of currentLoopCommands; track $index) {
                 <span class="command-block mini-block">
-                  <ng-container *ngTemplateOutlet="arrowIcon; context: { dir: subCmd }"></ng-container>
+                  @if (subCmd === "UP") {
+                    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg>
+                  }
+                  @if (subCmd === "DOWN") {
+                    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
+                  }
+                  @if (subCmd === "LEFT") {
+                    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+                  }
+                  @if (subCmd === "RIGHT") {
+                    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                  }
                 </span>
               }
               @if (currentLoopCommands.length === 0) {
-                <span class="empty-text ghost-text">Agrega flechas...</span>
+                <span class="empty-text ghost-text">Añade 1 o 2 flechas...</span>
               }
             </div>
           </div>
@@ -114,136 +166,66 @@
             type="button"
             class="loop-btn start-loop"
             [class.hint-glow]="activeHintBtn === 'LOOP_START'"
-            [disabled]="isMaxBlocksReached || isPlaying"
             (click)="startLoop()"
+            [disabled]="isPlaying || isMaxBlocksReached"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-rotate-ccw-icon lucide-rotate-ccw"
-            >
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-              <path d="M3 3v5h5" />
-            </svg>
-            <span>Iniciar Bucle</span>
+            <svg class="loop-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Iniciar Bucle
           </button>
         } @else {
           <button
             type="button"
             class="loop-btn end-loop"
             [class.hint-glow]="activeHintBtn === 'LOOP_END'"
-            [disabled]="isPlaying"
             (click)="closeLoop()"
           >
+            <svg class="loop-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
             Cerrar Bucle
           </button>
         }
       </div>
 
-      <div
-        class="direction-buttons"
-        role="group"
-        aria-label="Comandos de dirección"
-      >
+      <div class="direction-buttons">
         <button
           type="button"
           class="dir-btn"
           [class.hint-glow]="activeHintBtn === 'UP'"
-          [disabled]="isPlaying"
           (click)="addCommand('UP')"
-          aria-label="Mover Arriba"
+          [disabled]="isPlaying"
+          aria-label="Mover arriba"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="m5 12 7-7 7 7" />
-            <path d="M12 19V5" />
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg>
         </button>
         <div class="horizontal-btns">
           <button
             type="button"
             class="dir-btn"
             [class.hint-glow]="activeHintBtn === 'LEFT'"
-            [disabled]="isPlaying"
             (click)="addCommand('LEFT')"
-            aria-label="Mover a la Izquierda"
+            [disabled]="isPlaying"
+            aria-label="Mover izquierda"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="m12 19-7-7 7-7" />
-              <path d="M19 12H5" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
           </button>
           <button
             type="button"
             class="dir-btn"
             [class.hint-glow]="activeHintBtn === 'DOWN'"
-            [disabled]="isPlaying"
             (click)="addCommand('DOWN')"
-            aria-label="Mover Abajo"
+            [disabled]="isPlaying"
+            aria-label="Mover abajo"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M12 5v14" />
-              <path d="m19 12-7 7-7-7" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>
           </button>
           <button
             type="button"
             class="dir-btn"
             [class.hint-glow]="activeHintBtn === 'RIGHT'"
-            [disabled]="isPlaying"
             (click)="addCommand('RIGHT')"
-            aria-label="Mover a la Derecha"
+            [disabled]="isPlaying"
+            aria-label="Mover derecha"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
           </button>
         </div>
       </div>
@@ -251,70 +233,31 @@
       <div class="action-buttons">
         <button
           type="button"
-          class="hint-btn"
-          (click)="mostrarPista()"
-          [disabled]="isPlaying || isHintPlaying"
-          aria-label="Mostrar pista asistida"
-        >
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg>
-          <span>Pista</span>
-        </button>
-        <button
-          type="button"
           class="run-btn"
           (click)="runSequence()"
-          [disabled]="
-            isPlaying || playerSequence.length === 0 || isBuildingLoop
-          "
-          aria-label="Ejecutar algoritmo"
+          [disabled]="isPlaying || playerSequence.length === 0 || isBuildingLoop"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
-          <span>Ejecutar</span>
+          <span>{{ isPlaying ? "..." : "EJECUTAR" }}</span>
         </button>
+
         <button
           type="button"
           class="reset-btn"
-          (click)="initGame(difficultyLevel)"
+          (click)="initGame(difficulty)"
           [disabled]="isPlaying"
-          aria-label="Reiniciar nivel"
         >
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m17 2 4 4-4 4" /><path d="M3 11v-1a4 4 0 0 1 4-4h14" /><path d="m7 22-4-4 4-4" /><path d="M21 13v1a4 4 0 0 1-4 4H3" /></svg>
           <span>Reiniciar</span>
         </button>
+
+        <button
+          type="button"
+          class="hint-btn"
+          (click)="mostrarPista()"
+          [disabled]="isPlaying || isHintPlaying"
+        >
+          <span>Pista</span>
+        </button>
       </div>
-    </div>
-  </div>
-
-  <div class="board-container">
-    <div
-      class="game-grid"
-      [ngStyle]="{ 'grid-template-columns': 'repeat(' + gridSize + ', 1fr)' }"
-      role="grid"
-      aria-label="Tablero de juego"
-    >
-      @for (row of grid; track $index; let y = $index) {
-        @for (cell of row; track $index; let x = $index) {
-          <div
-            class="grid-cell"
-            [ngClass]="'cell-' + cell.type"
-            [class.cell-hint]="cell.isHint"
-            role="gridcell"
-          >
-            @if (playerPosition.x === x && playerPosition.y === y) {
-              <span
-                class="player-character"
-                [class.robot-exploded]="isDestroying"
-                aria-label="Posición actual del robot"
-                >🤖</span
-              >
-            }
-
-            @if (cell.type === "goal") {
-              <span aria-label="Bandera de meta">🚩</span>
-            }
-          </div>
-        }
-      }
     </div>
   </div>
 </div>
