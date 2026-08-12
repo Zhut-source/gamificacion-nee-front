@@ -13,13 +13,13 @@ export class AudioService {
     if (savedVolume !== null) {
       this.volume = Number(savedVolume) / 100;
     }
-
     this.preloadSound(
       'congratulations',
       'assets/audio/alertas/congratulations.mp3',
     );
-    this.preloadSound('fail', 'assets/audio/alertas/fail.mp3');
-
+    this.preloadSound('fail', 
+      'assets/audio/alertas/derrotasound.mp3'
+    );
     this.preloadSound(
       'jump',
       'assets/audio/games/secuenciacion/jump-sound.mp3',
@@ -39,6 +39,14 @@ export class AudioService {
     this.preloadSound(
       'badge-notification',
       'assets/audio/alertas/badge-notification.mp3',
+    )
+    this.preloadSound(
+      'win',
+      'assets/audio/alertas/winsound.mp3',
+    )
+    this.preloadSound(
+      'crack-wall',
+      'assets/audio/games/secuenciacion/choquemetalico.mp3',
     )
   }
 

@@ -229,7 +229,7 @@ export class ChallengeViewComponent implements OnInit, OnDestroy {
     this.feedback.show = true;
     
     if (result.status === 'success') {
-      this.audioService.playSound('congratulations');
+      this.audioService.playSound('win');
 
       if (!this.completedDifficulties.includes(this.currentDifficulty)) {
         this.completedDifficulties.push(this.currentDifficulty);

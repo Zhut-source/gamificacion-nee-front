@@ -1,5 +1,4 @@
 <div class="game-environment">
-  <!-- 1. EL TABLERO (MATRIZ DE LUCES) -->
   <div class="board-container">
     <div
       class="game-grid"
@@ -9,6 +8,7 @@
       @for (row of grid; track rowIndex; let rowIndex = $index) {
         @for (cell of row; track colIndex; let colIndex = $index) {
           <button
+            type="button"
             class="grid-cell light-bulb"
             [class.is-on]="cell.isOn"
             [class.cell-hint]="cell.isHint"
@@ -23,7 +23,6 @@
               (cell.isOn ? ' encendida' : ' apagada')
             "
           >
-            <!-- Efecto visual del foco -->
             <div class="bulb-inner"></div>
           </button>
         }
@@ -31,32 +30,26 @@
     </div>
   </div>
 
-  <!-- 2. PANELES LATERALES -->
   <div class="side-panels">
-    <!-- Panel de Instrucciones y Estado -->
     <div class="sequence-timeline" aria-label="Instrucciones del juego">
       <p class="timeline-title">Patrón de Luces</p>
       <div class="instructions-content">
-        <p class="empty-text" style="margin-bottom: 10px; display: block">
+        <p class="empty-text">
           <strong>Misión:</strong> Apaga todas las luces del tablero.<br />
           Al tocar una luz, se invertirá su estado y el de las luces que están
           directamente a su <strong>izquierda y derecha</strong>:
         </p>
 
-        <!-- APOYO VISUAL DE LA REGLA (Línea Horizontal) -->
         <div class="pattern-demo-container" aria-hidden="true">
           <div class="mini-grid">
-            <!-- Fila Superior (Apagada) -->
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
 
-            <!-- Fila Central (Encendida en línea horizontal) -->
             <div class="mini-cell is-affected"></div>
             <div class="mini-cell is-center is-affected">👆</div>
             <div class="mini-cell is-affected"></div>
 
-            <!-- Fila Inferior (Apagada) -->
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
             <div class="mini-cell"></div>
@@ -70,10 +63,10 @@
       </div>
     </div>
 
-    <!-- 3. PANEL DE CONTROLES -->
-    <div class="control-panel" style="justify-content: flex-end">
+    <div class="control-panel">
       <div class="action-buttons">
         <button
+          type="button"
           class="reset-btn"
           (click)="initGame(difficulty)"
           [disabled]="isPlaying"
@@ -88,6 +81,7 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
           >
             <path d="m17 2 4 4-4 4" />
             <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
@@ -96,6 +90,7 @@
           </svg>
           <span>Reiniciar Patrón</span>
         </button>
+
         <button
           type="button"
           class="hint-btn"
@@ -112,11 +107,9 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-lightbulb-icon lucide-lightbulb"
+            aria-hidden="true"
           >
-            <path
-              d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"
-            />
+            <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
             <path d="M9 18h6" />
             <path d="M10 22h4" />
           </svg>

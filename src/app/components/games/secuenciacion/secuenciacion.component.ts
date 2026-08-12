@@ -306,7 +306,7 @@ export class SecuenciacionComponent implements OnInit, OnChanges {
         this.isPlaying = false;
         this.currentCommandIndex = -1;
         this.isDestroying = true;
-        this.audioService.playSound('robot-off');
+        this.audioService.playSound('crack-wall');
         await this.delay(400);
         this.isDestroying = false;
         this.failureMessage = '¡Ups! Chocaste con un obstáculo. ¡Haz clic aquí para reiniciar!';

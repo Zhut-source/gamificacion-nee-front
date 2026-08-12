@@ -1,3 +1,32 @@
+@keyframes pulseHintLight {
+  from {
+    transform: scale(0.95);
+    box-shadow: 0 0 0px #ef4444;
+  }
+  to {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ef4444;
+  }
+}
+
+@keyframes clickSimulation {
+  0%, 100% {
+    transform: scale(1.1) translateY(0);
+    border-bottom-width: 4px;
+  }
+  50% {
+    transform: scale(1.1) translateY(4px);
+    border-bottom-width: 0px;
+  }
+}
+
+@keyframes shakeBoard {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+  40%, 60% { transform: translate3d(8px, 0, 0); }
+}
+
 :host {
   display: flex;
   align-items: center;
@@ -8,7 +37,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 2rem;
   width: 100%;
 }
@@ -25,49 +54,40 @@
 .board-container {
   flex: 0 0 450px;
   max-width: 450px;
-  background-color: #2b2b2a; // Fondo oscuro para resaltar las luces
+  background-color: #2b2b2a;
   padding: 15px;
   border-radius: 16px;
-  box-shadow:
-    inset 0 4px 8px rgba(0, 0, 0, 0.3),
-    0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
 
   .game-grid {
     display: grid;
     gap: 8px;
   }
 
-  // ESTILOS DE LAS LUCES (Botones)
   .light-bulb {
-    all: unset; // Quita los estilos por defecto del botón
+    all: unset;
     aspect-ratio: 1 / 1;
     border-radius: 12px;
     position: relative;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-sizing: border-box;
-
-    // ESTADO: APAGADO
     background-color: #4b5563;
     border-bottom: 6px solid #1f2937;
     box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1);
 
     .bulb-inner {
       position: absolute;
-      top: 15%;
-      left: 15%;
-      right: 15%;
-      bottom: 15%;
+      top: 15%; left: 15%; right: 15%; bottom: 15%;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #6b7280, #374151);
       opacity: 0.5;
       transition: all 0.3s;
     }
 
-    // INTERACCIONES
     &:focus-visible {
-      outline: 4px solid var(--accent, #0eb9de);
-      outline-offset: 4px;
+      outline: 2px solid var(--spinner-color);
+      outline-offset: 3px !important;
     }
 
     &:active:not(:disabled) {
@@ -76,13 +96,10 @@
       margin-top: 4px;
     }
 
-    // ESTADO: ENCENDIDO
     &.is-on {
-      background-color: #fde047; // Amarillo brillante
+      background-color: #fde047;
       border-bottom: 6px solid #ca8a04;
-      box-shadow:
-        0 0 15px rgba(253, 224, 71, 0.5),
-        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 15px rgba(253, 224, 71, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.8);
 
       .bulb-inner {
         background: radial-gradient(circle at 30% 30%, #ffffff, #fef08a);
@@ -91,121 +108,76 @@
       }
     }
 
-    // ESTADO: PISTA (HINT)
     &.cell-hint {
       animation: pulseHintLight 1s infinite alternate ease-in-out;
-      border: 3px dashed #ef4444 !important; // Rojo para que destaque sobre el amarillo
+      border: 3px dashed #ef4444 !important;
     }
   }
 }
 
-@keyframes pulseHintLight {
-  from {
-    transform: scale(0.95);
-    box-shadow: 0 0 0px #ef4444;
-  }
-  to {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px #ef4444;
-  }
-}
-
 .sequence-timeline {
-  background-color: #ffffff;
+  background-color: var(--bg-surface);
   padding: 20px;
   border-radius: 12px;
-  border: 2px solid var(--button-speaker-bg-color);
+  border: 2px solid var(--border-carrucel);
   flex-grow: 1;
 
   .timeline-title {
     margin: 0 0 15px 0;
     font-weight: bold;
     font-size: 1.2rem;
-    color: var(--text-primary);
+    color: var(--text-main);
   }
 
   .empty-text {
-    color: var(--container-dashboard-text-color);
+    color: var(--text-muted);
     line-height: 1.6;
+    margin-bottom: 10px;
+    display: block;
   }
 
   .stats-box {
     margin-top: 20px;
     padding: 15px;
-    background-color: rgba(#0eb9de, 0.1);
+    background-color: rgba(14, 185, 222, 0.1);
     border-radius: 8px;
-    border: 1px solid rgba(#0eb9de, 0.3);
+    border: 1px solid rgba(14, 185, 222, 0.3);
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     .stat-label {
       font-weight: bold;
-      color: var(--text-primary);
+      color: var(--text-main);
     }
     .stat-value {
-      color: var(--accent);
-    }
-  }
-}
-
-.control-panel {
-  display: flex;
-  flex-direction: flow;
-  width: 100%;
-
-  .action-buttons{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .action-buttons button {
-    padding: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      color: var(--color-accent-4);
       font-weight: bold;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      color: white;
-    &.hint-btn {
-      background-color: #8b5cf6;
-      border-bottom: 4px solid #6d28d9;
     }
-    &.reset-btn {
-      background-color: #f59e0b;
-      border-bottom: 4px solid #d97706;
-    }
-    &:active {
-      transform: translateY(4px);
-      border-bottom: 0;
-    }
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+
+    &.danger {
+      background-color: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.5);
+      .stat-value {
+        color: #ef4444;
+      }
     }
   }
 }
 
-// ==========================================
-// APOYO VISUAL (LA CRUZ DEMOSTRATIVA)
-// ==========================================
 .pattern-demo-container {
   display: flex;
   justify-content: center;
-  margin: 20px 0;
-  padding: 15px;
+  margin: 15px 0;
+  padding: 12px;
   background-color: #2b2b2a;
   border-radius: 12px;
   box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
 
   .mini-grid {
     display: grid;
-    grid-template-columns: repeat(3, 40px);
-    grid-template-rows: repeat(3, 40px);
+    grid-template-columns: repeat(3, 36px);
+    grid-template-rows: repeat(3, 36px);
     gap: 6px;
   }
 
@@ -216,17 +188,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
     transition: all 0.3s;
 
-    // Las luces que se encienden en forma de cruz
     &.is-affected {
       background-color: #fde047;
       border-bottom-color: #ca8a04;
       box-shadow: 0 0 10px rgba(253, 224, 71, 0.4);
     }
 
-    // La celda central que se presiona
     &.is-center {
       transform: scale(1.1);
       z-index: 2;
@@ -235,86 +205,56 @@
   }
 }
 
-// Animación para enseñar que se debe hacer clic ahí
-@keyframes clickSimulation {
-  0%,
-  100% {
-    transform: scale(1.1) translateY(0);
-    border-bottom-width: 4px;
-  }
-  50% {
-    transform: scale(1.1) translateY(4px);
-    border-bottom-width: 0px;
-  }
-}
+.control-panel {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
 
-.stats-box {
-  // ... (tu css actual)
-  &.danger {
-    background-color: rgba(#ef4444, 0.1);
-    border-color: rgba(#ef4444, 0.5);
-    .stat-value {
-      color: #ef4444;
+  .action-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    button {
+      flex: 1;
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: white;
+
+      &:focus-visible {
+        outline: 2px solid var(--spinner-color);
+        outline-offset: 3px !important;
+      }
+
+      &.hint-btn {
+        background-color: #8b5cf6;
+        border-bottom: 4px solid #6d28d9;
+      }
+      &.reset-btn {
+        background-color: #f59e0b;
+        border-bottom: 4px solid #d97706;
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(4px);
+        border-bottom: 0;
+      }
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
     }
   }
-
-  &.timer-box {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
 }
 
-.energy-bar {
-  width: 100%;
-  height: 10px;
-  background-color: #e5e7eb;
-  border-radius: 5px;
-  overflow: hidden;
-
-  .energy-fill {
-    height: 100%;
-    background-color: var(--accent, #0eb9de);
-    transition:
-      width 1s linear,
-      background-color 0.3s;
-  }
-}
-
-.stats-box.danger .energy-fill {
-  background-color: #ef4444;
-  animation: pulseHintLight 0.5s infinite alternate;
-}
-
-/* Tablero parpadea en rojo cuando pierdes */
-:host ::ng-deep app-juego-patrones {
-  .board-container.failed-state {
-    animation: shakeBoard 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-    box-shadow: inset 0 0 20px #ef4444;
-  }
-}
-
-@keyframes shakeBoard {
-  10%,
-  90% {
-    transform: translate3d(-2px, 0, 0);
-  }
-  20%,
-  80% {
-    transform: translate3d(4px, 0, 0);
-  }
-  30%,
-  50%,
-  70% {
-    transform: translate3d(-8px, 0, 0);
-  }
-  40%,
-  60% {
-    transform: translate3d(8px, 0, 0);
-  }
-}
-
-// Adaptación de pista para el modo Alto Contraste global
 body.high-contrast {
   .board-container {
     border: 2px solid #ffffff;
@@ -332,18 +272,38 @@ body.high-contrast {
   }
 }
 
-// Responsividad
-@media (max-width: 1030px) {
+@media (max-width: 1400px) {
   .game-environment {
     flex-direction: column;
     align-items: center;
+    gap: 1.5rem;
   }
+
   .board-container {
     width: 100%;
     max-width: 450px;
   }
+
   .side-panels {
     width: 100%;
     max-width: 450px;
+  }
+}
+
+@media (max-width: 480px) {
+  .board-container,
+  .side-panels {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .control-panel .action-buttons {
+    flex-direction: row;
+    gap: 6px;
+
+    button {
+      padding: 10px 6px;
+      font-size: 0.85rem;
+    }
   }
 }
