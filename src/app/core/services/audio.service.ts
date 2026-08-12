@@ -48,6 +48,19 @@ export class AudioService {
       'crack-wall',
       'assets/audio/games/secuenciacion/choquemetalico.mp3',
     )
+    this.preloadSound(
+      'water-fill',
+      'assets/audio/games/descomposicion/waterfill.mp3',
+    )
+    this.preloadSound(
+      'water-error',
+      'assets/audio/games/descomposicion/watererror.mp3',
+    )
+    this.preloadSound(
+      'water-destroy',
+      'assets/audio/games/descomposicion/waterdestroy.mp3',
+    )
+
   }
 
   preloadSound(key: string, src: string) {

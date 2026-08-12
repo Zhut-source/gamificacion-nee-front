@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, OnDestroy } from '@angular/core';
 import { AudioService } from '@core/services/audio.service';
 
 export interface LightCell {
@@ -16,7 +16,7 @@ export interface LightCell {
   templateUrl: './patrones.component.html',
   styleUrl: './patrones.component.scss'
 })
-export class PatronesComponent implements OnInit, OnChanges {
+export class PatronesComponent implements OnInit, OnChanges, OnDestroy {
   
   @Input() difficultyLevel: 'easy' | 'medium' | 'hard' = 'easy';
   @Output() gameResult = new EventEmitter<{status: 'success' | 'failed', message: string}>();
@@ -127,8 +127,10 @@ export class PatronesComponent implements OnInit, OnChanges {
     if (this.checkWinCondition()) {
       this.gameStatus = 'success';
       this.isPlaying = true;
+      this.audioService.playSound('robot-cargando');
     
       setTimeout(() => {
+        this.isPlaying = false;
         this.gameResult.emit({ 
           status: 'success', 
           message: `¡Patrón descifrado en ${this.movesCount} movimientos y ${this.intentosCount} intentos!` 

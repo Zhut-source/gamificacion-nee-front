@@ -6,7 +6,6 @@
 }
 
 :root {
-  ////COLORS BASE
   --color-black: #000000;
   --color-black-1: #121212;
   --color-dark: #2b2b2a;
@@ -15,10 +14,9 @@
   --color-azul-claro: #f0f4f8;
   --color-azul-oscuro: #1a4a73;
 
-  --color-muted-1:#7a7a7a;
-  --color-muted-2:#a1a1a1;
+  --color-muted-1: #7a7a7a;
+  --color-muted-2: #a1a1a1;
 
-  //Acentos
   --color-accent-1: #ffd700;
   --color-accent-2: #995500;
   --color-accent-3: #4f46e5;
@@ -26,14 +24,13 @@
   --color-error: #ff4d4d;
   --color-success: #10b981;
 
-  //VARIABLES
-  --focus-outline-color:var(--color-accent-4);
-  --logo-color:var(--color-accent-4);
+  --focus-outline-color: var(--color-accent-4);
+  --logo-color: var(--color-accent-4);
   --spinner-color: var(--color-accent-4);
   --hover-link: var(--color-accent-4);
 
   --lines-color-header: var(--color-accent-4);
-  --lines-color:var(--color-dark);
+  --lines-color: var(--color-dark);
   --bg-header: var(--color-azul-oscuro);
   --bg-body: var(--color-azul-claro);
   --bg-surface: var(--color-white);
@@ -44,7 +41,6 @@
   --border-main: var(--color-dark);
   --border-carrucel: var(--color-azul-oscuro);
 
-  // Botones y Acciones Primarias
   --btn-1-action-bg: var(--color-light);
   --btn-1-action-text: var(--color-dark);
   --btn-1-action-hover-bg: var(--color-accent-4);
@@ -52,7 +48,7 @@
   --btn-1-action-active-bg: var(--color-accent-4);
   --btn-1-action-active-text: var(--color-dark);
   --btn-1-action-active-outline: var(--color-accent-3);
-  //Negativo de btn-1 --> btn-2
+
   --btn-2-action-bg: var(--color-azul-oscuro);
   --btn-2-action-text: var(--color-light);
   --btn-2-action-hover-bg: var(--color-accent-4);
@@ -74,7 +70,6 @@
   --btn-3-action-active-text: var(--color-dark);
   --btn-3-action-active-outline: var(--color-accent-3);
 
-  // Inputs y Controles
   --input-1-text: var(--color-dark);
   --input-1-border: var(--color-dark);
   --input-1-placeholder: var(--text-muted);
@@ -82,39 +77,62 @@
   --input-1-error: var(--color-error);
   --input-1-success: var(--color-success);
 
-  //cheack box
   --input-1-box-active-bg: var(--color-accent-4);
   --input-1-box-active-text: var(--color-black);
 
   --progress-base-bg: var(--color-dark);
   --progress-fill-bg: var(--color-success);
 
-  --double-color:var(--color-black);
-  --double-color-inverter:var(--color-white);
+  --double-color: var(--color-black);
+  --double-color-inverter: var(--color-white);
 
-  // BG CARD PASTEL
   --pastel-color-0: #f0f4ff;
   --pastel-color-1: #eefbf3;
   --pastel-color-2: #fffbeb;
   --pastel-color-3: #fdf2f8;
   --pastel-color-4: #faf5ff;
 
-  // BORDES SATURADOS (NUEVOS)
   --saturated-color-0: #3b82f6;
   --saturated-color-1: #10b981;
   --saturated-color-2: #f59e0b;
   --saturated-color-3: #ec4899;
   --saturated-color-4: #a855f7;
 
-  //componente navbar
   --nav-label-color: var(--color-dark);
   --nav-label-bg: var(--color-white);
   --nav-label-color-hover: var(--color-white);
   --nav-label-bg-hover: var(--color-dark);
   --nav-label-color-active: var(--color-azul-oscuro);
 
-  //titulos variables
   --title-1-color: var(--color-azul-oscuro);
+
+  --badge-easy-bg: transparent;
+  --badge-easy-text: #166534;
+  --badge-easy-border: #16a34a;
+
+  --badge-medium-bg: transparent;
+  --badge-medium-text: #b45309;
+  --badge-medium-border: #d97706;
+
+  --badge-hard-bg: transparent;
+  --badge-hard-text: #b91c1c;
+  --badge-hard-border: #dc2626;
+
+  --badge-status-completed-bg: transparent;
+  --badge-status-completed-text: #ffffff;
+  --badge-status-completed-border: #ffffff;
+
+  --badge-status-pending-bg: transparent;
+  --badge-status-pending-text: #0369a1;
+  --badge-status-pending-border: #0284c7;
+
+  --badge-status-assisted-bg: transparent;
+  --badge-status-assisted-text: #b45309;
+  --badge-status-assisted-border: #d97706;
+
+  --badge-status-alert-bg: transparent;
+  --badge-status-alert-text: #b91c1c;
+  --badge-status-alert-border: #dc2626;
 }
 
 *,
@@ -184,23 +202,24 @@ body.accessible-font {
   h1 {
     font-size: 34px;
   }
+
   h2 {
     font-size: 26px;
   }
+
   h3 {
     font-size: 22px;
   }
 }
 
 body.high-contrast {
-  //VARIABLES
-  --focus-outline-color:var(--color-accent-1);
-  --logo-color:var(--color-accent-1);
+  --focus-outline-color: var(--color-accent-1);
+  --logo-color: var(--color-accent-1);
   --spinner-color: var(--color-accent-1);
   --hover-link: var(--color-accent-1);
 
   --lines-color-header: var(--color-white);
-  --lines-color:var(--color-white);
+  --lines-color: var(--color-white);
   --bg-header: var(--color-black);
   --bg-body: var(--color-black);
   --bg-surface: var(--color-black-1);
@@ -211,7 +230,6 @@ body.high-contrast {
   --border-main: var(--color-dark);
   --border-carrucel: var(--color-white);
 
-  // Botones y Acciones Primarias
   --btn-1-action-bg: var(--color-white);
   --btn-1-action-text: var(--color-black);
   --btn-1-action-hover-bg: var(--color-accent-1);
@@ -241,7 +259,6 @@ body.high-contrast {
   --btn-3-action-active-text: var(--color-black);
   --btn-3-action-active-outline: var(--color-accent-3);
 
-  // Inputs y Controles
   --input-1-text: var(--color-white);
   --input-1-border: var(--color-white);
   --input-1-placeholder: var(--text-muted);
@@ -249,36 +266,64 @@ body.high-contrast {
   --input-1-error: var(--color-error);
   --input-1-success: var(--color-success);
 
-  //cheack box
   --input-1-box-active-bg: var(--color-accent-1);
   --input-1-box-active-text: var(--color-black);
 
   --progress-base-bg: var(--color-white);
   --progress-fill-bg: var(--color-accent-1);
 
-  --double-color:var(--color-white);
-  --double-color-inverter:var(--color-black);
+  --double-color: var(--color-white);
+  --double-color-inverter: var(--color-black);
 
-  //componente navbar
   --nav-label-color: var(--color-white);
   --nav-label-bg: var(--color-dark);
   --nav-label-color-hover: var(--color-dark);
   --nav-label-bg-hover: var(--color-white);
   --nav-label-color-active: var(--color-accent-1);
 
-  //titulos variables
   --title-1-color: var(--color-accent-1);
 
-  .card-challenges:not(:disabled) {
-    background-color: color-mix(
-      in srgb,
-      var(--dynamic-color) 30%,
-      transparent
-    ) !important;
-    border: 2px solid var(--dynamic-color) !important;
-    color: var(--color-white) !important;
+  --badge-easy-bg: transparent;
+  --badge-easy-text: #4ade80;
+  --badge-easy-border: #4ade80;
+
+  --badge-medium-bg: transparent;
+  --badge-medium-text: var(--color-accent-1);
+  --badge-medium-border: var(--color-accent-1);
+
+  --badge-hard-bg: transparent;
+  --badge-hard-text: #f87171;
+  --badge-hard-border: #f87171;
+
+  --badge-status-completed-bg: transparent;
+  --badge-status-completed-text: #ffffff;
+  --badge-status-completed-border: #ffffff;
+
+  --badge-status-pending-bg: transparent;
+  --badge-status-pending-text: #38bdf8;
+  --badge-status-pending-border: #38bdf8;
+
+  --badge-status-assisted-bg: transparent;
+  --badge-status-assisted-text: var(--color-accent-1);
+  --badge-status-assisted-border: var(--color-accent-1);
+
+  --badge-status-alert-bg: transparent;
+  --badge-status-alert-text: #f87171;
+  --badge-status-alert-border: #f87171;
+
+  .card-challenges:not(:disabled):not(.locked):not([aria-disabled="true"]) {
+    background-color: color-mix(in srgb, var(--dynamic-color) 15%, var(--bg-surface)) !important;
+    border: 3px solid var(--dynamic-color) !important;
+    color: var(--text-main) !important; 
   }
-  .card-challenges:disabled {
-    color: var(--text-secundary) !important;
+
+  .card-challenges:disabled,
+  .card-challenges.locked,
+  .card-challenges[aria-disabled="true"] {
+    background-color: var(--bg-surface) !important; 
+    border: 3px solid #767676 !important; 
+    color: var(--text-muted) !important; 
+    opacity: 1 !important; 
+    filter: none !important;
   }
 }

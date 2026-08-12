@@ -28,7 +28,7 @@
     background-color: #e0e0e0;
     padding: 10px;
     border-radius: 12px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
     position: relative; 
     overflow: hidden;
     align-self: flex-start;
@@ -368,11 +368,12 @@
     .game-environment {
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 1.5rem;
     }
 
     .board-container {
+      align-self: center;
     width: 100%;
       max-width: 500px;
     }

@@ -38,7 +38,7 @@
       </div>
     </div>
   } @else {
-    <!-- SISTEMA DE TABS -->
+    
     <div class="tabs-container">
       <button
         [class.active]="activeTab === 'carreras'"
@@ -67,7 +67,7 @@
     </div>
 
     <div class="catalog-workspace">
-      <!-- LADO IZQUIERDO: Formulario de Creación -->
+      
       <section class="form-section card">
         <h2>Añadir Nuevo Registro</h2>
         <form
@@ -75,7 +75,7 @@
           (ngSubmit)="onSubmit()"
           class="input-area"
         >
-          <!-- Si es materia, necesita un Dropdown extra para elegir a qué carrera pertenece -->
+          
           @if (activeTab === "materias") {
             <label class="control-label">Pertenece a la Carrera:</label>
             <select class="input-df" formControlName="carreraId">
@@ -91,7 +91,7 @@
             type="text"
             class="input-df"
             formControlName="nombre"
-            placeholder="Ej. Ingeniería en Sistemas"
+            [placeholder]="currentPlaceholder"
           />
 
           <button
@@ -104,7 +104,7 @@
         </form>
       </section>
 
-      <!-- LADO DERECHO: Tabla de Registros Actuales -->
+      
       <section class="table-section card">
         <h2>Registros Existentes</h2>
 
@@ -112,29 +112,29 @@
           <table class="students-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th style="width: 80px; text-align: center;">ID</th>
                 <th>Nombre</th>
                 @if (activeTab === "materias") {
                   <th>Carrera Perteneciente</th>
                 }
-                <th style="text-align: right">Acciones</th>
+                <th style="width: 140px; text-align: center;">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <!-- Iteramos sobre el array del tab activo -->
+              
               @for (item of catalogs[activeTab]; track item.id) {
-                <tr>
-                  <td style="color: #7a7a7a">#{{ item.id }}</td>
+                <tr class="row-item" [class.row-deleting]="deletingItemId === item.id">
+                  <td class="item-id">#{{ item.id }}</td>
                   <td>
-                    <strong>{{ item.nombre }}</strong>
+                    <strong class="item-name">{{ item.nombre }}</strong>
                   </td>
                   @if (activeTab === "materias") {
-                    <td>{{ item.carrera_nombre }}</td>
+                    <td class="item-carrera">{{ item.carrera_nombre }}</td>
                   }
-                  <td style="text-align: right">
+                  <td style="text-align: center">
                     <button
                       class="action-btn-danger"
-                      (click)="onDelete(item.id)"
+                      (click)="openDeleteModal(item)"
                     >
                       Eliminar
                     </button>
@@ -143,8 +143,8 @@
               }
               @if (catalogs[activeTab].length === 0) {
                 <tr>
-                  <td colspan="4" style="text-align: center; padding: 20px">
-                    No hay registros.
+                  <td [attr.colspan]="activeTab === 'materias' ? 4 : 3" class="empty-cell">
+                    No hay registros disponibles en esta categoría.
                   </td>
                 </tr>
               }
@@ -152,6 +152,42 @@
           </table>
         </div>
       </section>
+    </div>
+  }
+
+  
+  
+  
+  @if (showDeleteModal) {
+    <div class="modal-backdrop" (click)="closeDeleteModal()">
+      <div class="modal-card card" (click)="$event.stopPropagation()">
+        <button class="close-modal-btn" (click)="closeDeleteModal()" aria-label="Cerrar modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+
+        <div class="delete-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18"/>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+            <line x1="10" x2="10" y1="11" y2="17"/>
+            <line x1="14" x2="14" y1="11" y2="17"/>
+          </svg>
+        </div>
+        <h2 class="modal-title">Eliminar Registro</h2>
+        <p class="modal-subtext">
+          ¿Estás seguro de que deseas eliminar <strong>"{{ itemToDelete?.nombre }}"</strong> de la categoría <strong>{{ activeTab }}</strong>? Esta acción no se puede deshacer.
+        </p>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel-modal" (click)="closeDeleteModal()">
+            Cancelar
+          </button>
+          <button type="button" class="action-btn-danger btn-confirm-delete" (click)="confirmDelete()">
+            Sí, Eliminar
+          </button>
+        </div>
+      </div>
     </div>
   }
 </main>

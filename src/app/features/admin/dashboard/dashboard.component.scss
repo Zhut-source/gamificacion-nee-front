@@ -1,14 +1,11 @@
 .dashboard-container {
-  padding: 40px;
+  padding: 30px 40px;
   background-color: var(--bg-body);
   color: var(--text-main);
   max-width: 100%;
-  min-height: calc(100vh - 80px);
+  box-sizing: border-box;
 
   @media (max-width: 700px) { padding: 20px; }
-  @media (max-height: 600px) { 
-    
-  }
 }
 
 .loading-overlay {
@@ -56,7 +53,6 @@
   .subtitle { font-size: 1.1rem; color: var(--text-muted); }
 }
 
-// Reutilizamos el estilo de grid de métricas del Maestro
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -76,7 +72,6 @@
   }
 }
 
-// Estilo de los Botones/Tarjetas de Módulos
 .management-modules {
   .section-title { margin-bottom: 1.5rem; color: var(--text-main); }
 
@@ -87,7 +82,7 @@
   }
 
   .module-card {
-    all: unset; // Quita los estilos base del botón
+    all: unset; 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -128,8 +123,6 @@
     }
   }
 }
-
-//spinner
 
 .fulfilling-square-spinner,
 .fulfilling-square-spinner * {

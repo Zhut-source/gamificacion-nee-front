@@ -250,7 +250,6 @@ export class CondicionalesComponent implements OnInit, OnChanges {
 
     if (errors === 0) {
       this.gameStatus = 'success';
-      this.audioService.playSound('congratulations');
       this.gameResult.emit({
         status: 'success',
         message: `¡Clasificación perfecta! Has dominado las condicionales.`,

@@ -1,17 +1,15 @@
-// ==========================================================================
-// CONTENEDOR PRINCIPAL
-// ==========================================================================
 .dashboard-container {
-  padding: 40px;
+  padding: 30px 40px;
   background-color: var(--bg-body);
   color: var(--text-main);
   max-width: 100%;
-  min-height: calc(100vh - 80px);
+  box-sizing: border-box;
 
-  @media (max-width: 700px) { padding: 20px; }
+  @media (max-width: 700px) {
+    padding: 20px;
+  }
 }
 
-// Botón "Volver al Panel"
 .btn-back-workspace {
   all: unset;
   gap: 6px;
@@ -35,22 +33,27 @@
     color: var(--btn-3-action-hover-text);
     background: var(--btn-3-action-hover-bg);
     border: 2px solid var(--btn-3-action-hover-border);
-    transform: translateX(-4px); // Pequeño efecto hacia atrás
+    transform: translateX(-4px);
   }
-  
+
   &:focus-visible {
     outline: 2px solid var(--btn-3-action-active-outline);
     outline-offset: 3px !important;
   }
 }
 
-// ==========================================================================
-// CABECERAS Y TARJETAS (CARDS)
-// ==========================================
 .admin-header {
   margin-bottom: 1.5rem;
-  .main-title { margin-bottom: 0.25rem; color: var(--text-main); font-size: 1.8rem; }
-  .subtitle { font-size: 1.1rem; color: var(--text-muted); margin: 0; }
+  .main-title {
+    margin-bottom: 0.25rem;
+    color: var(--text-main);
+    font-size: 1.8rem;
+  }
+  .subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
 }
 
 .card {
@@ -58,18 +61,15 @@
   border: 2px solid var(--card-border-color, #ffffff);
   border-radius: 16px;
   padding: 1.5rem 2rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
 }
 
-// ==========================================================================
-// DISEÑO DE TABLA MODERNA
-// ==========================================================================
 .table-responsive-wrapper {
   width: 100%;
   overflow-x: auto;
   border-radius: 8px;
-  border: 1px solid #e2e8f0; // Borde exterior de toda la tabla
+  border: 1px solid #e2e8f0;
   background-color: transparent;
 
   &:focus-visible {
@@ -80,31 +80,32 @@
 
 .students-table {
   width: 100%;
-  border-collapse: collapse; // Junta los bordes
+  border-collapse: collapse;
   text-align: left;
-  min-width: 800px; 
+  min-width: 800px;
   background-color: var(--bg-surface);
 
-  th, td {
+  th,
+  td {
     padding: 1rem 1.25rem;
     vertical-align: middle;
     border-bottom: 1px solid #e2e8f0;
   }
 
-  // Líneas divisorias verticales (opcional, para que "parezca más tabla")
-  th:not(:last-child), td:not(:last-child) {
-    border-right: 1px solid rgba(0,0,0,0.05);
+  th:not(:last-child),
+  td:not(:last-child) {
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
   }
 
   thead {
-    background-color: rgba(0,0,0,0.03); // Fondo sutil para la cabecera
-    
+    background-color: rgba(0, 0, 0, 0.03);
+
     th {
-      font-weight: 700;
-      color: var(--text-main, #2B2B2A);
+      font-weight: 800;
+      color: var(--text-main, #2b2b2a);
       white-space: nowrap;
       text-transform: uppercase;
-      font-size: 0.85rem;
+      font-size: 1rem;
       letter-spacing: 0.5px;
     }
   }
@@ -114,155 +115,233 @@
       transition: background-color 0.15s ease;
 
       &:hover {
-        background-color: rgba(14, 185, 222, 0.05); // Efecto Hover suave con el color de la app
+        background-color: rgba(14, 185, 222, 0.05);
       }
 
       &:last-child td {
-        border-bottom: none; // Quita la línea final para que no choque con el borde curvo
+        border-bottom: none;
       }
     }
 
-    // Estilos de textos internos de la tabla
-    strong { color: var(--text-main); font-size: 1.05rem; }
-    td { color: var(--text-muted, #4b5563); }
+    strong {
+      color: var(--text-main);
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+    td {
+      color: var(--text-muted, #4b5563);
+      font-size: 1rem;
+    }
   }
 }
 
-// ==========================================================================
-// ETIQUETAS (BADGES) Y BOTONES
-// ==========================================================================
 .badge {
   display: inline-block;
-  padding: 4px 12px;
-  background-color: #DCFCE7;
-  color: #15803D;
+  padding: 5px 14px;
+  background-color: #dcfce7;
+  color: #15803d;
   border-radius: 20px;
-  font-weight: bold;
-  border: 1px solid #15803D;
-  
+  font-weight: 800;
+  font-size: 1rem;
+  border: 1px solid #15803d;
+
   &.badge-empty {
-    background-color: #F1F5F9;
-    color: #64748B;
+    background-color: #f1f5f9;
+    color: #64748b;
     border-color: #cbd5e1;
   }
 }
 
-// Código de aula
 code {
-  background: rgba(0,0,0,0.05); 
-  padding: 4px 8px; 
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 5px 10px;
+  border-radius: 6px;
   font-weight: bold;
+  font-size: 1rem;
   letter-spacing: 1px;
   color: var(--text-main);
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-// Botones de acción estándar (Ver Alumnos, Cerrar Detalle)
 .action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background-color: transparent;
-  border: 2px solid var(--btn-2-action-bg, #2B2B2A);
-  color: var(--btn-2-action-bg, #2B2B2A);
-  padding: 0.5rem 1rem;
+  border: 2px solid var(--btn-2-action-bg, #2b2b2a);
+  color: var(--btn-2-action-bg, #2b2b2a);
+  padding: 0.6rem 1.2rem;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1rem;
   white-space: nowrap;
   transition: all 0.2s ease;
 
-  &:hover, &:focus-visible {
-    background-color: var(--btn-2-action-bg, #2B2B2A);
-    color: var(--btn-2-action-text, #F9F6F0);
+  &:hover,
+  &:focus-visible {
+    background-color: var(--btn-2-action-bg, #2b2b2a);
+    color: var(--btn-2-action-text, #f9f6f0);
     outline: none;
     transform: translateY(-2px);
   }
 }
 
-// Botones de Peligro (Eliminar)
 .action-btn-danger {
   all: unset;
   box-sizing: border-box;
-  padding: 0.5rem 1rem;
-  background: #FEE2E2;
-  color: #DC2626;
-  border: 2px solid #DC2626;
+  padding: 0.6rem 1.2rem;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 2px solid #dc2626;
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
-  
-  &:hover, &:focus-visible { 
-    background: #DC2626; 
-    color: white; 
+
+  &:hover,
+  &:focus-visible {
+    background: #dc2626;
+    color: white;
     transform: translateY(-2px);
   }
 }
 
-// Botones de Advertencia (Expulsar del Aula)
 .action-btn-warning {
   all: unset;
   box-sizing: border-box;
-  padding: 0.5rem 1rem;
-  background: #FEF9C3;
-  color: #A16207;
-  border: 2px solid #A16207;
+  padding: 0.6rem 1.2rem;
+  background: #fef9c3;
+  color: #a16207;
+  border: 2px solid #a16207;
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
-  
-  &:hover, &:focus-visible { 
-    background: #A16207; 
-    color: white; 
+
+  &:hover,
+  &:focus-visible {
+    background: #a16207;
+    color: white;
     transform: translateY(-2px);
   }
 }
 
-// ==========================================================================
-// SPINNER Y CARGA (REUTILIZADOS)
-// ==========================================================================
-.loading-overlay { display: flex; justify-content: center; align-items: center; min-height: 50vh; width: 100%; transition: opacity 0.3s; &.fade-out { opacity: 0; pointer-events: none; } }
-.spinner-container { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-.fulfilling-square-spinner { height: 50px; width: 50px; position: relative; border: 4px solid var(--spinner-color); animation: fulfilling-square-spinner-animation 2.5s infinite ease; }
-.fulfilling-square-spinner .spinner-inner { vertical-align: top; display: inline-block; background-color: var(--spinner-color); width: 100%; opacity: 1; animation: fulfilling-square-spinner-inner-animation 2.5s infinite ease-in; }
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  width: 100%;
+  transition: opacity 0.3s;
+  &.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.fulfilling-square-spinner {
+  height: 50px;
+  width: 50px;
+  position: relative;
+  border: 4px solid var(--spinner-color);
+  animation: fulfilling-square-spinner-animation 2.5s infinite ease;
+}
+.fulfilling-square-spinner .spinner-inner {
+  vertical-align: top;
+  display: inline-block;
+  background-color: var(--spinner-color);
+  width: 100%;
+  opacity: 1;
+  animation: fulfilling-square-spinner-inner-animation 2.5s infinite ease-in;
+}
 
-@keyframes fulfilling-square-spinner-animation { 0% { transform: rotate(0deg); } 25%, 50% { transform: rotate(180deg); } 75%, 100% { transform: rotate(360deg); } }
-@keyframes fulfilling-square-spinner-inner-animation { 0%, 25%, 100% { height: 0%; } 50%, 75% { height: 100%; } }
+@keyframes fulfilling-square-spinner-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  25%,
+  50% {
+    transform: rotate(180deg);
+  }
+  75%,
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes fulfilling-square-spinner-inner-animation {
+  0%,
+  25%,
+  100% {
+    height: 0%;
+  }
+  50%,
+  75% {
+    height: 100%;
+  }
+}
 
-// ==========================================================================
-// ALTO CONTRASTE (DUA)
-// ==========================================================================
 body.high-contrast {
-  .card { background-color: #000000 !important; border: 2px solid #ffffff !important; }
-  
-  .table-responsive-wrapper { border-color: #ffffff; }
+  .card {
+    background-color: #000000 !important;
+    border: 2px solid #ffffff !important;
+  }
+
+  .table-responsive-wrapper {
+    border-color: #ffffff;
+  }
 
   .students-table {
     background-color: #000;
     thead {
       background-color: #121212;
-      th { border-bottom: 2px solid #ffffff; color: #FFF; }
+      th {
+        border-bottom: 2px solid #ffffff;
+        color: #fff;
+      }
     }
-    th:not(:last-child), td:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.2); }
-    td { border-bottom: 1px solid rgba(255,255,255,0.2); color: #ccc; }
-    strong { color: #FFF; }
-    code { background-color: #121212; border-color: #FFF; color: #FFF;}
+    th:not(:last-child),
+    td:not(:last-child) {
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ccc;
+    }
+    strong {
+      color: #fff;
+    }
+    code {
+      background-color: #121212;
+      border-color: #fff;
+      color: #fff;
+    }
 
-    tbody tr:hover { background-color: #121212 !important; }
+    tbody tr:hover {
+      background-color: #121212 !important;
+    }
   }
 
   .action-btn {
     border-color: #ffffff !important;
     color: #ffffff !important;
-    &:hover { background-color: #ffffff !important; color: #000000 !important; }
+    &:hover {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+    }
   }
 
-  .action-btn-danger, .action-btn-warning {
+  .action-btn-danger,
+  .action-btn-warning {
     background-color: transparent;
   }
 }

@@ -24,8 +24,8 @@
     border-color: var(--border-carrucel);
   }
   50% {
-    box-shadow: 0 0 15px var(--color-accent-4);
-    border-color: var(--color-accent-4);
+    box-shadow: 0 0 15px var(--lines-color-header);
+    border-color: var(--lines-color-header);
   }
   100% {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -411,7 +411,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: var(--pastel-color-0);
+      background-color: var(--bg-body);
       border: 2px solid var(--border-carrucel);
       padding: 1rem 1.25rem;
       border-radius: 10px;
@@ -847,3 +847,53 @@
     font-size: 0.95rem;
   }
 }
+
+body.high-contrast {
+  .card {
+    background-color: var(--bg-surface) !important;
+    border: 2px solid var(--lines-color) !important;
+    box-shadow: none !important;
+  }
+
+  .classroom-item {
+    background-color: var(--bg-surface) !important;
+    border-color: var(--lines-color) !important;
+
+    .class-code-text {
+      background-color: var(--bg-body) !important;
+      color: var(--color-accent-1) !important;
+      border: 1px solid var(--lines-color);
+    }
+  }
+
+  .skeleton-block {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.05) 75%
+    ) !important;
+  }
+
+  .switch-control {
+    .slider {
+      background-color: var(--color-dark) !important;
+      border: 1px solid var(--color-white);
+      &:before {
+        background-color: var(--color-white) !important;
+      }
+    }
+    input:checked + .slider {
+      background-color: var(--color-accent-1) !important;
+      &:before {
+        background-color: var(--color-black) !important;
+      }
+    }
+  }
+
+  .floating-scroll-btn {
+    box-shadow: none !important;
+    border: 2px solid var(--color-white) !important;
+  }
+}
+

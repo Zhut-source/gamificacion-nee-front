@@ -471,13 +471,19 @@ body.high-contrast .hint-glow {
 }
 
 @media (max-width: 1400px) {
+  :host {
+    align-items: flex-start;
+  }
+
   .game-environment {
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     gap: 1.5rem;
   }
 
   .board-container {
+    align-self: center;
     width: 100%;
     max-width: 500px;
   }
@@ -490,7 +496,7 @@ body.high-contrast .hint-glow {
 
 @media (max-width: 1030px) {
   .game-environment {
-    padding: 0;
+    justify-content: center;
   }
 
   .board-container {

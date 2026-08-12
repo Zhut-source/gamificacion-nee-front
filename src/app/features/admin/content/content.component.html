@@ -14,7 +14,7 @@
     </div>
   } @else {
 
-    <!-- VISTA 1: LISTADO DE DESAFÍOS (Lectura) -->
+    
     @if (!selectedChallenge) {
       <header class="admin-header" style="margin-top: 20px;">
         <h1 class="main-title">Contenido de juegos</h1>
@@ -29,15 +29,15 @@
               <button class="action-btn" (click)="editChallenge(challenge)">Editar Textos</button>
             </div>
             <h2 style="margin: 10px 0;">{{ challenge.nombre }}</h2>
-            <p style="color: #7A7A7A; font-size: 0.9rem;"><strong>Desc. Tarjeta:</strong> {{ challenge.descripcion_nivel }}</p>
-            <p style="color: #7A7A7A; font-size: 0.9rem;"><strong>Desc. Juego:</strong> {{ challenge.descripcion_juego }}</p>
-            <p style="color: #7A7A7A; font-size: 0.9rem; margin-bottom: 0;"><strong>{{ challenge.objetivos?.length || 0 }} Objetivos</strong></p>
+            <p class="card-desc"><strong>Desc. Tarjeta:</strong> {{ challenge.descripcion_nivel }}</p>
+            <p class="card-desc"><strong>Desc. Juego:</strong> {{ challenge.descripcion_juego }}</p>
+            <p class="card-objectives-count"><strong>{{ challenge.objetivos?.length || 0 }} Objetivos</strong></p>
           </article>
         }
       </div>
     }
 
-    <!-- VISTA 2: FORMULARIO DE EDICIÓN -->
+    
     @if (selectedChallenge) {
       <header class="admin-header edit-header" style="margin-top: 20px;">
         <div class="header-titles">
@@ -52,10 +52,10 @@
       <section class="card form-container">
         <form [formGroup]="editForm" (ngSubmit)="onSave()" class="input-area">
           
-          <!-- LAYOUT DE 2 COLUMNAS (SPLIT VIEW) -->
+          
           <div class="split-form-layout">
             
-            <!-- COLUMNA IZQUIERDA: TEXTOS -->
+            
             <div class="left-column">
               <div class="field-group">
                 <label class="control-label">Nombre del Desafío:</label>
@@ -69,13 +69,13 @@
 
               <div class="field-group" style="flex-grow: 1;">
                 <label class="control-label">Instrucción Larga (Dentro del Entorno de Juego):</label>
-                <!-- Ocupará el resto del espacio disponible hacia abajo -->
+                
                 <textarea class="input-df textarea-df" formControlName="descripcion_juego" style="flex-grow: 1; min-height: 120px;" placeholder="Instrucciones que leerá la voz..."></textarea>
                 <small class="help-text">Este texto es el que leerá la síntesis de voz (TTS) de forma predeterminada.</small>
               </div>
             </div>
 
-            <!-- COLUMNA DERECHA: OBJETIVOS DINÁMICOS -->
+            
             <div class="right-column">
               <div class="field-group dynamic-list-group">
                 
@@ -88,7 +88,7 @@
                   @for (objCtrl of objetivosArray.controls; track $index; let i = $index) {
                     <div class="objective-item">
                       <span class="bullet">•</span>
-                      <!-- Usamos textarea para que el objetivo pueda tener 2 o 3 líneas sin romperse -->
+                      
                       <textarea class="input-df flex-fill" [formControlName]="i" rows="2"></textarea>
                       <button type="button" class="remove-btn" (click)="removeObjective(i)" title="Eliminar este objetivo">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -105,7 +105,7 @@
               </div>
             </div>
 
-          </div> <!-- FIN SPLIT LAYOUT -->
+          </div> 
 
           <hr class="form-divider">
 

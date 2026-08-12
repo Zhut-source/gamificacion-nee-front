@@ -423,6 +423,7 @@ export class DescomposicionComponent implements OnInit, OnChanges {
       this.gameStatus = 'failed';
       this.isPlaying = true;
       setTimeout(() => {
+        this.isPlaying = false;
         this.gameResult.emit({
           status: 'failed',
           message: 'Has destruido agrupaciones 3 veces. ¡Cuidado al trazar!',
@@ -448,6 +449,7 @@ export class DescomposicionComponent implements OnInit, OnChanges {
       this.isPlaying = true;
       this.audioService.playSound('level-win');
       setTimeout(() => {
+        this.isPlaying = false;
         this.gameResult.emit({
           status: 'success',
           message: '¡Descomposición completada perfectamente!',
